@@ -1,54 +1,77 @@
 # 👨🏼‍💻🧬 Projects
+If you are using this material for a course, a project is a good way to put in to practice
+all of the various tools, methods and concepts we have looked at previously.
+This section will get into what makes for a good project in either a course context.
 
-## How to create real time systems, good frameworks for the different fields and project proposals
+This is where you get to play!
 
-* Starting with a simple prototype
-* Identify your components
-* Single threaded correct implementation -> Testing to avoid regression
-* Optimize
+You can either write your own proposal, which is hopefully relevant to what you normally work
+with/are interested in, or pick one from [the list].
 
-## What makes for a good project?
+## What makes for a good real-time project?
+Below you will find a few questions to ask yourself when determining either how to write your own
+proposal or picking a pre-existing one.
 
-* What is your concept/project?
-* Which concepts from the previous material do you think
-are relevant to your project and why?
-* Preprocessing your data?
+* Which concepts from the previously seen material do you think are relevant to your project and why?
+* Can the system eventually (end goal) take in sensor data, such as images from a camera or sound
+from a microphone, and keep a real-time processing rate?
+* Can the system be manipulated by a user through a GUI?
+* Can the system be optimized by preprocessing your data?
 * How do you adapt to your chosen/available platform?
-* Which libraries did you choose for this problem?
-* How fast did you get to your minimum viable product?
-* Which steps did you take from there and why?
+* Which libraries are available for this problem?
+* How fast can you get to your minimum viable product?
+* Which steps would you take from there and why?
 * How did you determine which parts of your system to optimize?
-* What else would you like to do with your system?
+* Is there room to add more features to your system?
 
-## Project Proposals
+## How to create real time systems
+* Start with a simple prototype.
+* Identify your components.
+* Create your first prototype as a single threaded correct implementation.
+* Start with simple, reproducible data. If you are working with sound, load a single file.
+* Implement testing (preferably automated) to avoid any regressions. Regressions are likely to occur
+when optimizing.
+* Start ingesting real-time data from a sensor or getting user interaction.
+* Profile and optimize in a loop.
+* Optionally, add more features and optimize.
+* Optionally, if you are using machine learning, is there anything you could do to optmize your
+model as a preprocessing step?
 
-* Virtual 3D scanner for a point cloud dataset
-* EEG system
-* Change the latent variables in a network using GUI, optimize the network
-* Point cloud renderer
-* Real-time style transfer on a web cam feed
-* Rendering fractals influenced by a web cam feed
-* Eye tracking -> Present to screen and read from web cam ->
-feature extraction -> classifier -> intervention signal ->
-reading app (Wolfgang Fuhl, PISTOL, fixation detection)
-* Bird classification from sound / Real-time classification of sound (Xeno-canto database)
-* Who is talking? Real-time classification of sound
-* Are you dyslexic? Eye tracking classifier
-* Cognitive load tracker - Eyes & pupil dilation and online estimation of
-signal strength (pupils vs. sound for the hearing impaired)
+## Components
+Given how easy it is to include libraries in Rust projects, Rust has a relatively small standard
+library. Instead a de-facto standard library emerges through a pseudo-democratic process driven
+by usage statistics and GitHub stars. A list of these de-facto standard crates can be
+found on the [blessed][0] website.
 
-## Components - libraries/frameworks
+Additionally, there's a set of overview sites tracking the state of Rust's nascent ecosystem.
+These have the "Arewe____yet" form. Examples like [Arewelearningyet][1] can also be found
+in [AreWeRustYet][2].
 
-[blessed](https://blessed.rs/crates)  
-[rayon](https://github.com/rayon-rs/rayon)  
-[egui](https://github.com/emilk/egui)  
-[wonnx](https://github.com/webonnx/wonnx)  
-[tch](https://github.com/LaurentMazare/tch-rs)  
-[winit](https://github.com/rust-windowing/winit)  
-[cv](https://github.com/rust-cv/cv)  
-[ultraviolet](https://github.com/fu5ha/ultraviolet)  
-[arewelearningyet](https://www.arewelearningyet.com/neural-networks/)  
-[burn](https://github.com/burn-rs/burn)  
-[time](https://doc.rust-lang.org/std/time/index.html)  
-[chrono](https://docs.rs/chrono/latest/chrono/)  
-[hifitime](https://github.com/nyx-space/hifitime)  
+An additional list of libraries and frameworks you might find useful for doing a project -  
+[rayon][3]  
+[ultraviolet][9]  
+[egui][4]  
+[winit][7]  
+[wonnx][5]  
+[tch][6]  
+[burn][10]  
+[cv][8]  
+[time][11]  
+[chrono][12]  
+[hifitime][13]  
+
+[0]: https://blessed.rs/crates
+[1]: https://www.arewelearningyet.com/
+[2]: https://github.com/UgurcanAkkok/AreWeRustYet
+[3]: https://github.com/rayon-rs/rayon
+[4]: https://github.com/emilk/egui
+[5]: https://github.com/webonnx/wonnx
+[6]: https://github.com/LaurentMazare/tch-rs
+[7]: https://github.com/rust-windowing/winit
+[8]: https://github.com/rust-cv/cv
+[9]: https://github.com/fu5ha/ultraviolet
+[10]: https://github.com/burn-rs/burn
+[11]: https://doc.rust-lang.org/std/time/index.html
+[12]: https://docs.rs/chrono/latest/chrono/
+[13]: https://github.com/nyx-space/hifitime
+[14]: https://absorensen.github.io/the-guide/m6_projects/s0_project_proposals
