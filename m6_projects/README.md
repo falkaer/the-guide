@@ -25,6 +25,7 @@ from a microphone, and keep a real-time processing rate?
 * Is there room to add more features to your system?
 
 ## How to create real time systems
+
 * Start with a simple prototype.
 * Identify your components.
 * Create your first prototype as a single threaded correct implementation.

@@ -89,12 +89,12 @@ Start taking sensor inputs, either web cam or microphone, perform FFT to get the
 domain signal in real-time on the input and modify the fractal equations using the
 spectral domain signal.
 
-[0] : https://www.thinkautonomous.ai/blog/lidar-datasets/
-[1] : https://github.com/Jakobovski/free-spoken-digit-dataset
-[2] : https://www.shadertoy.com/
-[3] : https://pbr-book.org/4ed/Wavefront_Rendering_on_GPUs
-[4] : https://iquilezles.org/articles/
-[5] : https://www.hci.uni-tuebingen.de/chair/team/wolfgang-fuhl
-[6] : https://arxiv.org/abs/2201.06799
-[7] : https://github.com/tmalsburg/saccades
-[8] : https://xeno-canto.org/
+[0]: https://www.thinkautonomous.ai/blog/lidar-datasets/
+[1]: https://github.com/Jakobovski/free-spoken-digit-dataset
+[2]: https://www.shadertoy.com/
+[3]: https://pbr-book.org/4ed/Wavefront_Rendering_on_GPUs
+[4]: https://iquilezles.org/articles/
+[5]: https://www.hci.uni-tuebingen.de/chair/team/wolfgang-fuhl
+[6]: https://arxiv.org/abs/2201.06799
+[7]: https://github.com/tmalsburg/saccades
+[8]: https://xeno-canto.org/
