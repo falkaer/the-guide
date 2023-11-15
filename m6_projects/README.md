@@ -6,7 +6,7 @@ This section will get into what makes for a good project in either a course cont
 This is where you get to play!
 
 You can either write your own proposal, which is hopefully relevant to what you normally work
-with/are interested in, or pick one from [the list].
+with/are interested in, or pick one from [the list][14].
 
 ## What makes for a good real-time project?
 Below you will find a few questions to ask yourself when determining either how to write your own

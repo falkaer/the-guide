@@ -78,8 +78,8 @@ There are lots of GPU-based path tracers for inspiration on [Shadertoy][2].
 Make sure there is a UI to allow the user to navigate the scene and edit settings.
 Transfer the path tracer to a compute shader writing to a texture and a fragment shader reading and
 presenting the texture. Try to implement wavefront path tracing or other advanced methods. Shadertoy
-has more sources of inspiration, or you can check out [this chapter] from Physically Based Rendering
-fourth edition.
+has more sources of inspiration, or you can check out [this chapter][3] from
+Physically Based Rendering fourth edition.
 
 ## Rendering fractals influenced by sensor inputs
 Render fractals in real-time. You can find inspiration with [Shadertoy][2] and [Inigo Quilez][4].
