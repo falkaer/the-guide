@@ -1,4 +1,4 @@
-# Project Proposals
+# Project Ideas
 Sometimes you might just need a little inspiration.
 
 ## Speech Recognition System
