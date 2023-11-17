@@ -75,4 +75,4 @@ An additional list of libraries and frameworks you might find useful for doing a
 [11]: https://doc.rust-lang.org/std/time/index.html
 [12]: https://docs.rs/chrono/latest/chrono/
 [13]: https://github.com/nyx-space/hifitime
-[14]: https://absorensen.github.io/the-guide/m6_projects/s0_project_proposals
+[14]: https://absorensen.github.io/the-guide/m6_projects/s0_project_ideas
