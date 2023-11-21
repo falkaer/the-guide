@@ -171,9 +171,9 @@ let bits_of_precision: u32 = 10;
 let mut encoded: u32 = 0;
 let mut mask: u32 = 1;
 for index in 0..bits_of_precision {
-    encoded |= ((x & (1 << index)) << 2*index);
-    encoded |= ((y & (1 << index)) << (2*index + 1));
-    encoded |= ((z & (1 << index)) << (2*index + 2));
+    encoded |= ((x & (1 << index)) <<  component_count * index);
+    encoded |= ((y & (1 << index)) << (component_count * index + 1));
+    encoded |= ((z & (1 << index)) << (component_count * index + 2));
 }
 
 ```
