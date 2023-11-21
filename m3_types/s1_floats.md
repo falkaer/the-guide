@@ -36,7 +36,7 @@ for element in &mut data {
 
 ```
 
-But if ```some_constant``` was 4.0, 2.0 or 256.0 or some other version of 2^N, they would be. 
+But if ```some_constant``` was 4.0, 2.0 or 256.0 or some other version of 2^N, they would be.
 Finally, ```NaN```'s propagate.
 Any operation involving a ```NaN``` value returns a ```NaN``` value, including ```NaN == NaN```.
 Division by ```1.0/0.0``` does not return ```NaN``` in Rust, but ```inf```. ```-1.0/0.0```
