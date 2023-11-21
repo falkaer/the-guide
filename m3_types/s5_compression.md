@@ -181,7 +181,6 @@ aren't writing the compressor yourself.
 [Data Compression](https://en.wikipedia.org/wiki/Data_compression)  
 [Lempel-Ziv 77 & 78](https://en.wikipedia.org/wiki/LZ77_and_LZ78)  
 [Huffman Coding](https://en.wikipedia.org/wiki/Huffman_coding)  
-
 [Zip](https://en.wikipedia.org/wiki/ZIP_(file_format))  
 Gzip - [HTTP Compression](https://en.wikipedia.org/wiki/HTTP_compression)  
 
