@@ -1,4 +1,5 @@
 # 👨🏼‍💻 Exercises
+Otherwise covered by the projects
 
 ## 🧬 Group discussion and presentation
 Pick one of the following topics.  

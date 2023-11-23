@@ -1,9 +1,11 @@
 # 3️⃣ Branchless Programming
 For this next section, I am going to be cheating a little bit.
 I am going to introduce to you a concept that is mostly about optimizing for branch prediction and cache lines.
-These things aren't technically concurrency. But they do lead to an introduction of single instruction,
-multiple data (SIMD), which is... I don't know... concurrency's cousin or something. It also wasn't immediately
-obvious where else this would go. Anyways, branch prediction, branchless programming, data oriented programming and
+These things are somewhere between concurrency, memory optimization and real-time systems.
+They do lead to an introduction of single instruction, multiple data (SIMD), which is... I don't know...
+concurrency's cousin or something. Factoring your code in a way that leads you to get good performance out of
+SIMD. This is not just about writing a function a certain way, but about how you structure your data, your code
+and your architecture. Anyways, branch prediction, branchless programming, data oriented programming and
 SIMD, here we go!
 
 ## Branch Prediction
@@ -48,8 +50,7 @@ Image credit </a>
 </figcaption>
 </figure>
 
-If you would like to know more about the hardware side, I do recommend you check out these
-[slides](https://ics.uci.edu/~swjun/courses/2023F-CS250P/materials/lec5.5%20-%20Fast%20and%20Correct%20Pipelining.pdf)
+If you would like to know more about the hardware side, I do recommend you check out these [slides][0]
 from University of California, Irvine for a cursory glance at the fairly complex topic of the hardware involved in
 branch prediction.  
 
@@ -59,8 +60,7 @@ B would be executed. In a few cases path A will be executed instead, but will be
 ## Branchless Programming
 "Branchless programming", is perhaps too big a promise, in all but the simplest cases, it will be
 "branch mitigating programming". Branching in code is expensive, so let's look at how we can help the computer,
-regardless of parallelism, attain a bit of speed. Again, please checkout the
-[slides](https://ics.uci.edu/~swjun/courses/2023F-CS250P/materials/lec5.5%20-%20Fast%20and%20Correct%20Pipelining.pdf)
+regardless of parallelism, attain a bit of speed. Again, please checkout the [slides][0]
 for an overview of various hazards with code examples. But a few of the basic highlights are control flow, through
 short circuiting, unrolling of for-loops (your compiler will often do this automatically), reformulation of
 branching through arithmetic. Another problem can be data hazards. If line A is writing to some variable in an
@@ -397,3 +397,5 @@ in path tracing and has recently gotten hardware support.
 [Shader Execution Reordering][1]  
 
 [1]: https://developer.nvidia.com/blog/improve-shader-performance-and-in-game-frame-rates-with-shader-execution-reordering/  
+
+[0]: https://ics.uci.edu/~swjun/courses/2023F-CS250P/materials/lec5.5%20-%20Fast%20and%20Correct%20Pipelining.pdf
