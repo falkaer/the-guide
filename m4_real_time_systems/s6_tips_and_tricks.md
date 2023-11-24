@@ -17,3 +17,4 @@ bindings, in which case it might be better with a string or integer
 * Static/Dynamic Dispatch - dyn, enum, trait, limitations good!
 * The Markov Chain
 * If using recursion and risking stack overflow, use a loop and a queue
+* If you are on an HPC file system, it is likely faster to have a few really big files, load them into memory and get your files from that mapped file instead of having > 100 files and loading them individually
