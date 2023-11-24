@@ -12,14 +12,13 @@ Another case could of course if we inverted the scenario. You might be able to u
 accelerate whatever you are doing in a high level language such as Python. Other than writing entire
 libraries, like PyTorch, you could be writing your own custom data loader.
 
-Another reason for creating bindings could be if you need the functionality of a library that isn't available in the
-language you are using. Rust still has a relatively young ecosystem. It is not uncommon that a library isn't
-available or isn't as good as one that is in C++. In that case you will need to use the
+Another reason for creating [bindings][0] could be if you need the functionality of a library that
+isn't available in the language you are using. Rust still has a relatively young ecosystem. It is not uncommon
+that a library isn't available or isn't as good as one that is in C++. In that case you will need to use the
 [foreign function interface][1] ([Rust FFI][2]) to call into other languages. Specifically, it can call to C
 from which you can call to other languages like C++. C generally defines the glue between languages, but
 there are multiple crates for creating language bindings found on [blessed.rs][6], like [Maturin][3], which uses
 [PyO3][4] ([docs][5]).
-
 
 Enough motivation! What should you be aware of when creating bindings for your project, outside of the specifics
 of using a crate like PyO3? First off, if you are creating bindings, what type of information are you exchanging?
