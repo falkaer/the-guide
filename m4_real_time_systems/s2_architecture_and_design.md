@@ -34,7 +34,7 @@ could keep the state necessary to for each component to run it outside of the co
 to each function call. In my opinion, stress on opinion, this would be, in most cases, an example of a dogmatic
 adherence to a principle. Just keep the necessary state inside the components. Still as little as possible, though.
 
-Data-oriented design and branchless programming are important enough concepts that they have gotten their own
+[Data-oriented design][1] and branchless programming are important enough concepts that they have gotten their own
 section which is the very next one. It basically boils down to this, instead of having an array of particles,
 let's have a particle system which has arrays of each component in those particles, as it has to manipulate all
 the particles anyway. Formulating your system as components is a good way to get started with this as you
@@ -43,14 +43,14 @@ reformatting of your data can also be seen as a transposition of your data. Bran
 move the potential branches outside of loops and reduce potential branching for better performance. Doing this
 is helped along by using data-oriented design, which was in turn helped along by encapsulation through components.
 
-Entity component systems, is a system, most often used in games programming, wherein relevant data is composited
-to do what seems to be a more flexible version of the classic first pass encapsulated data-oriented design. In
-general it is something you most likely use a library to implement, like [Legion][3]. Alternatively, here's
-a blog post about building [your own ECS][4].
+[Entity component systems][2], are a type of system, most often used in games programming, wherein relevant data
+is composited to do what seems to be a more flexible version of the classic first pass encapsulated
+data-oriented design. In general it is something you most likely use a library to implement,
+like [Legion][3]. Alternatively, here's a blog post about building [your own ECS][4].
 
 ## An Example Architecture
 Let's take a look at an example architecture. This is an abstracted view of what a UI-based application, hooked up
-to a machine learning library, using a GPU backend, with a multithreaded data loader might look like. 
+to a machine learning library, using a GPU backend, with a multithreaded data loader might look like.
 
 <figure markdown>
 ![Image](../figures/example_architecture.png){ width="800" }
