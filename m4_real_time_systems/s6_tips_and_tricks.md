@@ -25,7 +25,8 @@ get all of your code working correctly, make sure to commit it. As soon as you s
 your code, you are likely to introduce bugs, get exasperated and lost. Then once you've given up, you can just
 revert to your commit when it was working and retry your optimization attempt. Usually at that point you've tried
 out some stuff and can now see a clearer, simpler, solution and it will come to you much quicker. Thank you,
-version control!
+version control! Or, even better, create branches when you try out new features and merge them into trunk once
+you're assured that they didn't introduce errors.
 
 ## Minimizing Interaction with the Operating System
 Previously I have mentioned concepts such as object pools and green threads. Often times a key performance
