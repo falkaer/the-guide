@@ -7,8 +7,7 @@ formats have emerged such as bfloat16. A lot of these very small specialized typ
 are required to work with tensor core accelerators.
 
 I can't explain exactly how a float works much better than the
-[wiki](https://en.wikipedia.org/wiki/Floating-point_arithmetic). Ever so slightly browsing the page about
-[IEEE-754](https://en.wikipedia.org/wiki/IEEE_754) also makes good sense.
+[wiki][7]. Ever so slightly browsing the page about [IEEE-754][8] also makes good sense.
 
 So, now that you've browsed the websites and your are familliar with concepts such as exponent and fraction, I
 have a few key concepts for you to make note of. If you can at all keep your floats as close to being between
@@ -63,16 +62,21 @@ complete the accumulated sum, in 32-bits, can be cast down to 16-bits and writte
 
 ## Additional Reading - Highly Recommended
 Every floating point operation incurs some form of error. But if you used specialized floating point operations
-such as the [fused multiply-add](https://en.wikipedia.org/wiki/Multiply%E2%80%93accumulate_operation), which
-can be found [in Rust as well](https://doc.rust-lang.org/std/primitive.f32.html#method.mul_add), you can get a
+such as the [fused multiply-add][1], which can be found [in Rust as well][2], you can get a
 single rounding error instead of two rounding errors. If you are summing a large list of numbers you can use
 algorithms for compensating for the accumulated error, such as
-[Kahan Summation](https://en.wikipedia.org/wiki/Kahan_summation_algorithm). You can also keep a
-[running estimate of the error](https://pbr-book.org/3ed-2018/Shapes/Managing_Rounding_Error).
+[Kahan Summation][3]. You can also keep a [running estimate of the error][4].
 
 ### 🧬 Computer Graphics
 Depth buffers are usually in need of some thought. You can take a look at
-[depth precision visualized](https://developer.nvidia.com/content/depth-precision-visualized) or the now
-fairly common [reverse depth buffer](https://www.danielecarbone.com/reverse-depth-buffer-in-opengl/).
+[depth precision visualized][5] or the now fairly common [reverse depth buffer][6].
 
 [0]: https://en.wikipedia.org/wiki/Fast_Fourier_transform#Accuracy
+[1]: https://en.wikipedia.org/wiki/Multiply%E2%80%93accumulate_operation
+[2]: https://doc.rust-lang.org/std/primitive.f32.html#method.mul_add
+[3]: https://en.wikipedia.org/wiki/Kahan_summation_algorithm
+[4]: https://pbr-book.org/3ed-2018/Shapes/Managing_Rounding_Error
+[5]: https://developer.nvidia.com/content/depth-precision-visualized
+[6]: https://www.danielecarbone.com/reverse-depth-buffer-in-opengl/
+[7]: https://en.wikipedia.org/wiki/Floating-point_arithmetic
+[8]: https://en.wikipedia.org/wiki/IEEE_754
