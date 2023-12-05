@@ -120,8 +120,7 @@ nav:
     - m5_optimization/README.md
     - S0 - Timing and Printing: m5_optimization/s0_timing_and_printing.md
     - S1 - Profilers: m5_optimization/s1_profilers.md
-    - S2 - 🧬3️⃣ Optimizing Deep Learning Training: m5_optimization/s2_optimizing_deep_learning_training.md
-    - S3 - 👨🏼‍💻 Exercises: m5_optimization/s3_exercises.md
+    - S2 - 👨🏼‍💻 Exercises: m5_optimization/s2_exercises.md
   - M6 - 👨🏼‍💻🧬 Projects:
     - m6_projects/README.md
     - S0 - Project Ideas: m6_projects/s0_project_ideas.md

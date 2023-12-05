@@ -63,8 +63,9 @@ complete the accumulated sum, in 32-bits, can be cast down to 16-bits and writte
 ## Additional Reading - Highly Recommended
 Every floating point operation incurs some form of error. But if you used specialized floating point operations
 such as the [fused multiply-add][1], which can be found [in Rust as well][2], you can get a
-single rounding error instead of two rounding errors. If you are summing a large list of numbers you can use
-algorithms for compensating for the accumulated error, such as
+single rounding error instead of two rounding errors. The fused multiply-add may be slower in some cases (it is
+on my machine) and faster in others. Depending on your use case you might also not see any difference in error. If
+you are summing a large list of numbers you can use algorithms for compensating for the accumulated error, such as
 [Kahan Summation][3]. You can also keep a [running estimate of the error][4].
 
 ### 🧬 Computer Graphics

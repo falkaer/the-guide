@@ -69,15 +69,15 @@ So for right now, just give the link to graph's wiki page a quick look. You shou
 looking at a few of the images.
 
 Once you have done this, just know, that the rest of this module won't actually use a real graph.
-The graph we will concern ourselves with will be defined as being one way, unidirectional, and each
+The graph we will concern ourselves with will be defined as being unidirectional and each
 node can point to at most one other node. This reduces the entire graph to just being a list of operations
 which will be executed sequentially.
 
 ## The Network We Want to Support
 For illustrating how computational graphs can benefit your code we don't really need to support
 a lot of operators. We need transfers to and from the GPU (eventually), a linear operator
-(matrix-matrix multiplication followed by an addition), a ReLU operator (single call to a max function with 0)
-and a softmax operator. The softmax operator is the most complex part, don't worry I will show you some
+(matrix multiplication followed by an addition), a ReLU operator (single call to a max function with 0)
+and a softmax operator. The softmax operator is the most complex part. Don't worry I will show you some
 CPU code that is fairly easy to understand. The GPU version gets a bit complicated and is only constructed
 in a fairly simplistic version.
 
@@ -112,8 +112,8 @@ If you are in the root directory for ```computational_graphs``` go to ```src/sha
 [online](https://github.com/absorensen/the-guide/blob/main/m1_memory_hierarchies/code/computational_graphs/src/shared/tensor2d.rs).
 
 Start by taking a look at the definition of the ```Tensor2D``` struct at the very top. The ```derive``` stuff
-at the top is asking some macros to automatically implement (derive) some traits (interfaces and behavior)
-automatically. ```Clone``` means we can call a Tensor2D element as below -
+is asking some macros to automatically implement (derive) some traits (interfaces and behavior).
+```Clone``` means we can call a Tensor2D element as below -
 
 ```rust
 let some_tensor: Tensor2D = Tensor2D::new(0.1, 8, 8);
@@ -124,7 +124,7 @@ let copy_of_some_tensor: Tensor2D = some_tensor.clone();
 This creates a complete and total copy of ```some_tensor```. If we manipulate or move ```some_tensor```,
 ```copy_of_some_tensor``` will not be affected as they no longer have anything to do with each other.
 
-Next, take a look at the ```new``` function. In it we create a new ```Tensor2D``` by creating a new
+Next, take a look at the ```new``` function. In it, we create a new ```Tensor2D``` by creating a new
 ```Vec<f32>``` with size ```row_count*column_count```. Each element is given a value of ```scale*index```.
 This is just for testing purposes so I found it useful for this to not be all zeros and not all random numbers.
 This allows us to verify that the GPU implementations are functionally equivalent to the CPU implementations.
@@ -137,24 +137,25 @@ in the form of more time and code spent on control flow statements like ```for-l
 
 ## Implementing Operators
 In this section I will be going through various implementations of the three operators and their fused variants
-and show benchmarks to show you how big of a performance impact these sort of first guess optimizations can have
-even without profiling or microoptimizations.
+and perform benchmarks to show you how big of a performance impact these sort of first guess optimizations can have
+even without profiling or micro-optimizations.
 
 ### Linear
 There's some dimension checking functions, you can just ignore those. They use ```debug_assert``` statements
-to raise an error if the dimensions of the tensors given to a linear layer function don't match. ```debug_assert```
-is the same as an ```assert``` statement, except it is only run in debug mode. I did it this way to incur only a small
-hit to performance. You probably passed the ```linear_layer``` function on the way down, it just acts as a wrapper
-around the ```linear_layer_preallocated``` function. If you haven't already allocated a tensor to use as output,
-it will make one for you. If you do this a lot however, such as in a loop, you should be using the preallocated
-version to not have memory allocations in your loops.
+to raise an error if the dimensions of the tensors given to a linear function don't match. ```debug_assert```
+is the same as an ```assert``` statement, except it is only run in debug mode. I did it this way to minimize
+the performance implications of the assert. You probably passed the ```linear``` function on the way down,
+it just acts as a wrapper around the ```linear_preallocated``` function. If you haven't already allocated
+a tensor to use as output, it will make one for you. If you do this a lot however, such as in a loop,
+you should be using the preallocated version to not have memory allocations in your loops.
 
-Finally, let's go down to the ```linear_layer_preallocated``` function. There are three main sections. One is
+Let's go down to the ```linear_preallocated``` function. There are three main sections. One is
 the call to the ```debug_assert``` function from earlier, to check for valid input and output dimensions, the
-second is the matrix-matrix multiplication which needs three whole for-loops and finally the bias section. Note
-the use of linearized accesses, if you need a reminder what that is all about, go back to ```m1::s0::The Vector```.
+second is the matrix multiplication which needs three whole for-loops and finally the bias section. Note
+the use of linearized accesses, if you need a reminder what that is all about, go back to 
+[The Vector][2] section.
 
-It's not too bad, but we could do better, although we won't do more efficient implementations of matrix-matrix
+It's not too bad, but we could do better, although we won't do more efficient implementations of matrix
 multiplication, note that the read accesses of the weights tensor is strided. We could have implemented that some
 tensors could be transposed, but you get the point. So we have a triple for-loop and a double for-loop in our
 linear operator. Try to think, based on the contents of the last couple of sections, what would be good first
@@ -164,43 +165,45 @@ While you think about that in the back of your mind, I'll take a quick detour to
 finnicky concept - inlining!
 
 Inlining in Rust, and most other languages, is done via an annotation to the compiler. It is usually more of a hint
-or request than an actual instruction. In Rust it looks like the derivation of traits we saw earlier -
+or request than an actual instruction. In Rust, it looks like the derivation of traits we saw earlier -
 ```#[inline(always)]```. In that case it actually is more of a command. There's other variants you can put inside
 the parantheses like ```#[inline]```, which is more of a suggestion, or ```#[inline(never)]```. Inlining
-is basically taking all calls to that function and substituting it with the code from the function. This is
-largely good for very small functions, such as if we made a function for making our linearized array accesses
-prettier to look at, but for large functions it either does nothing or makes the performance worse. So, in general,
+is basically taking all calls to that function and replacing it with the actual code from the function.
+This is allows the compiler to not just optimize the code within the function, but optimize the function
+alongside the code surrounding the call.
+Inlining is mostly good for smaller functions, such as if we made a function making our linearized array accesses
+prettier to look at. For large functions it either does nothing or makes the performance worse. In general,
 unless you were trying to examine the concept of inlining like we are now, you should stick with ```#[inline]```
 and suggest inlining to the compiler, without demanding it. The compiler is pretty smart and will usually figure
-out what is best. As you will see in the function ```linear_layer_preallocated_inline```, the function itself
+out what is best. As you will see in the function ```linear_preallocated_inline```, the function itself
 is not different in any way.
 
-Next up is the function ```linear_layer_local_accumulation```. Now it's memory hierarchy time! While I didn't
+Next up is the function ```linear_local_accumulation```. Now it's memory hierarchy time! While I didn't
 get rid of the strided memory access of the weights tensor, I removed some of that control flow overhead,
 by linearizing the bias part. Now it is just a single for-loop, instead of two, because the dimensions of
 the output and bias tensors match, and there are no transformations to be made. So we get to just iterate
 through all elements. I also elected to not accumulate the result of each output element directly in the output
-tensor. Instead I accumulate in a local variable, which will hopefully be kept in a register.
+tensor. Instead, I accumulate in a local variable, which will hopefully be kept in a register.
 
 Think back! Where is the register located? And why can it be problematic to accumulate the sum in the output tensor?
 
 The bias is the same. But that does mean we are writing to the same output element twice. Let's move the bias
-calculation into the matrix-matrix multiplication loop. ```linear_layer_optimized``` moves the bias to just
+calculation into the matrix multiplication loop. ```linear_optimized``` moves the bias to just
 before the writing of the accumulated result to the output tensor. If the bias calculation was a lot larger, this
 might not be faster. In some cases for highly complex loops, it can instead make sense to separate them into
 more loops, which is a process called ```loop fission```. I have only used a small subset of loop optimizations,
-but you can read about more ways of optimzing a loop [here](https://en.wikipedia.org/wiki/Loop_optimization).
+but you can read about more ways of optimzing a loop [here][3].
 
 Ok, so try and run the code locally! To begin with go to the file ```src/lib.rs```. Comment out all
 of the lines within and including the ```if configuration.compatible_gpu_found {``` line. Then in your terminal
 navigate to the root folder, the one containing the ```src``` folder, and write ```cargo run --release```. Your
 computer will now run a bunch of benchmarks relevant to the rest of this section. You can find the output
-in ```computational_graphs/outputs/benchmarks/stack```. The one that should have been generated on your computer
-that we want to look at now is called ```linear_layer_cpu_benchmark_stack.png```. If you weren't able to run
+in ```computational_graphs/outputs/benchmarks/cpu```. The one that should have been generated on your computer
+that we want to look at now is called ```cpu_linear_benchmark.png```. If you weren't able to run
 it locally, don't worry, I got you covered!
 
 <figure markdown>
-![Image](../figures/linear_layer_cpu_benchmark_stack.png){ width="800" }
+![Image](../figures/cpu_linear_benchmark.png){ width="800" }
 <figcaption>
 Benchmarking linear operator functions on the CPU.
 This benchmark was run on my laptop boasting an Intel i7-1185G7, 3.0 GHz with 32GB of RAM. The operating system was
@@ -208,9 +211,7 @@ Windows 10. The L1/L2/L3 caches were 320 KB, 5 MB and 12 MB respectively.
 </figcaption>
 </figure>
 
-Huh, it seems our loop fission didn't really matter in the grand scheme of things!
-The graph is quite high resolution to allow you to zoom in. The x-axis is the size of the tensors. Only NxN matrices
-are used. The y-axis is time in nanoseconds averaged over 1000 runs. Note how the
+The x-axis is the size of the tensors. Only NxN matrices are used. The y-axis is time in nanoseconds. Note how the
 lines are piecewise linear. There are two points where all of the lines get quite a bit slower and scale worse
 with the size of the tensors. Why do you think that is?
 
@@ -241,24 +242,25 @@ You can zoom in on these parts of the graph by modifying ```lib.rs``` to just te
 interesting ranges. Like right around the size of the last bend.
 Another thing to note is that only the versions of the linear operator that uses local accumulation
 significantly outperform the naive version. One surprise is that keeping the bias outside of the
-matrix-matrix loop, is better performing than moving the bias in. Sometimes it really is better to
-keep things simple. So from now on, the ```linear_layer_local_accumulation``` version will be the preferred one.
+matrix multiplication loop, is better performing than moving the bias inside. Sometimes it really is better to
+keep things simple. So from now on, the ```linear_local_accumulation``` version will be the preferred one.
 
 ### ReLU
 Next up, we have the ReLU function, which is embarrasingly simple. It returns the maximum of two numbers.
 One of the numbers is zero. Done.
 
-So, move your way down to the ```relu``` and ```relu_preallocated``` functions. Here I also completely flatten
+So, move your way down to the ```relu``` and ```relu_preallocated``` functions. Here, I also completely flatten
 out the two dimensional tensor to save on the amount of time spent on control flow vs. actual computation.
-But then we get a new variant. The ```relu_inplace``` function. Because it is possible to do the ReLU operation
-directly on the input array, let's try that variant as well and see what the effect is. Finally, we have
-```relu_inplace_inline```. This function is definitely small enough that it might benefit from inlining.
+But then we get a new variant. The ```relu_inplace``` function. With the ReLU operation it possible to work
+directly on the input array instead of outputting to another array. Let's try that variant as well and see what
+the effect is. Finally, we have ```relu_inplace_inline```. This function is definitely small enough that
+it might benefit from inlining.
 
 So now go back into the same folder where you found the linear benchmark output and look at what your computer
 could crunch out. Alternatively, if you couldn't run it, I got you covered here.
 
 <figure markdown>
-![Image](../figures/relu_cpu_stack.png){ width="800" }
+![Image](../figures/cpu_relu_benchmark.png){ width="800" }
 <figcaption>
 Benchmarking ReLU operator functions on the CPU.
 This benchmark was run on my laptop boasting an Intel i7-1185G7, 3.0 GHz with 32GB of RAM. The operating system was
@@ -274,14 +276,14 @@ operations inplace. Since the ReLU operation is so simple, it becomes easily dom
 and memory costs. The difference between the preallocated version and the inplace version is not as big, but
 still substantial enough to warrant the optimization. Inlining on the other hand didn't make a big difference
 in this case. It is still doing one read and one write after all.
-Go back and look at the how much was gained by inlining the much more complex linear operator
+Go back and look at how much was gained by inlining the much more complex linear operator
 in the previous benchmark! Go on!
 
 Inplace operations are also available in PyTorch. The ReLU actually has a flag for the
-[inplace version](https://pytorch.org/docs/stable/generated/torch.nn.ReLU.html).
+[inplace version][4].
 
 ### Softmax
-Now let's look at the softmax operator. It isn't that complicated, except as we'll see when we talk about
+Now let's look at the softmax operator. It isn't that complicated, except, as we'll see when we talk about
 the GPU version, the max and sum values are actually non-trivial to implement on a GPU using more than a
 single work group (a group of threads).
 
@@ -300,7 +302,7 @@ Finally, checkout the results in your output folder! Or if you couldn't run them
 some here -
 
 <figure markdown>
-![Image](../figures/softmax_cpu_stack.png){ width="800" }
+![Image](../figures/cpu_softmax_benchmark.png){ width="800" }
 <figcaption>
 Benchmarking Softmax operator functions on the CPU.
 This benchmark was run on my laptop boasting an Intel i7-1185G7, 3.0 GHz with 32GB of RAM. The operating system was
@@ -308,27 +310,27 @@ Windows 10. The L1/L2/L3 caches were 320 KB, 5 MB and 12 MB respectively.
 </figcaption>
 </figure>
 
-As can be seen, the inplace and inline versions beat the naive and preallocated versions by an extremely wide
-margin. The different between the inplace and inline seems quite small, but the inplace version seems to
-consistently beat the inline version.
+As can be seen, the inplace and inplace_inline versions beat the naive and preallocated versions by an extremely wide
+margin. The different between the inplace and inplace_inline seems quite small, but the inplace_inline
+version seems to consistently beat the inplace version.
 
 ### Fused
 Finally, let's see what we can do with combining the operators with fusion! First take a look at the functions
-```linear_layer_local_accumulation_relu``` and ```linear_layer_optimized_relu```. In these two I combine
+```linear_local_accumulation_relu``` and ```linear_optimized_relu```. In these two, I combine
 the linear operator with the ReLU operator. In the local accumulation variant, the bias and ReLU are handled
 in their own distinct loop (loop fission). In the optimized variant, they are in the same loop as the
-matrix-matrix multiplication.
+matrix multiplication.
 
 Now let's add in the softmax operator. Take a look at ```linear_relu_softmax_fused_fission``` and
 ```linear_relu_softmax_fused```. In the fission version, the max value is found in the same loop as
 the bias and ReLU computation. In fused version, bias, ReLU and max are all moved into the ending of the
-matrix-matrix multiplication loop.
+matrix multiplication loop.
 
 Finally, checkout the results in your output folder! Or if you couldn't run them locally I have
 some here -
 
 <figure markdown>
-![Image](../figures/linear_relu_softmax_fused_cpu_stack.png){ width="800" }
+![Image](../figures/cpu_linear_relu_softmax_fused_benchmark.png){ width="800" }
 <figcaption>
 Benchmarking fused operators functions on the CPU.
 This benchmark was run on my laptop boasting an Intel i7-1185G7, 3.0 GHz with 32GB of RAM. The operating system was
@@ -336,11 +338,11 @@ Windows 10. The L1/L2/L3 caches were 320 KB, 5 MB and 12 MB respectively.
 </figcaption>
 </figure>
 
-As can be seen the naive version, which is just successive function calls to linear, ReLU and softmax operators
-is massively outperformed by the fused linear-relu-softmax operators, with the fissioned version with bias
-outside of the matrix-matrix loop winning out. Of course the linear-relu versions are the fastest,
+As can be seen, the naive version, which is just successive function calls to linear, ReLU and softmax operators,
+is massively outperformed by the fused linear-relu-softmax operators. The fissioned version with bias
+outside of the matrix loop seems to be outperformed in this one. Of course the linear-relu versions are the fastest,
 as they don't do softmax, but between the two of them it is again the version without the bias calculation
-at the end of the matrix-matrix loop which wins ever so slightly.
+at the end of the matrix loop which wins ever so slightly.
 
 It's hard to make a general conclusion based on that, without going a lot deeper, but in any case,
 you should always test and measure! Now, you can either continue on reading the 3️⃣ material
@@ -364,11 +366,12 @@ test launch can create some issues when testing our GPU functions.
 
 ## 🧬3️⃣ Graphs in Graphics/GPU Programming
 Computational graphs are even making their way into the way you can program the GPU!
-Ways to define computational graphs have been added to
-[DirectX12][0]
-and [Vulkan][1].
+Ways to define computational graphs have been added to [DirectX12][0] and [Vulkan][1].
 This development seems to be lead by game and graphics workloads being increasingly
 compute shader driven.
 
 [0]: https://devblogs.microsoft.com/directx/d3d12-work-graphs-preview/
 [1]: https://gpuopen.com/gpu-work-graphs-in-vulkan/
+[2]: https://absorensen.github.io/the-guide/m1_memory_hierarchies/s0_soft_memory_hierarchies/#the-vector
+[3]: https://en.wikipedia.org/wiki/Loop_optimization
+[4]: https://pytorch.org/docs/stable/generated/torch.nn.ReLU.html

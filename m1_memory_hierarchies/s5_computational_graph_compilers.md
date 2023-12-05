@@ -17,21 +17,42 @@ Finally, there is the graph loop variant. This variant is not just creating a co
 moves the loop from the measuring function closer into the graph runner itself. One thing to note though
 is that while we do cut down on some transfers, the implementation is still suboptimal. I will elaborate
 about why in 3️⃣. So just take this as an indicator of why you should use computational graphs
-and computational graph compilers when you can.
+and computational graph compilers when you can. There also two additional plots which show the same
+benchmark but with the CPU and Immediate runs removed to zoom in on the graph and graph loop runs.
 
 <figure markdown>
-![Image](../figures/graphs_size.png){ width="600" }
+![Image](../figures/graphs_size_benchmark.png){ width="600" }
 <figcaption>
-Benchmarking randomly generated graphs of depth 64 at various tensor sizes across 10 samples.
+Benchmarking randomly generated graphs of depth 64 at various tensor sizes across 25 samples.
 This benchmark was run on my laptop boasting an Intel i7-1185G7, 3.0 GHz with 32GB of RAM. The operating system was
 Windows 10. The L1/L2/L3 caches were 320 KB, 5 MB and 12 MB respectively.
 </figcaption>
 </figure>
 
 <figure markdown>
-![Image](../figures/graphs_depth.png){ width="600" }
+![Image](../figures/graphs_only_size_benchmark.png){ width="600" }
 <figcaption>
-Benchmarking randomly generated graphs of various depths and a size of 256 across 10 samples.
+Benchmarking randomly generated graphs of depth 64 at various tensor sizes across 25 samples.
+Run without CPU and Immediate functions. 
+This benchmark was run on my laptop boasting an Intel i7-1185G7, 3.0 GHz with 32GB of RAM. The operating system was
+Windows 10. The L1/L2/L3 caches were 320 KB, 5 MB and 12 MB respectively.
+</figcaption>
+</figure>
+
+<figure markdown>
+![Image](../figures/graphs_depth_benchmark.png){ width="600" }
+<figcaption>
+Benchmarking randomly generated graphs of various depths and a size of 256 across 25 samples.
+This benchmark was run on my laptop boasting an Intel i7-1185G7, 3.0 GHz with 32GB of RAM. The operating system was
+Windows 10. The L1/L2/L3 caches were 320 KB, 5 MB and 12 MB respectively.
+</figcaption>
+</figure>
+
+<figure markdown>
+![Image](../figures/graphs_only_depth_benchmark.png){ width="600" }
+<figcaption>
+Benchmarking randomly generated graphs of various depths and a size of 256 across 25 samples.
+Run without CPU and Immediate functions. 
 This benchmark was run on my laptop boasting an Intel i7-1185G7, 3.0 GHz with 32GB of RAM. The operating system was
 Windows 10. The L1/L2/L3 caches were 320 KB, 5 MB and 12 MB respectively.
 </figcaption>
@@ -59,7 +80,7 @@ So far so good. But what did the fused versions do?
 When calculating the linear operation, it kept the output in the threads register and applied the ReLU function
 once the data in register before storing it in the GPU's RAM and dispatching a new compute shader.
 One of the suggested exercises is to optimize the linear shader. In any case that should involve tiling and
-shared memory. That would mean that the matrix-matrix multiplication would need the work group to act in
+shared memory. That would mean that the matrix multiplication would need the work group to act in
 coordination and load in tiles of the matrices into shared memory (L1 cache) and synchronize, in order for
 them to get more out of memory they might otherwise have overlapping accesses of. Finally, when we use
 the graph loop, we don't actually tell the GPU to run this same queue for N iterations, but add to the
@@ -136,13 +157,10 @@ at the top of the shader file and then compile. This makes your code less readab
 as fully using op codes.
 
 ## 5️⃣ Additional Reading
-
-* [Fun and hackable tensors in Rust][0]
-* [Massively Parallel Fun with GPUs][1]
-* [Compute Shader Glossary][2]
-* [Torch.fx][3]
-* [torch.compile][4]
-* [Getting started with PyTorch's compiler][5]
+Here's a few blog posts on [GPU tensors][1] and how [to build neural networks][0], as well as an
+[introduction to GPU computing terminology][2]. Another few blog posts, specifically for the
+PyTorch compiler are [Torch.fx][3], [torch.compile][4] and
+[getting started with PyTorch's compiler][5].
 
 [0]: https://getcode.substack.com/p/fun-and-hackable-tensors-in-rust
 [1]: https://getcode.substack.com/p/massively-parallel-fun-with-gpus

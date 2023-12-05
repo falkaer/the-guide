@@ -6,38 +6,25 @@ or you might be able to quantize data in order to compress it better, or even us
 hardware.
 
 ## Rounding Error Mitigation
-### m3::e0 - Fused Multiply-Add
-In Rust, fused multiply-add is available directly on f32 types through [mul_add][0].
+### m3::e0 - Summation
+Let's take a look at compensating for errors in extremely large summations. To do this we need to have a ground
+truth result we can hold up the quality of our summation to. I have a code snippet ready for you to generate
+your data -
 
 ```rust
-let mut some_value: f32 = 3.14;
-some_value = some_value.mul_add(2.0, 3.50);
+    let element_count: usize = 100000000;
+    let element_value: f32 = 0.1;
+    let ground_truth: f32 = 10000000.0;
+
+    let data: Vec<f32> = (0..element_count).into_iter().map(| _ | element_value).collect();
 ```
-
-Choose some mathematical formula or algorithm. If you have nothing, try just a basic multiplication and add.
-Do the actual multiplication in as high a precision as you can. Then try to get the same result using
-accumulation in a loop with and without FMA instruction. Check how close to the correct result each of the
-methods were. Remember that you might need to specify to a print statement more decimals of precision.
-
-Fused multiply-add is also available on the gpu. In WGSL, you can find it [here][1].
-
-### m3::e1 - Summation
-Let's take a look at compensating for errors in extremely large summations. To do this we need to have a ground
-truth result we can hold up the quality of our summation to. Let's use π and the [Madhava-Leibniz formula][3] to
-generate a series of numbers which should eventually approximate π.
-
-Generate a huge list of ```f32``` numbers with the Madhava-Leibniz formula, more than 100.000. Speed isn't
-that important for these exercises. Sum them naively, don't use the built-in sum function.
-Take the absolute difference between the naive sum and ```std::f64::consts::PI```, or
-```const PI: f64 = 3.14159265358979323846264338327950288f64;```. You need to cast the naive
-```f32``` sum to ```f64```.
 
 Now we are going to try out three different techniques for summing these numbers. Start using f32 for the data
 and the accumulation. What happens if you accumulate in f64 instead? What if you use f16 for data and f32 for
 accumulation? What if you use f16 for both? You will have to find a crate for f16, just make sure it doesn't convert
 to f32 for arithmetic operations.
 
-First up is [Kahan summation][2].
+First up is [Kahan summation][2] and a supplemental [blog post][14].
 Next try the Kahan-Babushka-Klein sum, from the same page.
 Finally, try the [pairwise summation][4]. Iteratively add every two numbers to get a new list that is half the size
 until you have 1 number.
@@ -47,7 +34,7 @@ way of summation on GPU's. If you want to get nuts, we can get nuts, you can als
 [iterative tree reduction][5] on the GPU.
 
 ## Sorting
-### m3::e3 - Radix
+### m3::e1 - Radix
 Simply but [Radix][7] -, or bucket-, sorting numbers sorts them one digit at a time. Eventually, once all digits
 have been sorted, all of the numbers will be sorted. There are some very advanced, very parallelizable, versions
 of Radix sort, but try to do [a simple one][8].
@@ -61,7 +48,7 @@ Next generate a really big list of integers. Once the algorithm has executed and
 verify programmatically, that every element is equal to or bigger than its predecessor. Unless it is element 0,
 of course.
 
-### m3::e4 - Morton
+### m3::e2 - Morton
 Morton coding not quite sorting, but we can generate a new number which gives better spatial coherence to data.
 Which can then be sorted by the [Morton code][9]. Briefly put, in the 2 dimensional case, we interleave the bits of
 two 4 bit numbers, ```x``` and ```y```, as ```y3x3y2x2y1x1y0x0```. This results in a z-order curve as described in
@@ -75,7 +62,7 @@ resolution in all dimensions, your input numbers cannot exceed 21-bits.
 
 Generating Morton codes as efficiently as possible also makes for an [interesting read][11].
 
-## m3::e5 - Compression and Quantization
+## m3::e3 - Compression and Quantization
 Generate a list of points (```Vec3<f32>```). Make them big, don't just center them around 0 to 1. Start off with
 just a few numbers you verify yourself, but then generate a couple of million numbers. You can
 get the ```Vec3``` from libraries like [nalgebra][12] and [ultraviolet][13].
@@ -111,3 +98,4 @@ Can you calculate the maximum induced loss of precision for the points?
 [11]: https://www.forceflow.be/2013/10/07/morton-encodingdecoding-through-bit-interleaving-implementations/
 [12]: https://www.nalgebra.org/
 [13]: https://docs.rs/ultraviolet/latest/ultraviolet/
+[14]: https://chrisjameswalker.com/2022/01/28/kahans-summation-algorithm/

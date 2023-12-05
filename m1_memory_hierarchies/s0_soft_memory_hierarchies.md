@@ -325,7 +325,12 @@ This is to ensure that it accesses the same amount of elements as the sequential
 With the non-wrapping stride we only access every N elements, but we also end up doing much less work.
 
 Finally, we have random access. This is basically the worst case scenario. We randomly select an element
-to access the same amount of times as the number of elements in the array.
+to access the same amount of times as the number of elements in the array. This random access
+is based on sending what would otherwise have been the access index through a hash function which
+hopefully results in a reasonably random access distribution. On my first try I got random accesses
+through a random number generator. It turned out to be overkill and resulted in extremely poor
+performance for random access. Your take away from that should be that generating random floats
+is very expensive.
 
 <figure markdown>
 ![Image](../figures/access_patterns.png){ width="400" }
@@ -335,8 +340,13 @@ Timing access patterns in Rust.
 </figure>
 
 Given that we just talked about cache lines, most of these numbers make good sense.
-Random access is catastrophic, wrapping strided access is bad, but most interestingly
-non-wrapping strided access, which actually accesses less elements than the others,
+Wrapping strided access is bad. Random access is the same as the worst (17) wrapping strided access.
+Why do you think that is?
+
+My best guess is that once you are that far outside of being able to reuse a cache line, essentially
+every single access will be a cache miss, it's the same.
+
+Most interestingly non-wrapping strided access, which actually accesses less elements than the others,
 is slower than sequential access for strides 2 and 3. With stride 4, where we are
 only accessing one fourth the elements of the sequential access pattern, we begin to
 get faster. But what do you know, sometimes the nice and predictable path,

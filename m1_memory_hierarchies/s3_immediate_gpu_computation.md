@@ -25,15 +25,15 @@ the GPU! Don't worry too much about the particulars. The setup is quite
 a bit like what is described in the 3️⃣ section of m1::s2.
 
 There are three central files for this. ```src::shared::tensor2d_gpu.rs```,
-```src::shared::shaders::linear_layer.wgsl``` and ```src::immediate::nodes.rs```.
+```src::shared::shaders::linear.wgsl``` and ```src::immediate::nodes.rs```.
 If you don't have them locally you can them [here][0], [here][1] and [here][2] respectively.
 
-First of all, let's go directly to the shader (GPU) code in ```linear_layer.wgsl```.
+First of all, let's go directly to the shader (GPU) code in ```linear.wgsl```.
 The version of the two functions we are interested in is ```main```.
 At the top there is a struct called ```TensorDimensions```, it is
 bound as something called a ```uniform```. The ```uniform``` is a struct,
 it can also just be a single value, which is read only for the duration of our shader.
-As such all threads can safely keep it entirely in their registers or in whichever
+As such all threads can safely keep it entirely in their registers, or in whichever
 cache they have room, without fear of the data getting stale. It also
 means that each thread will be accessing the same data, and not just overlapping
 data. But let's stay with the definition. We now have the ```group```, which is 0.
@@ -84,13 +84,21 @@ Then we just loop through the input row and weight column, multiplying
 and adding, until we have accumulated our result, add our bias and then
 store the result in the output tensor.
 
-Given the immediate mode usage, we will always be paying for a full transfer
-to and from the GPU. This implementation of the linear operator is quite suboptimal, it has been
-left as an optional 4️⃣ exercise to implement a more optimal version using tiling and shared memory.
+<figure markdown>
+![Image](../figures/immediate_linear_benchmark.png){ width="800" }
+<figcaption>
+Benchmarking Linear operator on the GPU and the CPU.
+This benchmark was run on my laptop boasting an Intel i7-1185G7, 3.0 GHz with 32GB of RAM. The operating system was
+Windows 10. The L1/L2/L3 caches were 320 KB, 5 MB and 12 MB respectively.
+</figcaption>
+</figure>
 
-If I get the time, at some point I might put up a performance benchmark comparing it to the CPU, but I have
-one later on for the more complex case of handling arbitrary graphs, which is a bit more representative
-of the real use case. Just know that immediate mode is highly suboptimal.
+Given the immediate mode usage, we will always be paying for a full transfer
+to and from the GPU. Clearly, the tensors will have to be quite large before
+a single shot immediate linear operator starts paying off. Inexplicably,
+the GPU version with ReLU is faster than without. This implementation of the
+linear operator is quite suboptimal, it is left as an optional exercise to
+implement a more optimal version using tiling and shared memory.
 
 ## Building ReLU
 We then implement ReLU, Softmax and the fused operators in the same way.
@@ -98,16 +106,17 @@ ReLU you can just check out yourself in ```shaders::relu.wgsl``` or
 [online][3] along with an inline implementation in ```shaders::relu_inline.wgsl``` or [here][4].
 
 <figure markdown>
-![Image](../figures/relu_gpu_immediate.png){ width="800" }
+![Image](../figures/immediate_relu_benchmark.png){ width="800" }
 <figcaption>
-Benchmarking ReLU operators on the GPU.
+Benchmarking ReLU operators on the GPU and CPU.
 This benchmark was run on my laptop boasting an Intel i7-1185G7, 3.0 GHz with 32GB of RAM. The operating system was
 Windows 10. The L1/L2/L3 caches were 320 KB, 5 MB and 12 MB respectively.
 </figcaption>
 </figure>
 
 Interestingly, when done this way, the inline version is significantly slower than the normal, more functional,
-version.
+version. As you can see with the redline, for ReLU, it will be quite some time before doing it on the GPU
+is in any way faster.
 
 ## Building Softmax
 Next up, we have the softmax operator. You will find the three shaders
@@ -118,11 +127,23 @@ the sum is a lot more complicated on a GPU. The implementation
 provided is not even using all the possible threads, but just a
 single work group to make the code more readable. Implementing
 a tree reduction with iterative calls to max and sum shaders
-is left as a 4️⃣ exercise. So you don't need to know
+is left as an exercise. So you don't need to know
 what that is right now, just know that it is not just
 implemented suboptimally, but even without more than 32 threads.
 I did however cheat a little bit and use shared memory, to make it a bit faster.
 Don't worry about shared memory, I will introduce it in 3️⃣.
+
+<figure markdown>
+![Image](../figures/immediate_softmax_benchmark.png){ width="800" }
+<figcaption>
+Benchmarking Softmax operators on the GPU and CPU.
+This benchmark was run on my laptop boasting an Intel i7-1185G7, 3.0 GHz with 32GB of RAM. The operating system was
+Windows 10. The L1/L2/L3 caches were 320 KB, 5 MB and 12 MB respectively.
+</figcaption>
+</figure>
+
+Of course, the CPU implementation is faster, even if I had parallelized it correctly, it would have to quite
+large to offset the cost of the transfer.
 
 ## Building Fused Operators
 Finally, the fused operators are basically implemented through doing
@@ -132,11 +153,11 @@ for them. Again, don't worry about the stuff happening CPU side.
 Just know that it is implemented slighty suboptimally, and
 these shaders aren't implemented optimally.
 
-The only really interesting of the performance benchmarks, as we don't have many different implementations of
+The only really interesting of the performance benchmarks, as I don't have many different implementations of
 each operator is the fused ones.
 
 <figure markdown>
-![Image](../figures/linear_relu_softmax_fused_gpu_immediate.png){ width="800" }
+![Image](../figures/immediate_linear_relu_softmax_fused_benchmark.png){ width="800" }
 <figcaption>
 Benchmarking fused operators on the GPU. If there is no underscore between the operators they were fused.
 This benchmark was run on my laptop boasting an Intel i7-1185G7, 3.0 GHz with 32GB of RAM. The operating system was
@@ -144,9 +165,9 @@ Windows 10. The L1/L2/L3 caches were 320 KB, 5 MB and 12 MB respectively.
 </figcaption>
 </figure>
 
-As you can see, using fused operators, especially when we are in immediate mode, save us a whole bunch of
-performance, having 2 transfers instead of 6 makes a big difference. The fully fused operator wins by a large
-margin. Now, let's start building some graphs!
+As you can see, fusing all three operators and now having 2 transfers instead of 6 makes a big difference.
+The fully fused operator wins by a large margin compared to the other GPU versions, but it still needs
+quite a bit of scale before it can beat the CPU implementation. Now, let's start building some graphs!
 _________________
 
 ## 3️⃣ Setting up to Dispatch Multiple Shaders
@@ -161,7 +182,7 @@ One other thing that is fundamentally suboptimal about this, is that we compile 
 for every operator, every time we use the operator. If you do lots of small matrix calls,
 this will incur a significant overhead. Shader compilation is expensive. What you could do
 instead is to cache your compiled shaders for reuse later on. This is done with the graph
-implementations, but it has been left as an optional 4️⃣ exercise for you to implement
+implementations, but it has been left as an optional exercise for you to implement
 this for immediate mode operations. This works just fine when you have 4-10 shaders to
 compile and keep track of, but what if you had in the 1000's of combinations? In that
 case you might need some form of cache eviction mechanism, such as LRU.

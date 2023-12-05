@@ -127,7 +127,7 @@ a benchmark so you can see the differences in our assortment of implementations.
 _________________
 
 ## 3️⃣ Borrow Checking a Graph?
-Ok, so what if we actually wanted a more complex, and applicaple in real-world circumstances?
+Ok, so what if we actually wanted a more complex, and applicable in real-world circumstances?
 We ironically need to deal with the issues that Rust enforces through the borrow checker.
 If we have one node writing to multiple other nodes, that is fine.
 
