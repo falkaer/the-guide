@@ -33,7 +33,7 @@ Windows 10. The L1/L2/L3 caches were 320 KB, 5 MB and 12 MB respectively.
 ![Image](../figures/graphs_only_size_benchmark.png){ width="600" }
 <figcaption>
 Benchmarking randomly generated graphs of depth 64 at various tensor sizes across 25 samples.
-Run without CPU and Immediate functions. 
+Run without CPU and Immediate functions.
 This benchmark was run on my laptop boasting an Intel i7-1185G7, 3.0 GHz with 32GB of RAM. The operating system was
 Windows 10. The L1/L2/L3 caches were 320 KB, 5 MB and 12 MB respectively.
 </figcaption>
@@ -52,7 +52,7 @@ Windows 10. The L1/L2/L3 caches were 320 KB, 5 MB and 12 MB respectively.
 ![Image](../figures/graphs_only_depth_benchmark.png){ width="600" }
 <figcaption>
 Benchmarking randomly generated graphs of various depths and a size of 256 across 25 samples.
-Run without CPU and Immediate functions. 
+Run without CPU and Immediate functions.
 This benchmark was run on my laptop boasting an Intel i7-1185G7, 3.0 GHz with 32GB of RAM. The operating system was
 Windows 10. The L1/L2/L3 caches were 320 KB, 5 MB and 12 MB respectively.
 </figcaption>

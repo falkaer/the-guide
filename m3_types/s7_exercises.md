@@ -84,10 +84,7 @@ numbers.
 
 Can you calculate the maximum induced loss of precision for the points?
 
-[0]: https://doc.rust-lang.org/std/primitive.f32.html#method.mul_add
-[1]: https://webgpufundamentals.org/webgpu/lessons/webgpu-wgsl-function-reference.html#func-fma
 [2]: https://en.wikipedia.org/wiki/Kahan_summation_algorithm
-[3]: https://en.wikipedia.org/wiki/Leibniz_formula_for_%CF%80
 [4]: https://en.wikipedia.org/wiki/Pairwise_summation
 [5]: https://developer.download.nvidia.com/assets/cuda/files/reduction.pdf
 [6]: https://en.wikipedia.org/wiki/Fast_Fourier_transform

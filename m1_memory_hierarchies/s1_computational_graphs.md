@@ -152,7 +152,7 @@ you should be using the preallocated version to not have memory allocations in y
 Let's go down to the ```linear_preallocated``` function. There are three main sections. One is
 the call to the ```debug_assert``` function from earlier, to check for valid input and output dimensions, the
 second is the matrix multiplication which needs three whole for-loops and finally the bias section. Note
-the use of linearized accesses, if you need a reminder what that is all about, go back to 
+the use of linearized accesses, if you need a reminder what that is all about, go back to
 [The Vector][2] section.
 
 It's not too bad, but we could do better, although we won't do more efficient implementations of matrix
