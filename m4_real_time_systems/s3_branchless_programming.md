@@ -1,12 +1,30 @@
 # 3️⃣ Branchless Programming
-For this next section, I am going to be cheating a little bit.
-I am going to introduce to you a concept that is mostly about optimizing for branch prediction and cache lines.
-These things are somewhere between concurrency, memory optimization and real-time systems.
-They do lead to an introduction of single instruction, multiple data (SIMD), which is... I don't know...
-concurrency's cousin or something. Factoring your code in a way that leads you to get good performance out of
-SIMD. This is not just about writing a function a certain way, but about how you structure your data, your code
-and your architecture. Anyways, branch prediction, branchless programming, data oriented programming and
-SIMD, here we go!
+The following sections are about to get a bit technical, so let's start things off with a very high level
+summary.
+
+Branchless programming is a way of making your code faster. It becomes faster by structuring our data in a certain
+way, through refactoring lists of structs, each with their own fields into fewer structs with multiples of each field,
+through sorting data to execute all of elements requiring one type of jobs, then all elements of the next type of job
+and through either minimizing the amount of if statements, through minimizing how many different paths code can go down
+and moving if statements outside of our loops. As you might recall, loops often dictate the run time of your code.
+
+The reason this becomes faster is that we can optimize what data we get in [our cache line][15] through a paradigm called
+data-oriented design and because of a hardware concept called branch prediction. Despite being single threaded,
+a thread can still do somethings concurrently. A line of code can contain more instructions than we think of at first
+glance. Fetching a data element, changing something and then storing it contains several parts. If the next line is
+also fetching a data element, but a different element, and there are no data or execution dependencies between them,
+as in, what we do with the first element has no effect on how we process the second element, we can initiate loading
+of the second element, once we are done loading the first element. While the first element is being processed,
+the second element is being loaded. Once the second element is loaded, a third element can be loaded. This is
+implemented in hardware and results in significant performance boosts. The pipeline is a lot deeper than my example.
+
+If the execution of the second element is can go down two different paths (think if-else), the hardware will predict
+which path will need to be executed and pre-load the needed data and instructions. But if the other path ends up
+being needed, all the work that has been accumulated ahead of time is thrown away and the other branch needs to be
+executed. This is known as a pipeline flush. Designing around this is a universal concept which can speed up your
+code, but it's not as simple as simply doing one thing, it has elements of hardware awareness, structuring and designing
+your architecture and data, and micro-optimizing your code like putting if statements outside of loops or reducing your
+usage of short circuiting boolean operators like ```||``` and ```&&```.
 
 ## Branch Prediction
 While the speed at which CPUs and memory can execute hasn't risen aggresively in these last few years, that doesn't
@@ -165,7 +183,7 @@ dependant on the material. If it hits a perfect mirror, it will change direction
 the side of a billiards table. If the surface was perfectly diffuse it might change to a direction in a completely
 random direction. This calculation is not just a simple lookup, but two entirely different mathematical functions.
 They ray will continue to bounce until it either reaches a maximum depth, hits a light source or is otherwise
-terminated. If that doesn't make sense, try out [this video](https://www.youtube.com/watch?v=frLwRLS_ZR0).
+terminated. If that doesn't make sense, try out [this video][14].
 
 So why spend your and my time describing path tracers?
 
@@ -266,7 +284,7 @@ struct Ray4 {
 We can choose a coarser granularity by making this struct any size we like. Within reason, we have a good
 chance it might fit on the stack. Now we are free to move around rays, eliminate ones that are terminated,
 replace terminated rays with new ones and other such divergence limiting operations. Some libraries such
-as [ultraviolet](https://docs.rs/ultraviolet/latest/ultraviolet/) are designed around AoSoA containing
+as [ultraviolet][13] are designed around AoSoA containing
 types like ```Vec3x8``` and ```f32x4```.
 
 We could even take things a step further and separate our ray structs.
@@ -281,7 +299,7 @@ is a single instruction that operates on an entire ```lane```. A ```lane``` is d
 of your CPU. The name to look for is typically named something like SSE or AVX. The CPU of the system used
 for benchmarking this section, has multiple SIMD instruction sets - Intel® SSE4.1, Intel® SSE4.2,
 Intel® AVX2, Intel® AVX-512. You can program for each specific instruction set or find a cross-platform such as
-[ultraviolet](https://docs.rs/ultraviolet/latest/ultraviolet/) to program for multiple architectures.
+[ultraviolet][13] to program for multiple architectures.
 What I found most important is that my SIMD lanes max out at 512 bits. If I am doing ```f32```-based SIMD
 operations I can fit up to 16 floats into a lane.
 
@@ -297,8 +315,7 @@ different, very basic, functions. Note that the memory-to-compute ratio is quite
 simple compared to the amount of load operations. SIMD doesn't magically make your program any less memory bound, as
 such you have to try and optimize your code before going fully SIMD.
 
-Find the code in ```m2_concurrency::code::sorting_functions``` or
-[online](https://github.com/absorensen/the-guide/tree/main/m2_concurrency/code/sorting_functions).  
+Find the code in ```m2_concurrency::code::sorting_functions``` or [online][12].  
 
 <figure markdown>
 ![Image](../figures/sorting_functions_benchmark.png){ width="500" }
@@ -353,8 +370,7 @@ As you can see, in this case I only use functions implemented directly by utravi
 ```uv::f32x8``` types.
 
 Be sure to check out the 4 references at the top of the code.
-Find the code in ```m2_concurrency::code::sphere_intersection``` or
-[online](https://github.com/absorensen/the-guide/tree/main/m2_concurrency/code/sphere_intersection).
+Find the code in ```m2_concurrency::code::sphere_intersection``` or [online][11].
 
 <figure markdown>
 ![Image](../figures/sphere_intersection_benchmark.png){ width="500" }
@@ -388,7 +404,7 @@ an introduction video to [SIMD][4] by Guillaume Endignoux and a talk by Mike Act
 ### 🧬 Shader Execution Reordering
 The sorting, compacting and reordering hinted at for path tracing earlier is actually a pretty hot button topic
 in path tracing and has recently gotten hardware support. The seminal paper [Megakernels Considered Harmful][9]
-is worth a read. You can also find a more practical blog post [blog post][10] about it thanks to Jacco Bikker.
+is worth a read. You can also find a more practical [blog post][10] about it thanks to Jacco Bikker.
 This is even being rolled out and described in this [blog post by Nvidia][1].  
 
 [0]: https://ics.uci.edu/~swjun/courses/2023F-CS250P/materials/lec5.5%20-%20Fast%20and%20Correct%20Pipelining.pdf
@@ -402,3 +418,8 @@ This is even being rolled out and described in this [blog post by Nvidia][1].
 [8]: https://web.eecs.utk.edu/~mbeck/classes/cs160/lectures/09_intruc_pipelining.pdf
 [9]: https://research.nvidia.com/sites/default/files/publications/laine2013hpg_paper.pdf
 [10]: https://jacco.ompf2.com/2019/07/18/wavefront-path-tracing/
+[11]: https://github.com/absorensen/the-guide/tree/main/m2_concurrency/code/sphere_intersection
+[12]: https://github.com/absorensen/the-guide/tree/main/m2_concurrency/code/sorting_functions
+[13]: https://docs.rs/ultraviolet/latest/ultraviolet/
+[14]: https://www.youtube.com/watch?v=frLwRLS_ZR0
+[15]: https://absorensen.github.io/the-guide/m1_memory_hierarchies/s0_soft_memory_hierarchies/#access-patterns

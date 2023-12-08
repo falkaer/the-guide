@@ -1,5 +1,4 @@
 # 👨🏼‍💻 Exercises
-Otherwise covered by the projects.
 
 ## 🧬 m4::e0 - Group discussion and presentation
 Pick one of the following topics.  
