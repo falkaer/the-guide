@@ -1,4 +1,4 @@
-# 2️⃣ Intro to GPU's
+# Intro to GPU's
 Now, I'll just give you a quick introduction to GPU's as the next section is about immediate mode
 GPU computation.
 
@@ -25,7 +25,7 @@ they can build an amazing car, they can adapt to changing circumstances quite we
 then the GPU is like a factory. Each path and process has to be carefully optimized, they might each only deal with
 a very small piece each and people have to work in lockstep. But. Their throughput is unmatched.
 
-At 3️⃣ I will go into more detail as to how to actually write GPU code, but the guide is set up using
+I will go into more detail as to how to actually write GPU code, but the guide is set up using
 Rust and a GPU API abstraction layer called [wgpu](https://wgpu.rs/). You don't need to understand how it works
 right now, but it means that you should be able to run all code, including GPU code, on your platform, even if
 it's made by Apple or AMD.
@@ -152,7 +152,7 @@ probably still outperform an integrated graphics card with 16GB of RAM available
 
 _________________
 
-## 3️⃣ Introducing wgpu and wgsl
+## Introducing wgpu and wgsl
 The guide will for all GPU purposes make use of the graphics library wgpu, but only the compute parts.
 wgpu is based on the WebGPU spec, which is supposed to be the new web GPU API, as well as not being particularly
 creative with their naming, the actual support in browsers for WebGPU is nascent. Chrome supports if you fiddle
@@ -177,7 +177,7 @@ We can add wgpu to a project by going into the ```Cargo.toml``` file in the root
 and under ```[dependencies]``` write the line ```wgpu = "*"```. It will pull down the latest version of wgpu.
 You can of course also get a specific version of it, such as ```wgpu = "0.16.3"```.
 
-## 3️⃣ Basic GPU Programming
+## Basic GPU Programming
 GPU programming, as has previously been mentioned, has two major elements. Host (CPU) code and device (GPU)
 code. We'll start off with the basics of the host code and then move on the GPU code. Just enough
 for you to be able to read the following sections and understand what is going on in this entire module,
@@ -330,7 +330,7 @@ Adding our two vectors, it should be easily verifiable that it is correct.
 
 Maybe now might be a good time to go back to the code and try to run through it again.
 
-## 3️⃣ Remove the loop where, you say?
+## Remove the loop where, you say?
 When writing GPU programs, you should usually start writing a CPU-based version. Once that works, you have
 something to verify your GPU program against. Often the part of your program that you want to offload to the GPU,
 will have loops. For example, in a vector addition snippet you might have -
@@ -390,7 +390,7 @@ should always look up your graphics cards and GPU API to see how many threads yo
 break it into several passes. It's not actually quite this simple, as, well you remember how we learned stride
 had a negative impact on performance earlier? Well, that is not quite the same on GPU's.
 
-## 3️⃣ Coalesced Accessing and Strides
+## Coalesced Accessing and Strides
 Because of the way threads and work groups share memory on a GPU, and each thread executing the same line of
 code at the same time, if thread A calls for memory at indices 0, 1, 2, 3 and thread B, which is right next to it
 in the same work group, calls for indices 4, 5, 6, 7, they will be asking for two different cache lines at the
@@ -455,7 +455,7 @@ made better sense, but keep thinking in these terms, implement different version
 only way to be sure! Once you have made a couple of different versions and done simple timing you can always
 add in a profiler, m4 has got you covered!
 
-## 3️⃣ Divergence, Overlap and Occupancy
+## Divergence, Overlap and Occupancy
 One statement I tried to sweep under the rug in the last section was - "each thread in a work group executes in lock step".
 It is highly desirable for a work group to have each thread executing in lock step. That is each thread is executing the
 same line in your program. If you have branches, like if-statements, some threads might execute path A and some threads
@@ -491,7 +491,7 @@ In machine learning terms, if you have pipelined and made your computational gra
 relatively independent, you might see a big increase in occupancy by using less layers and make the ones left very
 wide.
 
-## 3️⃣ Shared Memory and Synchronization
+## Shared Memory and Synchronization
 Just two final pieces are missing before we go back to memory hierarchies. Shared memory and synchronization.
 GPU's have more programmable pieces of the memory hiearchy, such as sharing directly between threads, sharing
 between work groups and more, but WGSL just has the primitives for shared memory, which is the only one

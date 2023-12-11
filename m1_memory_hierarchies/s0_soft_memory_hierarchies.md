@@ -1,4 +1,4 @@
-# 2️⃣ Soft Memory Hierarchies
+# Soft Memory Hierarchies
 <figure markdown>
 ![Image](../figures/amd_athlon_hierarchy.png){ width="600" }
 <figcaption>
@@ -858,7 +858,7 @@ Just like the stack, your local vector type probably has the functionality, but 
 should probably just use a queue type, restricting any usage to maintain and communicate that it's a queue.
 _________________
 
-## 3️⃣ Smart pointers
+## Smart pointers
 Ok, so I promised previously, that I would explain how Python, and most other
 garbage collected languages, deal with assigning one variable to another.
 If you recall the previous example
@@ -1024,7 +1024,7 @@ and another example about
 [reference cycles](https://doc.rust-lang.org/book/ch15-06-reference-cycles.html),
 which is what we needed weak pointers for.
 
-## 3️⃣ The Vector Reloaded
+## The Vector Reloaded
 This isn't meant to be a one-to-one representation of how tensors work in ```numpy``` or
 ```PyTorch```, but combined with creating different views on the same underlying
 one dimensional memory as we learned about earlier, we can look at a few other fun
@@ -1277,7 +1277,7 @@ For this to be more efficient than the dense version, you usually need at least 
 so big that you are having issues with memory. Sparse matrices also require their own separate implementations
 and can be hard to parallelize.
 
-## 3️⃣ Hash Maps
+## Hash Maps
 Another fundamental data structure is the hash map. The hash map takes a key type and a value type.
 The value type can pretty much be anything, don't worry about it! But where things get really interesting is
 the key value. What a hash map does is to take a key value and translate it into an array index using something
@@ -1355,7 +1355,7 @@ Generally, hash maps have an alright performance. C#'s dictionary lookup perform
 hill at around 30k entries though. This doesn't happen for arrays. You can read more about different hash table
 implementations [here](https://www.cs.princeton.edu/courses/archive/fall06/cos226/lectures/hash.pdf).
 
-## 3️⃣ Graphs and Trees
+## Graphs and Trees
 Now that we have dicked around with variations on a theme (that theme was arrays if you were in doubt),
 let's look at a different fundamental data structure. Graphs! Not the kind with the lines...
 wait these have lines too, uuuh, not the kind that has an x and a y axis, but the kind that has some circles with
@@ -1616,7 +1616,7 @@ You win some, you lose some. But it's all the same to me. It's the eighth of spa
 Another use case where the octree is very useful is when deciding what to render and at what level-of-detail.
 It also makes for a useful abstraction over virtualized geometry. More on that in a later module.
 
-## 3️⃣ Garbage collectors
+## Garbage collectors
 Garbage collection is a way of freeing the programmer of having to deal with which memory is and isn't
 relevant. It is usually implemented by most variables (especially the heap allocated ones) being
 reference counted or otherwise tracked, which we will see later in the tracing section.
@@ -1675,7 +1675,7 @@ For more on
 [generational garbage collection](https://en.wikipedia.org/wiki/Tracing_garbage_collection#Generational_GC_(ephemeral_GC))
 .
 
-## 3️⃣ Virtualized Memory Hierarchy
+## Virtualized Memory Hierarchy
 A simplified definition of virtualized memory is a single address space that doesn't correspond 1-to-1 to physical
 memory. As we have seen earlier in jagged arrays and permuted arrays, if we have all of our data in memory
 the caches, compiler and branch prediction take care of hiding memory access latencies, quite a bit,

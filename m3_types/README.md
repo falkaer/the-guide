@@ -1,4 +1,4 @@
-# 1️⃣ Types
+# Types
 Types might not seem to be the sexiest topic of all time, but don't you worry. Knowing about types
 will be a good investment of your time. Whether to use a 32-bit or 64-bit number is not just a matter
 of whether your program has enough precision to go around, but can be a source of bugs and buggy

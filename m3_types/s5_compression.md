@@ -1,4 +1,4 @@
-# 3️⃣ Compression
+# Compression
 Why should you care about compression? In most cases it will be handled for you, but if you are doing a real-time
 system, in a lot of cases you will have time for preprocessing. In preprocessing you can compress your data which,
 while requiring some encoding/decoding to then use your data, can relax the pressure on bandwidth,
@@ -52,6 +52,8 @@ For a brief introduction to both the classic Lempel-Ziv schemes look under
 week 10 on this [page](http://www2.compute.dtu.dk/courses/02282/2023/).
 Another classic is
 [Huffman Encoding](https://web.stanford.edu/class/archive/cs/cs106b/cs106b.1132/handouts/34-Huffman-Encoding.pdf).
+
+_________________
 
 ## 🧬 Point Cloud Compression
 This is mostly for people interested in graphics. I will showcase a few examples of transformations you can do to

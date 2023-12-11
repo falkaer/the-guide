@@ -1,4 +1,4 @@
-# 1️⃣ Memory Hierarchies, Computational Graphs and Compilers
+# Memory Hierarchies, Computational Graphs and Compilers
 Not all efficiency comes from optimizing the various computational details like multiplications, divisions
 and such of a function.
 Quite a large part of it, in fact, comes from optimizing how much you write to and read from memory.
@@ -15,9 +15,8 @@ Image credit</a>
 </figcaption>
 </figure>
 
-For an introduction to how a computer works,
-see [this explanation](https://people.compute.dtu.dk/janba/what_is_a_computer.html)
-by Andreas Bærentzen. I will continue assuming you have read it.  
+For an introduction to how a computer works, see [this explanation][1] by Andreas Bærentzen. I will
+continue assuming you have read it.  
 
 ## Perspective
 The further you move from simple, albeit heavy, problems such as a matrix-matrix problem to more heterogenous
@@ -178,3 +177,4 @@ For a more in-depth explanation on the memory hierarchy see this chapter on
 [Memory Hierarchy Design][0].
 
 [0]: https://www.cs.umd.edu/~meesh/411/CA-online/chapter/memory-hierarchy-design-basics/index.html
+[1]: https://people.compute.dtu.dk/janba/what_is_a_computer.html

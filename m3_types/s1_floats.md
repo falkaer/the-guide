@@ -1,4 +1,4 @@
-# 2️⃣ Floats
+# Floats
 Where as in signed integers we had two distinct areas of the bits with a uniform precision, we
 have 3 segments and a quite varying precision with floating point numbers. In the more-or-less standard
 IEEE-754 specification we also have a number of exceptions and specific behaviors such as in which situations

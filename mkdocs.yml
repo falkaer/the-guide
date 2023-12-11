@@ -74,7 +74,7 @@ nav:
     - S0 - Introduction to the Computing Landscape: m0_introduction/s0_intro_to_computing.md
     - S1 - Introduction to Rust: m0_introduction/s1_intro_to_rust.md
     - S2 - Basic Concepts in Rust: m0_introduction/s2_basic_concepts_in_rust.md
-    - S3 - 3️⃣ Less Basic Concepts in Rust: m0_introduction/s3_less_basic_concepts_in_rust.md
+    - S3 - Less Basic Concepts in Rust: m0_introduction/s3_less_basic_concepts_in_rust.md
     - S4 - 👨🏼‍💻 Exercises: m0_introduction/s4_exercises.md
   - M1 - Memory Hierarchies:
     - m1_memory_hierarchies/README.md
@@ -93,8 +93,8 @@ nav:
     - S3 - Atomics: m2_concurrency/s3_atomics.md
     - S4 - Message Passing: m2_concurrency/s4_message_passing.md
     - S5 - Async: m2_concurrency/s5_async.md
-    - S6 - 3️⃣ More GPU: m2_concurrency/s6_more_gpu.md
-    - S7 - 3️⃣ Parallel Graphs: m2_concurrency/s7_parallel_graphs.md
+    - S6 - More GPU: m2_concurrency/s6_more_gpu.md
+    - S7 - Parallel Graphs: m2_concurrency/s7_parallel_graphs.md
     - S8 - 👨🏼‍💻 Exercises: m2_concurrency/s8_exercises.md
   - M3 - Types:
     - m3_types/README.md
@@ -102,11 +102,11 @@ nav:
     - S1 - Floats: m3_types/s1_floats.md
     - S2 - Energy Efficiency: m3_types/s2_energy_efficiency.md
     - S3 - Bitwise Operations: m3_types/s3_bitwise_operations.md
-    - S4 - 3️⃣ Bit Tricks: m3_types/s4_bit_tricks.md
-    - S5 - 3️⃣ Compression: m3_types/s5_compression.md
-    - S6 - 🧬3️⃣ Cooperative Matrices: m3_types/s6_cooperative_matrices.md
+    - S4 - Bit Tricks: m3_types/s4_bit_tricks.md
+    - S5 - Compression: m3_types/s5_compression.md
+    - S6 - 🧬 Cooperative Matrices: m3_types/s6_cooperative_matrices.md
     - S7 - 👨🏼‍💻 Exercises: m3_types/s7_exercises.md
-  - M4 - 3️⃣ Real-Time Systems:
+  - M4 - Real-Time Systems:
     - m4_real_time_systems/README.md
     - S0 - Events and Interactions: m4_real_time_systems/s0_events_and_interactions.md
     - S1 - Graphical User Interfaces: m4_real_time_systems/s1_graphical_user_interfaces.md
@@ -116,7 +116,7 @@ nav:
     - S5 - Bindings: m4_real_time_systems/s5_bindings.md
     - S6 - Tips and Tricks: m4_real_time_systems/s6_tips_and_tricks.md
     - S7 - 👨🏼‍💻 Exercises: m4_real_time_systems/s7_exercises.md
-  - M5 - 3️⃣ Optimization:
+  - M5 - Optimization:
     - m5_optimization/README.md
     - S0 - Timing and Printing: m5_optimization/s0_timing_and_printing.md
     - S1 - Profilers: m5_optimization/s1_profilers.md

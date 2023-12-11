@@ -1,4 +1,4 @@
-# 2️⃣ Data Parallelism
+# Data Parallelism
 Now let's get into working with parallelism, I won't start from basic to advanced, but from
 easiest to most difficult to use. The absolute easiest to use, in Rust at least, is data parallelism.
 [Data parallelism](https://en.wikipedia.org/wiki/Data_parallelism) partitions the data into segments
@@ -113,7 +113,9 @@ and the ```render()``` [here](https://github.com/absorensen/raytracing_in_rust/b
 So, now that we can conclude that Rayon can be really good and easy to use for some things, let's move on
 to more explicitly define our own parallel system with, perhaps, longer running threads.
 
-## 3️⃣ Examples with Rayon
+_________________
+
+## Examples with Rayon
 You can find the code for this section in ```src/m2_concurrency/code/data_parallelism``` or
 [online](https://github.com/absorensen/the-guide/tree/main/m2_concurrency/code/data_parallelism).
 

@@ -1,4 +1,4 @@
-# 1️⃣ Introduction
+# Introduction
 Hello there!  
 If you are reading this you might have been enticed by promises of performance and other
 some such advanced black magic, but first, a digression...
@@ -18,11 +18,9 @@ seem an insurmountable obstacle, not doing so can have consequences.
 The speed of execution of a program is approximately correlated to the energy consumption of that program.
 Until we use 100% green, renewable, energy in all of computing we have a shared responsibility to at the very least
 practice some modicum of restraint and sensibility in our resource consumption. Taken to the limit by putting
-large scale machine learning, with its
-[massive energy consumption](https://towardsdatascience.com/chatgpts-electricity-consumption-7873483feac4)
-for both training and inference, in
+large scale machine learning, with its [massive energy consumption][0] for both training and inference, in
 everything without necessarily generating value comensurate to the expended resources is an
-[irresponsible use of resources](https://towardsdatascience.com/environmental-impact-of-ubiquitous-generative-ai-9e061bac6800).
+[irresponsible use of resources][1].
 
 <figure markdown>
 ![Image](../figures/chatgpt-is-so.jpg){ width="500" }
@@ -59,52 +57,7 @@ which most of a module will take place.
 
 Most importantly - Don't Panic! The guide is here for you! And now for something completely different... practicalities!
 
-## Levels and Annotations
-The guide's way of doing things is to iteratively expand the curriculum and the depth
-at which concepts are described. You can follow the guide iteratively by doing it
-multiple times, each time advancing in level or you can jump right in to the relevant level.
-
-### 1️⃣
-This level is for people unsure about investing the time and effort to do level 2.
-People are busy, and inherently looking to maximize the value gained given the time invested.
-Just for those people, each module has been boiled down to approximately 2 pages of reading.
-Reading all of the material should take at most an afternoon and is comprised of main page of each module.
-Basically, you could stop reading once you are done with
-the 1️⃣ header and just click each "MX - XXXX" on the left, read that page until the
-end, then click on the next "MX - XXXX" title and read that until the end and you would be
-done. That does not include "M4 - Optimization" and "M5 - Projects".
-Happy reading!
-
-### 2️⃣
-At this level you might be a comfortable programmer in Python, you might be a researcher, or you might just be
-warming up for level 3. In most cases you might not be all that comfortable with lower level languages, such as
-C, C++ or Rust.
-It is expected that you checkout the repository and try out the code on your own laptop.
-It is expected that you might change a few variables here and there to explore the performance
-benchmarks generated, but not much more than that.
-Don't worry, it does not require an Nvidia GPU to run on your laptop.
-There will be Rust code, 🦀, but it will be as simplified as possible to just
-focus on making your learning experience as smooth as possible.
-If you have a systems programming background or are experienced in C/C++/Rust, you should be able
-to move through this level easily.
-This level does not take into account any module, section, page or info box with a 3️⃣
-or above in front of the name.
-You are still welcome to read them of course, but
-the language and code are a bit more advanced and it might be a bit too much if you are still working on the basics.
-
-### 3️⃣
-This level is made up of all the material from 1️⃣ and 2️⃣.
-At this level it is expected that you have experience with C/C++/Rust and that you have tried
-programming a GPU or that you have previously done level 2 and are up for a challenge.  
-If you haven't done any of these things, you'll be ok, but it might take significant effort on your part.
-
-### Additional Reading
-The secret bonus level! It is the one where you do levels 1-3, perhaps even do the exercises and then read
-the "Additional Reading" sections at the bottom of select pages.
-The references here will generally be more rigorous. Typically these references will be to book
-chapters, university courses, scientific papers and in-depth blog posts.
-
-### 🧬 Specializations
+# 🧬 Specializations
 Throughout the guide there are sections and exercises prefixed by 🧬. These exercises and topics
 are meant to be up to you to follow. If you are mostly interested in deep learning, by all means
 only read and do the sections and exercises which are relevant to deep learning. Which section and
@@ -112,12 +65,20 @@ exercise is relevant to which specialization will be explained in each section. 
 deep learning will be supported, but once a full first draft is ready, I will begin adding things relevant to
 computer graphics, computer vision and cognitive signal processing.
 
-### 👨🏼‍💻
+# Additional Reading
+The secret bonus level! It is in no way expected that you read all of the links in additional reading,
+but if you find a topic interesting some additional links to help you along are present in
+the "Additional Reading" sections at the bottom of select pages.
+The references here will generally be more rigorous. Typically these references will be to book
+chapters, university courses, scientific papers and in-depth blog posts. In a lot of cases
+they are also the basis for the content above.
+
+# 👨🏼‍💻 Exercises and Teaching
 Sections indicated by 👨🏼‍💻 are recommended exercises if you want to really learn the topics in-depth or if you
 are following a course based on the material.
 
-If you are a teacher who wants to make use of this material, feel free to use the
-[course site](https://absorensen.github.io/real-time-visual-and-machine-learning-systems/).
+If you are a teacher who wants to make use of this material, feel free to use the [course site][2]
+for inspiration.
 The course focuses on teaching real-time systems for deep learners and visual systems programmers.  
 It allocates half of 15 days to go through the material in the guide and the
 other half to making a project relevant to the students' specialization, which is the contents of m5.  
@@ -129,4 +90,14 @@ The breadth of topics is quite wide, and each student shouldn't be expected to
 pass an exam in every topic.
 In most cases they might remember that a thing exists and that they can search for it.
 The thing they hopefully all learn is how to reason about performance, systems
-design and that getting your hands dirty can be both fun and invigorating.
+design and that getting your hands dirty can be both fun and motivating.
+
+It is important to note that the material and exercises have been made with a range of potential students
+in mind. From having taught yourself Python to experienced C++ programmer, from specialized in computer
+graphics to being a deep learning PhD. There is a range in everything, including the exercises and
+hand-ins. As such it is very important to specify to students which parts of the exercises and hand-ins
+they are expected to do and which parts they are invited to do if they find it interesting.
+
+[0]: https://towardsdatascience.com/chatgpts-electricity-consumption-7873483feac4
+[1]: https://towardsdatascience.com/environmental-impact-of-ubiquitous-generative-ai-9e061bac6800
+[2]: https://absorensen.github.io/real-time-visual-and-machine-learning-systems/

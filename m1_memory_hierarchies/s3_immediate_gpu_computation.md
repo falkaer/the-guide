@@ -1,4 +1,4 @@
-# 2️⃣ Immediate GPU computation
+# Immediate GPU computation
 Now let's look at speeding up our operators with GPU, after this
 we will take a look at building an actual computational graph, both
 on the CPU and the GPU.
@@ -170,14 +170,14 @@ The fully fused operator wins by a large margin compared to the other GPU versio
 quite a bit of scale before it can beat the CPU implementation. Now, let's start building some graphs!
 _________________
 
-## 3️⃣ Setting up to Dispatch Multiple Shaders
+## Setting up to Dispatch Multiple Shaders
 If you actually delve into how these immediate mode operators are implemented on the CPU side,
 go to ```src::immediate::nodes.rs```. The code is almost the exact same as in the ```add_gpu```
 example from ```m1::s2```, except now we will dispatch several shaders in a row, sharing
 data. Especially the softmax and fused operators will be significantly different on the
 CPU (host) side.
 
-## 3️⃣ Caching Shaders
+## Caching Shaders
 One other thing that is fundamentally suboptimal about this, is that we compile the shaders
 for every operator, every time we use the operator. If you do lots of small matrix calls,
 this will incur a significant overhead. Shader compilation is expensive. What you could do

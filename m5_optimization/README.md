@@ -1,4 +1,4 @@
-# 3️⃣ Optimization
+# Optimization
 Much like the memory hierarchies there's levels to measuring performance.
 The easiest is just using your system's own task manager. On Windows you just click
 "ctrl+shift+esc" and click on the performance tab. No putting in print statements,

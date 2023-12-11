@@ -1,4 +1,4 @@
-# 2️⃣ Async
+# Async
 If you went into the code from the memory hierachies module you will have already seen some async operations, which
 was solely to interact with the GPU, as the WebGPU specification, on which WGPU is based, requires that all
 interactions are async. This makes sense, as the CPU we are calling it from, does not have direct control of the
@@ -22,7 +22,9 @@ plus the amount of futures. Big runtime, small futures. Thus a big, if fast runt
 popular [tokio](https://tokio.rs/), only makes sense if we are in a minimum of 10's of requests per second.
 Otherwise, use a lighter runtime or whatever comes with Rust by default.
 
-## 3️⃣ Async in Rust
+_________________
+
+## Async in Rust
 Async is still relatively new in Rust and is likely to see significant changes. The documentation reflects that,
 despite there being an async Rust book, it is not complete.
 

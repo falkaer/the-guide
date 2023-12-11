@@ -1,4 +1,4 @@
-# 2️⃣ Threads
+# Threads
 This section is somewhat based on [The Book](https://doc.rust-lang.org/book/ch16-00-concurrency.html).
 In the last section we looked at what a parallelization library like Rayon can do. Under the hood, it does
 quite a lot of stuff. It subdivides a collection, in the examples I showed you, these collections were all
@@ -107,7 +107,9 @@ track of the lifetimes of our threads.
 Ok, so now we know a few ways we can launch some threads and wait until they are done executing, in later
 sections I will get into ways you can share data between threads and synchronize.
 
-## 3️⃣ Crossbeam Instead of Rayon
+_________________
+
+## Crossbeam Instead of Rayon
 For this section I have a project ready in ```src/m2_concurrency/code/parallelism/``` or you can find it
 [online](https://github.com/absorensen/the-guide/tree/main/m2_concurrency/code/parallelism).
 Once again, just like in the ```data_parallelism``` section,

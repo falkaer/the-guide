@@ -1,4 +1,4 @@
-# 1️⃣ Concurrency
+# Concurrency
 Ok, so in the past module we looked at parallelism in the form of GPU-parallelism. In many ways, I find it
 to be an easier introduction to the concept of parallelism. Parallelism and concurrency are often used
 interchangably, but they aren't necessarily the same.
@@ -16,7 +16,7 @@ too complicated. The programs aren't long running and we choose a specific subse
 use the GPU for. In this module, I'll mainly introduce you to CPU based parallelism with different
 mechanisms. In creating longer running CPU-based parallel programs you will likely need to combine
 a bunch of these mechanisms along with your accrued knowledge of data races, as enforced by the
-borrow checker in Rust. Additionally, I will introduce a few more concepts in GPU programming in 3️⃣.
+borrow checker in Rust. Additionally, I will introduce a few more concepts in GPU programming in ```m2::s6```.
 
 Anyways, why do we need parallelism in CPU's? Eventually, the clock frequencies, as in how many times
 per second a processor can do something, more or less flattened out. We get increased performance by
@@ -121,7 +121,7 @@ on your own laptop or desktop for following along, but running on
 multiple data center GPUs seems to be all the rage these days, so I will keep
 that in mind.
 
-## 2️⃣ Rust and Concurrency
+## Rust and Concurrency
 Each language has its own implementations of concepts in concurrency, but I will focus on showing you the ones
 in Rust and WGSL. All of them exist in other languages, but some may for example be more ergonomic to work with
 for concepts like ```async``` or ```channels```. What the other languages do not have is the borrow checker to

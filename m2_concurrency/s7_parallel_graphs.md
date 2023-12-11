@@ -1,4 +1,4 @@
-# 3️⃣ Parallel Graphs
+# Parallel Graphs
 How to efficiently use graphs in parallel is more of an advanced topic and poses [a wide range of challenges][3].
 If your graph is read-only and reasonably, sized you can optimize your performance by reducing the amount of
 pointer jumps you do and increase your cache coherence. One possible avenue is to construct your graph

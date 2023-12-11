@@ -1,4 +1,4 @@
-# 2️⃣ Locks
+# Locks
 We just took a look at how to launch and distribute some work to multiple threads.
 But we did some extra work to separate the data into neat chunks, with no overlap
 between which thread read and wrote to which data. So, how would we ensure
@@ -46,7 +46,9 @@ are used.
 I tried to come up with my own explanation for locks in Rust, but this page
 from [The Book](https://doc.rust-lang.org/book/ch16-03-shared-state.html) is quite good.
 
-## 3️⃣ Work Queue
+_________________
+
+## Work Queue
 So let's try to go back to how we could improve the performance of crossbeam when splitting our data
 into chunks and having threads work on a chunk each. This time we will use a mutex to create
 a [task queue](https://github.com/ProgrammingRust/mandelbrot/blob/task-queue/src/main.rs).

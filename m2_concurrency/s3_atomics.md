@@ -1,4 +1,4 @@
-# 2️⃣ Atomics
+# Atomics
 If a mutex is a horse, an atomic is a pony. Except, like a pony that's much faster than a horse.
 The smaller a region serialized through synchronization, the more potential concurrency we can have
 and the less likely things will go wrong. So what is an atomic?
@@ -55,7 +55,9 @@ compare results, or add, across work groups through a global atomic variable. Yo
 functions are available, which is a bit more limited compared to what was available in Rust,
 [here](https://www.w3.org/TR/WGSL/#atomic-builtin-functions).
 
-## 3️⃣ Lock Free Algorithms
+_________________
+
+## Lock Free Algorithms
 Lock free algorithms are a type of algorithms where there is a minimal amount of synchronization. Think of it as
 atomic, yes!, mutex/lock, no!, atomic lock, no! This requires a fair amount of thought, but a very simple version
 could for example to implement a queue of chunks this way. If we have an iterator or an index pointing to an array
@@ -65,7 +67,7 @@ the same time, but no locks have to be acquired. But this way of using atomics t
 from an array is made possible with all these functions which don't just swap, compare or fetch, but also
 do one more thing. We can increment and fetch to get our new data chunk!
 
-## 3️⃣ Crossbeam and Atomics
+## Crossbeam and Atomics
 Back to the storyline! Once again, go to ```m2_concurrency::code::parallelism``` or
 [online](https://github.com/absorensen/the-guide/tree/main/m2_concurrency/code/parallelism).
 Set the ```crossbeam_atomic_chunks``` flag to true.

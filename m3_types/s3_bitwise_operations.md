@@ -1,4 +1,4 @@
-# 2️⃣ Bitwise Operations
+# Bitwise Operations
 After that little aside, let's get back to a more direct description of how we work with types.
 We don't just have the mathematical operators which we can use on integers and floats, taken
 directly from mathematics, like *, /, +, -, %, but we can operate directly on the bits themselves, which
@@ -98,7 +98,9 @@ need to be true. Where as with bitwise XOR it only returns 1 if a single bit is 
 Finally, we have the bitwise NOT. Usually written as ~. It is the bitwise version of !. It just flips all bits
 from 0 to 1 or from 1 to 0.
 
-# 3️⃣ Bitwise Rust
+_________________
+
+# Bitwise Rust
 Rust does not have a bit vector implementation in the standard library, but what it does instead is implement
 quite a number of bitwise or bitwise-adjacent operations directly on
 [integers][0].

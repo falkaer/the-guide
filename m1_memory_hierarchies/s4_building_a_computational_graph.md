@@ -1,4 +1,4 @@
-# 2️⃣ Building a Computational Graph
+# Building a Computational Graph
 Ok, so now we have the basic building blocks ready. We also have a very simplifying set of constraints. This
 allows us to just represent this graph as a straight line. So we can just represent our graph as a
 series of nodes in a list. This list needs to be runnable on both the CPU and the GPU, so we'll look
@@ -126,7 +126,7 @@ a benchmark so you can see the differences in our assortment of implementations.
 
 _________________
 
-## 3️⃣ Borrow Checking a Graph?
+## Borrow Checking a Graph?
 Ok, so what if we actually wanted a more complex, and applicable in real-world circumstances?
 We ironically need to deal with the issues that Rust enforces through the borrow checker.
 If we have one node writing to multiple other nodes, that is fine.

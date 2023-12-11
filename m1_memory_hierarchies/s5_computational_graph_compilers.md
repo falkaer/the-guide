@@ -1,4 +1,4 @@
-# 2️⃣ Building a Computational Graph Compiler
+# Building a Computational Graph Compiler
 Ok, so we are almost done with this module. Let's put it all together and execute the graphs,
 except I have three more variations to explain before I present the benchmark graph.
 
@@ -69,7 +69,7 @@ this will help you to understand stuff like model distributed parallelism and da
 
 _________________
 
-## 3️⃣ Seeing the Memory Hierarchy
+## Seeing the Memory Hierarchy
 Ok, so what we just did, with the graphs and the operator fusions and the what not, what did it do in terms
 of the memory hierarchy? For the CPU, it didn't do a whole lot other than adding another layer of complexity,
 but let's focus on the GPU. When we went from the immediate mode, to the graph version, it saved us from
@@ -87,7 +87,7 @@ the graph loop, we don't actually tell the GPU to run this same queue for N iter
 queue, submit and wait N times. If we found the correct tools to tell the GPU to run some program for
 100 times, it might completely set the GPU free for a while.
 
-## 3️⃣ The Results and the Caveats
+## The Results and the Caveats
 Ok, so we just saw some results previously. I am mostly concerned with showing you the relative timings, otherwise
 I probably wouldn't be benchmarking on a laptop, but there a number of caveats that might make the benchmarks
 look slightly different. Some of these I might fix if/when I get the time, some are left as potential exercises,
@@ -108,7 +108,7 @@ Finally, for the umpteenth time, the max, sum and linear shaders are completely 
 sum are neglible due to only being called once per graph, but optimizing the linear operator would probably see
 all of the GPU based implementations run significantly faster.
 
-## 3️⃣ Metaprogramming
+## Metaprogramming
 Finally, I am going to introduce you to another way of representing these operators. Instead of having an
 operator with a full implementation of each operator and a lot of hardwired rules like, if a
 linear operator is followed by a ReLU operator, fuse them, you can attain a bit more flexibility by
@@ -156,7 +156,7 @@ a
 at the top of the shader file and then compile. This makes your code less readable, but not as unreadable
 as fully using op codes.
 
-## 5️⃣ Additional Reading
+## Additional Reading
 Here's a few blog posts on [GPU tensors][1] and how [to build neural networks][0], as well as an
 [introduction to GPU computing terminology][2]. Another few blog posts, specifically for the
 PyTorch compiler are [Torch.fx][3], [torch.compile][4] and

@@ -1,4 +1,4 @@
-# 3️⃣ Bit Tricks
+# Bit Tricks
 There's a number of different tricks you can do with bits, and I won't even attempt to do all of them.
 But I'll briefly introduce three different things you can do. Spatial hashing, Morton codes and the
 legendary fast inverse square root.

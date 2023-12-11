@@ -1,4 +1,4 @@
-# 2️⃣ Energy Efficiency
+# Energy Efficiency
 From experience, not a lot of people who daily write quite long-running code, necessarily
 connect the two dots computing and energy consumption/CO<sub>2</sub> emissions. Anything you
 do with a computer consumes some form of electricity. Including whatever you do on the internet

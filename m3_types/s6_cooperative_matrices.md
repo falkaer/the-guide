@@ -1,4 +1,4 @@
-# 🧬3️⃣ Cooperative Matrices
+# 🧬 Cooperative Matrices
 This is mostly for people interested in deep learning or programming GPUs to the fullest. This should also include
 people interested in graphics due to DLSS, denoisers and upscaling becoming so prevalent. Cooperative matrices are
 known as tensor cores on Nvidia systems.

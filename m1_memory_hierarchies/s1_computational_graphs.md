@@ -1,4 +1,4 @@
-# 2️⃣ Computational Graphs
+# Computational Graphs
 Conveying the importance of computational graphs to people who were probably using Python to
 program neural networks was the motivation for doing this whole thing in the first place.
 So now let's get to business.
@@ -351,7 +351,7 @@ your laptop, with no CUDA involved, to see if we can make this even faster.
 
 _________________
 
-## 3️⃣ Testing Operators
+## Testing Operators
 All of the operators have been tested to be numerically equivalent. Rust has some nice
 test facilities to help with this. If you look at the file next to ```tensor2d.rs```,
 called ```tensor2d_test.rs```, you can see a bunch of tests. This used to be in
@@ -364,7 +364,7 @@ CPU based tests. The testing system launches lots of tests in parallel to speed 
 the amount of time it takes to run the tests. As we will see later, this parallel
 test launch can create some issues when testing our GPU functions.
 
-## 🧬3️⃣ Graphs in Graphics/GPU Programming
+## 🧬Graphs in Graphics/GPU Programming
 Computational graphs are even making their way into the way you can program the GPU!
 Ways to define computational graphs have been added to [DirectX12][0] and [Vulkan][1].
 This development seems to be lead by game and graphics workloads being increasingly

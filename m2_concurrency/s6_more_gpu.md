@@ -1,4 +1,4 @@
-# 3️⃣ More GPU
+# More GPU
 This section is about giving a bit of additional context around GPUs.
 
 ## The Graphics Pipeline

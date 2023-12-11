@@ -1,4 +1,4 @@
-# 2️⃣ Message Passing
+# Message Passing
 Now let's look at a different way of doing parallelism. What if we didn't share memory at all and just sent it
 between threads? That would make things so much easier! We will do that with
 [message passing](https://en.wikipedia.org/wiki/Message_passing)!
@@ -48,7 +48,9 @@ Another main use of message passing is sharing data between computers. If you ha
 same problem, they don't have any physical memory to share, so instead they can send messages to each other. This
 is the basis of the MPI standard.
 
-## 3️⃣ Rust Channels
+_________________
+
+## Rust Channels
 The first ways to do message passing you will meet in Rust are the ```mpsc::channel``` and ```mpsc::sync_channel```
 structs. ```mpsc``` stands for multiple producer, single consumer. When creating an ```mpsc::channel``` both a
 sender and a receiver are returned. The sender can be cloned multiple times, to allow several threads to send
@@ -63,7 +65,7 @@ is *bounded* and won't change its size. A transmitting thread will have to block
 successfully. This might be best if you are running at high speeds and can't drop packages. You could very quickly
 accummulate a massive amount of memory.
 
-## 3️⃣ Real-Time Message Passing
+## Real-Time Message Passing
 I made a code example for you. You can either go to ```m2_concurrency::code::message_passing``` or
 [online](https://github.com/absorensen/the-guide/tree/main/m2_concurrency/code/message_passing).
 

@@ -1,4 +1,4 @@
-# 3️⃣ Branchless Programming
+# Branchless Programming
 The following sections are about to get a bit technical, so let's start things off with a very high level
 summary.
 
@@ -366,7 +366,7 @@ fn ray_sphere_intersect_x8(
 }
 ```
 
-As you can see, in this case I only use functions implemented directly by utraviolet's ```uv::Vec3x8``` and
+In this case I only use functions implemented directly by utraviolet's ```uv::Vec3x8``` and
 ```uv::f32x8``` types.
 
 Be sure to check out the 4 references at the top of the code.
@@ -388,7 +388,7 @@ version of your code. This is usually more likely if you turn on your compilers 
 
 With compilers you can tell it which platforms to compile for. If you tell it to compile exclusively for YOUR
 platform it can make use of optimizations and commands specific to your system. This might make it perform
-significantly worse on other systems though.,
+significantly worse on other systems though.
 
 I will leave you with one thing if you are memory bound, SIMD won't magically make your memory bandwidth increase.  
 

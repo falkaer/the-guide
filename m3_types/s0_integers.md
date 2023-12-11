@@ -1,4 +1,4 @@
-# 2️⃣ Integers
+# Integers
 So far we have mainly used integers as indices into memory (arrays), but other than being good at
 doing integer math, integers also have a few other characteristics going for them. They have
 uniform precision across their entire span, they are good for compressing data and integer-based

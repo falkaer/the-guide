@@ -1,4 +1,4 @@
-# 3️⃣ Timing and Printing
+# Timing and Printing
 
 As mentioned in the previous section there's a plethora of options in how to measure performance.
 But in this section, let's look at what to measure.
@@ -323,7 +323,7 @@ You can find the code for making the graph based on vectors of performance measu
 ```m1_memory_hierarchies::code::computational_graphs::src::shared::benchmark_plot.rs```.
 
 <figure markdown>
-![Image](../figures/graphs_size.png){ width="600" }
+![Image](../figures/graphs_size_benchmark.png){ width="600" }
 <figcaption>
 An example of a timing plot, comparing different implementations across different input sizes.
 </figcaption>

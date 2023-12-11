@@ -1,4 +1,4 @@
-# 3️⃣ Profilers
+# Profilers
 So we just did some preliminary timing of your program. It would have taken even less time to just look at your
 systems performance monitor, although that would only allow you to guess about what was taking most of the
 processing time. Once you have tried both timing your code, and you've gotten what you could out of the
