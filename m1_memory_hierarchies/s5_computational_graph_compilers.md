@@ -16,7 +16,7 @@ N - 2 operators that are randomly either a linear or ReLU operator.
 Finally, there is the graph loop variant. This variant is not just creating a computational graph, but
 moves the loop from the measuring function closer into the graph runner itself. One thing to note though
 is that while we do cut down on some transfers, the implementation is still suboptimal. I will elaborate
-about why in 3️⃣. So just take this as an indicator of why you should use computational graphs
+about why further down the page. So just take this as an indicator of why you should use computational graphs
 and computational graph compilers when you can. There also two additional plots which show the same
 benchmark but with the CPU and Immediate runs removed to zoom in on the graph and graph loop runs.
 

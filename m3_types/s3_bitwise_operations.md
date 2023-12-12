@@ -39,7 +39,7 @@ in a true or a 1. All other cases result in false or 0. But, the common && does 
 If we take the statement ```let is_correct = eval_a() && eval_b();``` and ```eval_a()``` returns false,
 ```eval_b()``` is never called. This can be a boon for performance if ```eval_b()``` is very expensive, but
 can actually lead to worse performance in the case of ```let is_correct = 0 < some_number && some_number < max;```.
-I'll get back to that in ```m2::s8```, which is about branchless programming. It's a 3️⃣ topic, which requires
+I'll get back to that in ```m2::s8```, which is about branchless programming. It's an advanced topic, which requires
 understanding some stuff about branch prediction, and especially bitwise- and conditional operations.
 
 Anyways. When we do the bitwise AND we don't supply two booleans, we supply two integers or other bit

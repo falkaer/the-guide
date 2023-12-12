@@ -17,5 +17,10 @@ Once you have completed this part 1 out of 3, I suggest modifying the resulting 
 (Hint: My solution was to use indices and a geometry service provided by dependency injection)
 * Parallelize computation of pixels through ```rayon```.
 
+## m0::e2
+If you are more inclined towards neural networks, [this tutorial][3] about neural networks and genetic
+algorithms might be more stimulating.
+
 [1]: https://adventofcode.com/
 [2]: https://raytracing.github.io/books/RayTracingInOneWeekend.html
+[3]: https://pwy.io/posts/learning-to-fly-pt1/

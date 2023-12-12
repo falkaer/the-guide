@@ -9,7 +9,7 @@ It can allow it to check that all of the dimensions fit for the data,
 it can make assumptions about fusing nodes (combining them), remove redundancies and unused elements.  
 
 Let's take a look at this defined network from PyTorch's own
-[documentation](https://pytorch.org/tutorials/recipes/recipes/defining_a_neural_network.html).
+[documentation][6].
 
 ```python
 class Net(nn.Module):
@@ -63,10 +63,9 @@ So why does it need the graph? That is something the rest of this module will tr
 along with a really basic introduction to fusion, where layers are combined to be more efficient.
 
 ## What is a Graph?
-A graph is [a type of structure](https://en.wikipedia.org/wiki/Graph_(discrete_mathematics)),
-for our needs, a data structure. In s0 there is a more elaborate examination of the concept for 3️⃣.
-So for right now, just give the link to graph's wiki page a quick look. You should get the gist just by
-looking at a few of the images.
+A graph is [a type of structure][7], for our needs, a data structure. In [m0::s0][5] there is a more
+elaborate examination of the concept. So for right now, just give the link to graph's wiki page a quick
+look. You should get the gist just by looking at a few of the images.
 
 Once you have done this, just know, that the rest of this module won't actually use a real graph.
 The graph we will concern ourselves with will be defined as being unidirectional and each
@@ -101,7 +100,8 @@ An example computational graph.
 </figure>
 
 The code for the rest of the module can be found at ```m1_memory_hierarchies/code/computational_graphs/``` or
-[online](https://github.com/absorensen/the-guide/tree/main/m1_memory_hierarchies/code/computational_graphs).
+[online][8]. It's quite long (more than 6k lines of code). You don't need to read the whole thing, you can just
+skim the most relevant sections which will typically be named specifically.
 
 ## What's in a Tensor2D?
 First of all we are going to start on the CPU.
@@ -109,7 +109,7 @@ We are going to create a data type which will hold the data our operators consum
 Let's call it ```Tensor2D```. Our 2D tensor will actually be a simple piece of one dimensional memory under the
 hood and we will keep track of the number of rows and columns to find out how to access each piece of data.
 If you are in the root directory for ```computational_graphs``` go to ```src/shared/tensor_2d.rs``` or
-[online](https://github.com/absorensen/the-guide/blob/main/m1_memory_hierarchies/code/computational_graphs/src/shared/tensor2d.rs).
+[online][9].
 
 Start by taking a look at the definition of the ```Tensor2D``` struct at the very top. The ```derive``` stuff
 is asking some macros to automatically implement (derive) some traits (interfaces and behavior).
@@ -170,7 +170,7 @@ or request than an actual instruction. In Rust, it looks like the derivation of 
 the parantheses like ```#[inline]```, which is more of a suggestion, or ```#[inline(never)]```. Inlining
 is basically taking all calls to that function and replacing it with the actual code from the function.
 This is allows the compiler to not just optimize the code within the function, but optimize the function
-alongside the code surrounding the call.
+alongside the code surrounding the call. It does result in a larger compiled binary, however.
 Inlining is mostly good for smaller functions, such as if we made a function making our linearized array accesses
 prettier to look at. For large functions it either does nothing or makes the performance worse. In general,
 unless you were trying to examine the concept of inlining like we are now, you should stick with ```#[inline]```
@@ -345,7 +345,7 @@ as they don't do softmax, but between the two of them it is again the version wi
 at the end of the matrix loop which wins ever so slightly.
 
 It's hard to make a general conclusion based on that, without going a lot deeper, but in any case,
-you should always test and measure! Now, you can either continue on reading the 3️⃣ material
+you should always test and measure! Now, you can either continue on reading the material
 or go to the next section to get a general introduction to GPUs. We will be using the GPU on
 your laptop, with no CUDA involved, to see if we can make this even faster.
 
@@ -375,3 +375,8 @@ compute shader driven.
 [2]: https://absorensen.github.io/the-guide/m1_memory_hierarchies/s0_soft_memory_hierarchies/#the-vector
 [3]: https://en.wikipedia.org/wiki/Loop_optimization
 [4]: https://pytorch.org/docs/stable/generated/torch.nn.ReLU.html
+[5]: https://absorensen.github.io/the-guide/m1_memory_hierarchies/s0_soft_memory_hierarchies/#graphs-and-trees
+[6]: https://pytorch.org/tutorials/recipes/recipes/defining_a_neural_network.html
+[7]: https://en.wikipedia.org/wiki/Graph_(discrete_mathematics)
+[8]: https://github.com/absorensen/the-guide/tree/main/m1_memory_hierarchies/code/computational_graphs
+[9]: https://github.com/absorensen/the-guide/blob/main/m1_memory_hierarchies/code/computational_graphs/src/shared/tensor2d.rs

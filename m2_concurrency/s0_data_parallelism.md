@@ -121,7 +121,7 @@ You can find the code for this section in ```src/m2_concurrency/code/data_parall
 
 Ok, so I made two additional examples. There's lots of different adaptors for iterators and I'll just show two.
 ```.filter()``` and ```.window()```. If you go back to the file from earlier and change the bool in the
-main function to ```true```, it should now run these two 3️⃣ benchmarks. First off let's look at the filter
+main function to ```true```, it should now run these two benchmarks. First off let's look at the filter
 benchmark. Filter is like map, except it will only emit elements which result in a ```true``` evaluation inside the
 closure. First we generate a vector of random floats with values between 0.0 and 0.1. Then we filter on them
 using the following lines -

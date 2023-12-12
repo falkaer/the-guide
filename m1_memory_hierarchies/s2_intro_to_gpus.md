@@ -11,14 +11,14 @@ to use them. You can just use the pure compute capabilities. This guide won't ge
 for the graphics specialization.
 
 Ok, so anyways, GPU's are pretty hot stuff right now as the software support becomes deeper and deeper,
-the hardware increasingly has hardware support for neural network specific operations and ChatGPT has
+the hardware increasingly has support for neural network specific operations and ChatGPT has
 increased the hype and demand for AI to exasperating levels.
 
 You can think of the GPU as an expansion of the memory hierarchies we have been examining earlier.
 It is not running in lock step, and you have to program more things explicitly, while also changing
 your mindset about how programming works. Memory transfers to and from the CPU and GPU will be
 relatively explicit, you have explicit control of a part of the L1 cache, you have to start programming
-in a warp oriented fashion and if-statements become quite dangerous.
+in a work group oriented fashion and if-statements become quite dangerous.
 
 If the CPU, with its numerous cores is like a team of highly skilled specialists building a car, sure,
 they can build an amazing car, they can adapt to changing circumstances quite well, they can act independently,
@@ -38,7 +38,7 @@ if you follow up this guide with some ```CUDA``` programming.
 First off, when dealing with the GPU, you will have to manipulate the GPU from the CPU with commands
 like "allocate this much memory", "transfer this memory from the CPU to GPU", "execute this shader/kernel" and
 "synchronize". These are all done in whatever language you are writing in on the CPU side, except for the
-actual program the GPU has to run. This is distinct from the GPU API, some GPU API's even accept shaders
+actual program the GPU has to run. This is distinct from the GPU API, some GPU APIs even accept shaders
 written in multiple shading languages, as they can either be transpiled (translated) from one language to
 another, or they can be compiled to an intermediate representation, such as SPIR-V, which they can then ingest.
 
@@ -229,7 +229,7 @@ pub async fn load_four_files(path_a: &str, path_b: &str, path_c: &str, path_d: &
 Ok, so why do we need ```async``` when dealing with the GPU? In some cases, we don't care about synchronization.
 We just want to keep transferring data to the GPU as fast as we can get it, the GPU might output to the display
 or we might get some data transferred back, but if we are doing this in a real-time setting, we might not care
-to synchronize, as in block, and we just need things when they are ready. Anything to do with gpu - ```async```
+to synchronize, as in block, and we just need things when they are ready. Anything to do with wgpu - ```async```
 will be involved. At least in Rust.
 
 Let's move on. We set up our CPU-side data. This is a simple vector addition, and I elected to make the data
@@ -278,7 +278,7 @@ save the compiled code or do it as part of your build step.
 When running you can load it from disk as needed. Once we have compiled
 our shader code we can create a compute pipeline with a specific entry point. The entry point is just the function
 that will be called when dispatching the shader call later on. Once we have a ```ComputePipeline``` we can
-begin doing our bind group layouts. In CUDA you can pass device side pointers to your CUDA functions
+begin doing our bind group layouts. In CUDA, you can pass device side pointers to your CUDA functions
 when dispatching. Or phrased differently, when using CUDA you can pass along memory addresses for buffers you have
 explicitly allocated on the GPU. When using the graphics APIs the most basic thing to do, if you are
 not going bindless, which is... well, don't worry about it, is to use bindings. There is a certain amount of bind
@@ -542,7 +542,15 @@ fn workgroup_phase(
 ```
 
 As usual, this code isn't very well tested and there might be some cases where it isn't fully functional,
-but you can see the primitives for declaring shared memory, accessing it and synchronizing.
+but you can see the primitives for declaring shared memory, accessing it and synchronizing. When you start coding
+with shared memory, you shouldn't necessarily be surprised that your code becomes a bit slower. If you are running
+a 1D problem, the cache manager might be able to outperform you, putting the data in the L1 cache by itself.
+It is also common for first tries in shared memory to have too many if-statements. If you minimize the amount
+of if-statements (minimize the amount of work group divergence) and make sure to think of your loading of data
+into shared memory as a separate issue, using strides the same size as a work group (using coalesced accesses)
+you can get very close to, if not better than the cache manager. For 2D problems like tiled matrix multiplication
+you are likely to see a speed up quite early in the optimization process.
+
 Now back to the memory hierarchies!
 
 ## Additional Reading

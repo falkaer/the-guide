@@ -399,7 +399,10 @@ To learn more about instruction pipelining, here is a [wiki][7] and some [slides
 wiki on [branch prediction][6].
 
 For the broader view there's a nice introduction video to [branchless programming][3] by Fedor Pikus,  
-an introduction video to [SIMD][4] by Guillaume Endignoux and a talk by Mike Acton on [data-oriented design][5].  
+an introduction video to [SIMD][4] by Guillaume Endignoux and a talk by Mike Acton on [data-oriented design][5].
+Data-oriented design has a big enough performance impact that the game engine Unity underwent years of development
+to introduce data-oriented design with [DOTS][17] (data-oriented tech stack).
+Intel also has a C compiler available called [ISPC][16] which generates a SIMD version of your code.
 
 ### 🧬 Shader Execution Reordering
 The sorting, compacting and reordering hinted at for path tracing earlier is actually a pretty hot button topic
@@ -423,3 +426,5 @@ This is even being rolled out and described in this [blog post by Nvidia][1].
 [13]: https://docs.rs/ultraviolet/latest/ultraviolet/
 [14]: https://www.youtube.com/watch?v=frLwRLS_ZR0
 [15]: https://absorensen.github.io/the-guide/m1_memory_hierarchies/s0_soft_memory_hierarchies/#access-patterns
+[16]: https://github.com/ispc/ispc
+[17]: https://unity.com/dots

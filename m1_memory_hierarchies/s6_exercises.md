@@ -66,7 +66,9 @@ us to make arbitrary graphs in a garbage collected setting or safe in a C++/Rust
 ## GPU Programming
 This serves as both one of the few instances where we can explicitly program parts of the memory hierarchy
 (shared memory resides in the L1 cache), but also as an introduction to parallel thinking, which you will
-need in the next module.
+need in the next module. The exercises here are fitting as a hand-in if you are doing a course. From experience,
+just doing the 1D convolution is plenty complicated for someone coming from Python. You'll get the point of how
+to use shared memory doing it. Doing matrix multiplication as well is good practice, but not strictly necessary.
 
 ### m1::e3 - 1D Convolution
 Go to ```m1_memory_hierarchies::code::gpu_hand_in``` and follow the instructions.
@@ -74,5 +76,5 @@ You need to do 3 different version of 1D convolution, a naive version, one with 
 signal and one with optimal usage of shared memory.
 
 ### m1::e4 - Matrix Multiplication
-For the second section you need to do a matrix multiplication and a tiled matrix multiplication
-(using shared memory). You should also try out doing a padded version.
+For the second section, also in ```gpu_hand_in``` you need to do a matrix multiplication and a
+tiled matrix multiplication (using shared memory). You should also try out doing a padded version.

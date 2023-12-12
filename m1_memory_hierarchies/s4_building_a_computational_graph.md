@@ -163,7 +163,7 @@ and another part of memory to another writer (slice references) for exclusive ac
 or you use the more expensive synchronization primitives to make the reads and writes
 to those elements sequential.
 
-Unfortunately, ```wgpu``` and ```wgsl``` don't have a borrow checker, and we have to do that
+Unfortunately, ```wgpu``` and ```WGSL``` don't have a borrow checker, and we have to do that
 analysis ourselves. Sometimes it can make sense to actually do this contentious writing
 to a shared buffer anyway, as the synchronized version can be expensive enough that
 absolute correctness might not be worth the cost. But if you feel you need to introduce this

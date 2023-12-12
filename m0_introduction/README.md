@@ -44,7 +44,7 @@ increasing the democratization of your work and its reach. If its able to run on
 This guide was made to be an iterative process, taking you by the hand,
 speaking to you at the level at which you are following it, trying not to overwhelm you.
 Reading that back, it could sound a bit condescending, but it basically means that the
-types of concepts you are assumed to know about will gradually increase with each level.  
+types of concepts you are assumed to know about will gradually increase.  
 Due to the guide gradually introducing certain concepts, jumping around the material
 is not recommended.
 I also acknowledge that some people have different interests.  
@@ -55,23 +55,23 @@ If you just follow along the path that is most relevant to you, you will be just
 The guide does contain code, sometimes just small snippets, but also frameworks in
 which most of a module will take place.
 
-Most importantly - Don't Panic! The guide is here for you! And now for something completely different... practicalities!
+Most importantly - Don't Panic! The guide is here for you!
+
+And now for something completely different... practicalities!
 
 # 🧬 Specializations
 Throughout the guide there are sections and exercises prefixed by 🧬. These exercises and topics
 are meant to be up to you to follow. If you are mostly interested in deep learning, by all means
 only read and do the sections and exercises which are relevant to deep learning. Which section and
-exercise is relevant to which specialization will be explained in each section. To begin with
-deep learning will be supported, but once a full first draft is ready, I will begin adding things relevant to
-computer graphics, computer vision and cognitive signal processing.
+exercise is relevant to which specialization will be explained in each section.
 
 # Additional Reading
 The secret bonus level! It is in no way expected that you read all of the links in additional reading,
 but if you find a topic interesting some additional links to help you along are present in
 the "Additional Reading" sections at the bottom of select pages.
-The references here will generally be more rigorous. Typically these references will be to book
+The references here will generally be more advanced. Typically these references will be to book
 chapters, university courses, scientific papers and in-depth blog posts. In a lot of cases
-they are also the basis for the content above.
+they are also the basis for the content in the section above it.
 
 # 👨🏼‍💻 Exercises and Teaching
 Sections indicated by 👨🏼‍💻 are recommended exercises if you want to really learn the topics in-depth or if you
@@ -81,7 +81,7 @@ If you are a teacher who wants to make use of this material, feel free to use th
 for inspiration.
 The course focuses on teaching real-time systems for deep learners and visual systems programmers.  
 It allocates half of 15 days to go through the material in the guide and the
-other half to making a project relevant to the students' specialization, which is the contents of m5.  
+other half to making a project relevant to the students' specialization, which is the [contents of m6][3].  
 It is designed to give shallow introductions to a wide range of concepts with a
 handful of varying exercises.
 The student is to then reach back and explore the topics relevant to their specialized
@@ -93,7 +93,7 @@ The thing they hopefully all learn is how to reason about performance, systems
 design and that getting your hands dirty can be both fun and motivating.
 
 It is important to note that the material and exercises have been made with a range of potential students
-in mind. From having taught yourself Python to experienced C++ programmer, from specialized in computer
+in mind. From having taught themselves Python to experienced C++ programmers, from specialized in computer
 graphics to being a deep learning PhD. There is a range in everything, including the exercises and
 hand-ins. As such it is very important to specify to students which parts of the exercises and hand-ins
 they are expected to do and which parts they are invited to do if they find it interesting.
@@ -101,3 +101,4 @@ they are expected to do and which parts they are invited to do if they find it i
 [0]: https://towardsdatascience.com/chatgpts-electricity-consumption-7873483feac4
 [1]: https://towardsdatascience.com/environmental-impact-of-ubiquitous-generative-ai-9e061bac6800
 [2]: https://absorensen.github.io/real-time-visual-and-machine-learning-systems/
+[3]: https://absorensen.github.io/the-guide/m6_projects/

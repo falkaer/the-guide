@@ -1,7 +1,6 @@
 # Immediate GPU computation
-Now let's look at speeding up our operators with GPU, after this
-we will take a look at building an actual computational graph, both
-on the CPU and the GPU.
+Now let's look at speeding up our operators with GPU, after this we will take a look at building an actual
+computational graph, both on the CPU and the GPU.
 
 The first version of our GPU implementation, will be for immediate mode computation.
 In this version the behavior will be treated a bit like executing a Python script.
@@ -16,13 +15,12 @@ have to do the whole thing over again. Compile the ReLU code for the GPU,
 allocate buffers, transfer, execute, transfer back. Then possibly deallocate.
 
 This is not a good way to accomplish this. But it is highly flexible and
-we're gonna do it anyways! Don't worry about the 'how' too much, 3️⃣
-goes into greater detail.
+we're gonna do it anyways! Don't worry about the 'how' too much, I'll go into greater detail further down the page.
 
 ## Building the Linear Node
 Okay, so let's try building the linear operator again, but this time on
 the GPU! Don't worry too much about the particulars. The setup is quite
-a bit like what is described in the 3️⃣ section of m1::s2.
+a bit like what is described in [m1::s2][6].
 
 There are three central files for this. ```src::shared::tensor2d_gpu.rs```,
 ```src::shared::shaders::linear.wgsl``` and ```src::immediate::nodes.rs```.
@@ -103,7 +101,7 @@ implement a more optimal version using tiling and shared memory.
 ## Building ReLU
 We then implement ReLU, Softmax and the fused operators in the same way.
 ReLU you can just check out yourself in ```shaders::relu.wgsl``` or
-[online][3] along with an inline implementation in ```shaders::relu_inline.wgsl``` or [here][4].
+[online][3] along with an inline implementation in ```shaders::relu_inline.wgsl``` or [online][4].
 
 <figure markdown>
 ![Image](../figures/immediate_relu_benchmark.png){ width="800" }
@@ -131,7 +129,7 @@ is left as an exercise. So you don't need to know
 what that is right now, just know that it is not just
 implemented suboptimally, but even without more than 32 threads.
 I did however cheat a little bit and use shared memory, to make it a bit faster.
-Don't worry about shared memory, I will introduce it in 3️⃣.
+Don't worry about shared memory, I will introduce it later on.
 
 <figure markdown>
 ![Image](../figures/immediate_softmax_benchmark.png){ width="800" }
@@ -193,3 +191,4 @@ case you might need some form of cache eviction mechanism, such as LRU.
 [3]: https://github.com/absorensen/the-guide/blob/main/m1_memory_hierarchies/code/computational_graphs/src/shared/shaders/relu.wgsl
 [4]: https://github.com/absorensen/the-guide/blob/main/m1_memory_hierarchies/code/computational_graphs/src/shared/shaders/relu_inline.wgsl
 [5]: https://github.com/absorensen/the-guide/blob/main/m1_memory_hierarchies/code/computational_graphs/src/shared/shaders/softmax.wgsl
+[6]: https://absorensen.github.io/the-guide/m1_memory_hierarchies/s2_intro_to_gpus/

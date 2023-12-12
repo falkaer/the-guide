@@ -11,7 +11,8 @@ preprocess the data at the edge before sending it to the cloud, it is likely to 
 If your code is faster, it is likely to greener. If your code is faster, it is likely to be cheaper.
 
 I will primarily focus on the energy efficiency of things you have direct control over. Once you
-have learned that, you should be able to infer the rest. Why not make this a 3️⃣ topic?
+have learned that, you should be able to infer the rest. Why not make this a more advanced or optional topic?
+
 Because quite a few people don't seem to be making the aforementioned connection, and I find it
 important that people start evaluating the value that is generated from what they are doing.
 Training and running neural networks do not grab energy out of the ether. They have a cost.

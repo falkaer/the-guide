@@ -687,7 +687,7 @@ correctness and performance.
 
 In Python, variables are all references to an underlying object, which is freed
 when there are no longer any references to said object. Don't worry about it too
-much, it is a 3️⃣ concept I will introduce further down the page.
+much, it is a concept I will introduce further down the page.
 But, it does have consequences when this happens
 
 ```python

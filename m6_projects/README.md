@@ -1,4 +1,4 @@
-# 👨🏼‍💻🧬 Projects
+# 👨🏼‍💻 Projects
 If you are using this material for a course, a project is a good way to put in to practice
 all of the various tools, methods and concepts we have looked at previously.
 This section will get into what makes for a good project in either a course context.
