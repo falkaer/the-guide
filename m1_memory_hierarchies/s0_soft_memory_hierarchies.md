@@ -28,7 +28,6 @@ by using raw pointers. So let's take a look!
 First of all, how do we get a pointer? Please note that checks for whether we have been given a valid pointer
 have been omitted. In the example below we get a pointer to a piece of memory which can hold up to 42 elements.
 
-
 === "C"
 
     ```c
@@ -200,8 +199,7 @@ Spot the error?
 ??? note "Answer"
 
     We had two pointers and forgot to ```free``` using the base pointer, ```base_integer_array```.
-    This is [undefined behavior][24],
-    which means that there are literally no definitions of what will happen.
+    This is [undefined behavior][24], which means that there are literally no definitions of what will happen.
     It is really bad. What we should have done was this.
 
     === "C"
