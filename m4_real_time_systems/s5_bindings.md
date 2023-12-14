@@ -29,10 +29,12 @@ is likely to be the exact same in both Rust and Python (but what about ```String
 Additionally, because we use a literal, the ownership of that 5 is not an issue. But then we go do something
 crazy like this -
 
-```Python
-element_count = 5
-my_lib.do_something(element_count)
-```
+=== "Python"
+
+    ```Python
+    element_count = 5
+    my_lib.do_something(element_count)
+    ```
 
 In this scenario, we have created a variable, which in Python is reference counted so the garbage collector can
 free it later on, and then given that variable to a function. That function calls some Rust code. Does that Rust

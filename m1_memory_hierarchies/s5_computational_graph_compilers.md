@@ -118,10 +118,9 @@ Programs are just strings!
 
 We can decimate all of our neatly written shaders into something called op codes. You start by defining
 all of the data that goes in, you have a few lines of the thread figuring out its own ID and so on.
-Peruse the directory ```src::op_code_compiler::runner.rs``` or
-[online][6]. This is just a toy example, it didn't make
-sense to make the whole thing and I won't be benchmarking it since the results will be the exact same
-as the operator version. Each op code is just a string. Each operator is just a list of op codes.
+Peruse the directory ```src::op_code_compiler::runner.rs``` or [online][6]. This is just a toy example,
+it didn't make sense to make the whole thing and I won't be benchmarking it since the results will be the exact
+same as the operator version. Each op code is just a string. Each operator is just a list of op codes.
 In this op code example we do operator fusion by adding our ReLU op-code to the list.
 
 This is sort of like ordering a standard cheese burger at a restaurant that ONLY SERVES BURGERS.
@@ -140,18 +139,22 @@ to merge these several different calls, keeping the data as close to the registe
 
 Another thing, often done in graphics is to have various defines in your shader code like
 
-```rust
-#ifdef USE_SHARED_MEMORY
-// something with shared memory
-#endif
-```
+=== "GLSL"
+
+    ```rust
+    #ifdef USE_SHARED_MEMORY
+    // something with shared memory
+    #endif
+    ```
 
 Then if at runtime you find out it would be optimal to use shared memory you can merely append
-a
+a -
 
-```rust
-#define USE_SHARED_MEMORY
-```
+=== "GLSL"
+
+    ```rust
+    #define USE_SHARED_MEMORY
+    ```
 
 at the top of the shader file and then compile. This makes your code less readable, but not as unreadable
 as fully using op codes.

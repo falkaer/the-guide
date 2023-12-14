@@ -13,8 +13,7 @@ These sections are indicated by this DNA emoji - 🧬. You will find additional 
 These sections are meant as exercises or hand-ins for a course or if you want to explore the concepts
 in practice.
 
-A course based on this material can be found
-[here][0].
+A course based on this material can be found [here][0].
 
 The material comprising the guide is divided into 7 modules.
 

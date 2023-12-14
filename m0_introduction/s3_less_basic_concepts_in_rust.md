@@ -1,9 +1,7 @@
 # Less Basic Concepts in Rust
-The real contents of this section is the project in ```m0_introduction/code/less_basic_concepts/```.
+The real contents of this section is the project in ```m0_introduction::code::less_basic_concepts```.
 Go into the file corresponding to each function being called in the ```main``` function in ```main.rs```
-and read all of the comments in order.
-The code can also be found
-[online](https://github.com/absorensen/the-guide/tree/main/m0_introduction/code/less_basic_concepts).
+and read all of the comments in order. The code can also be found [online][0].
 
 # Supplementary Comments
 In this section, I'll take you through a few addendums, which aren't as much about a
@@ -38,8 +36,7 @@ fn compute(input: &u32, output: &mut u32) {
 }
 ```
 
-You can also check the Rustonomicon for a
-[better explanation of aliasing](https://doc.rust-lang.org/nomicon/aliasing.html).
+You can also check the Rustonomicon for a [better explanation of aliasing][1].
 It is where the code snippets above are from. The code has been reformatted to preference.
 It may be on the more advanced side however.
 
@@ -72,11 +69,11 @@ void function(int argument_a, int argument_b, float argument_c) {}
 Rust seems to be designed in a way as to minimize the amount of ambiguity faced by the compiler (and you too).
 Sometimes in Rust code you will see several different constructor functions, such as ```build```,
 ```build_from_ints```, ```new``` and ```default```. In one way, that is a pain in the ass.
-In another way, it's quite nice.
-It forces the programmer to be explicit about how the functions behaviours are different,
-instead of being unwritten, implicit, or 'well, you can just read the code, it's not that complicated'.
-If you ever think or say that. Remember this... *ahem* RED FLAG! Fix your stuff so people don't have to guess,
-it will probably make the next person to read your code hate you slightly less. Which is a good thing!
+In another way, it's quite nice. It forces the programmer to be explicit about how the functions
+behaviours are different, instead of being unwritten, implicit, or 'well, you can just read the
+code, it's not that complicated'. If you ever think or say that. Remember this... *ahem* RED FLAG!
+Fix your stuff so people don't have to guess, it will probably make the next person to read your
+code hate you slightly less. Which is a good thing!
 
 ## Index Checking
 Whenever you access an element in an indexed collection such as a Vec:
@@ -102,10 +99,9 @@ for index in 0..data.len() {
 
 It requires an unsafe region, which is a region in your code where you tell the compiler
 to allow you to do some things it would otherwise not allow you to, and call the function
-```.get_unchecked(index)```.
-An unsafe region does not turn off all checking, but in general, if you are at the level of reading the guide,
-you don't need it and we won't be talking about it more. If you really want to read more about unsafe,
-the [Rustonomicon](https://doc.rust-lang.org/nomicon/intro.html) is the defacto standard
+```.get_unchecked(index)```. An unsafe region does not turn off all checking, but in general,
+if you are at the level of reading the guide, you don't need it and we won't be talking about it
+more. If you really want to read more about unsafe, the [Rustonomicon][2] is the defacto standard
 introduction to unsafe in Rust.
 
 The two above functions are equivalent to
@@ -125,3 +121,7 @@ for(int index{0}; index < data.size(); ++index)  {
 Note however, that square bracket indexing is the defacto standard way of accessing an array element in both
 languages. This showcases a core difference between the two languages. One being safety opt-out, and
 another being safety opt-in.
+
+[0]: https://github.com/absorensen/the-guide/tree/main/m0_introduction/code/less_basic_concepts
+[1]: https://doc.rust-lang.org/nomicon/aliasing.html
+[2]: https://doc.rust-lang.org/nomicon/intro.html

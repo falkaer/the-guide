@@ -7,8 +7,7 @@ own area of interest.
 
 ## m4::e0 - Architectural Analysis
 Describe the base architecture of the egui-winit-wgpu template. Found in
-```m2_concurrency::code::egui-winit-wgpu-template``` or
-[online][0].
+```m2_concurrency::code::egui-winit-wgpu-template``` or [online][0].
 
 Which elements are in play?  
 Who owns what data?  
@@ -42,7 +41,7 @@ into words analysis from a systems programming perspective.
 * 2 - [Custom memory allocators][6]
 * 2 - [SIMD optimization][7]
 
-## 🧬 Deep Learning
+## Deep Learning
 
 * 1 - Data Distributed Parallelism - [Post 1][8], [Post 2][9]
 * 1 - [Model Distributed Parallelism][10]
@@ -54,7 +53,7 @@ into words analysis from a systems programming perspective.
 * 2 - [Fast as CHITA: Neural Network Pruning with Combinatorial Optimization][17]
 * 2 - [QMoE: Practical Sub-1-Bit Compression of Trillion-Parameter Models][22]
 
-## 🧬 Computer Graphics
+## Computer Graphics
 
 * 1 - [multiresolution ambient occlusion][24]
 * 1 - [Fast Hierarchical Culling][18]
@@ -64,7 +63,7 @@ into words analysis from a systems programming perspective.
 * 2 - [Work Graphs in DX12][23]
 * 4 - Nanite - [Video 1][25], [Video 2][26], [Video 3][27]
 
-## 🧬 Computer Vision
+## Computer Vision
 
 * 4 - ORB-SLAM - [Paper 1][28], [Paper 2][29], [Paper 3][30], [Simply Explained][31]
 

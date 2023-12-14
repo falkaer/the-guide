@@ -37,7 +37,7 @@ running free or returning to the operating system, to quickly wake them up and g
 they can be returned to the thread pool again.
 
 ## Launching a Thread
-For this section I have a project ready in ```src/m2_concurrency/code/threads/``` or you can find it
+For this section I have a project ready in ```m2_concurrency::code::threads``` or you can find it
 [online](https://github.com/absorensen/the-guide/tree/main/m2_concurrency/code/threads).
 
 Go to the ```basic_threading``` function. In it we launch some threads using the standard libraries
@@ -110,7 +110,7 @@ sections I will get into ways you can share data between threads and synchronize
 _________________
 
 ## Crossbeam Instead of Rayon
-For this section I have a project ready in ```src/m2_concurrency/code/parallelism/``` or you can find it
+For this section I have a project ready in ```m2_concurrency::code::parallelism``` or you can find it
 [online](https://github.com/absorensen/the-guide/tree/main/m2_concurrency/code/parallelism).
 Once again, just like in the ```data_parallelism``` section,
 we are looking at a homogenous workload in two different versions, a VERY simple version that just doubles

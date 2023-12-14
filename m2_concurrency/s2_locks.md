@@ -60,39 +60,41 @@ This time you need to set the flag ```crossbeam_task_queue``` to true.
 
 As you can see, the two added functions have gotten *slightly* more complex -
 
-```rust
-{
-        let mut total_time: u128 = 0;
-        let now: Instant = Instant::now();
-        for _ in 0..iteration_count {
-            let task_queue = Arc::new(Mutex::new(data_chunks.iter_mut()));
-            let iteration_now: Instant = Instant::now();
-            crossbeam::scope(|spawner| {
-                for _ in 0..thread_count {
-                    let task_queue_handle = Arc::clone(&task_queue);
-                    spawner.spawn(move |_| {
-                        loop {
-                            match {
-                                let mut data = task_queue_handle.lock().unwrap();
-                                data.next()
-                            }
-                            {
-                                None => { return; }
-                                Some(data_chunk) => {
-                                    map_function(data_chunk);
+=== "Rust"
+
+    ```rust
+    {
+            let mut total_time: u128 = 0;
+            let now: Instant = Instant::now();
+            for _ in 0..iteration_count {
+                let task_queue = Arc::new(Mutex::new(data_chunks.iter_mut()));
+                let iteration_now: Instant = Instant::now();
+                crossbeam::scope(|spawner| {
+                    for _ in 0..thread_count {
+                        let task_queue_handle = Arc::clone(&task_queue);
+                        spawner.spawn(move |_| {
+                            loop {
+                                match {
+                                    let mut data = task_queue_handle.lock().unwrap();
+                                    data.next()
+                                }
+                                {
+                                    None => { return; }
+                                    Some(data_chunk) => {
+                                        map_function(data_chunk);
+                                    }
                                 }
                             }
-                        }
-                    });
-                }
-            }).unwrap();
-            total_time += iteration_now.elapsed().as_millis();
-        }
-        let elapsed_time: Duration = now.elapsed();
-        println!("{} ms for crossbeam task queue", elapsed_time.as_millis() as f64);
-        println!("{} ms for crossbeam task queue when discounting queue creation", total_time as f64);
-}
-```
+                        });
+                    }
+                }).unwrap();
+                total_time += iteration_now.elapsed().as_millis();
+            }
+            let elapsed_time: Duration = now.elapsed();
+            println!("{} ms for crossbeam task queue", elapsed_time.as_millis() as f64);
+            println!("{} ms for crossbeam task queue when discounting queue creation", total_time as f64);
+    }
+    ```
 
 This time around we are making a task queue. This task queue will be emptied every iteration.
 The task queue, is an Arc (to share this between threads) wrapped around a mutex (to allow us write access)
@@ -117,7 +119,8 @@ Windows 10. The L1/L2/L3 caches were 320 KB, 5 MB and 12 MB respectively.
 </figcaption>
 </figure>
 
-As you can see there is a cost to recreating the task queue every iteration (the difference between the last two lines)
-and we now approach the non-fine grained Rayon performance. If we hand tune the parameters for the crossbeam task queue,
-we might be able to get closer to the coarse-grained Rayon performance. Try to play around with the four values in the main
-function to better understand when which solution is best under which conditions.
+As you can see there is a cost to recreating the task queue every iteration (the difference between the last
+two lines) and we now approach the non-fine grained Rayon performance. If we hand tune the parameters for
+the crossbeam task queue, we might be able to get closer to the coarse-grained Rayon performance. Try to
+play around with the four values in the main function to better understand when which solution is best under
+which conditions.

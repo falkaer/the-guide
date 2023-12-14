@@ -8,46 +8,47 @@ It can allow a library or a framework to keep data at various levels of the memo
 It can allow it to check that all of the dimensions fit for the data,
 it can make assumptions about fusing nodes (combining them), remove redundancies and unused elements.  
 
-Let's take a look at this defined network from PyTorch's own
-[documentation][6].
+Let's take a look at this defined network from PyTorch's own [documentation][6].
 
-```python
-class Net(nn.Module):
-    def __init__(self):
-      super(Net, self).__init__()
-      self.conv1 = nn.Conv2d(1, 32, 3, 1)
-      self.conv2 = nn.Conv2d(32, 64, 3, 1)
-      self.dropout1 = nn.Dropout2d(0.25)
-      self.dropout2 = nn.Dropout2d(0.5)
-      self.fc1 = nn.Linear(9216, 128)
-      self.fc2 = nn.Linear(128, 10)
+=== "Python"
 
-    # x represents our data
-    def forward(self, x):
-      # Pass data through conv1
-      x = self.conv1(x)
-      # Use the rectified-linear activation function over x
-      x = F.relu(x)
+  ```python
+  class Net(nn.Module):
+      def __init__(self):
+        super(Net, self).__init__()
+        self.conv1 = nn.Conv2d(1, 32, 3, 1)
+        self.conv2 = nn.Conv2d(32, 64, 3, 1)
+        self.dropout1 = nn.Dropout2d(0.25)
+        self.dropout2 = nn.Dropout2d(0.5)
+        self.fc1 = nn.Linear(9216, 128)
+        self.fc2 = nn.Linear(128, 10)
 
-      x = self.conv2(x)
-      x = F.relu(x)
+      # x represents our data
+      def forward(self, x):
+        # Pass data through conv1
+        x = self.conv1(x)
+        # Use the rectified-linear activation function over x
+        x = F.relu(x)
 
-      # Run max pooling over x
-      x = F.max_pool2d(x, 2)
-      # Pass data through dropout1
-      x = self.dropout1(x)
-      # Flatten x with start_dim=1
-      x = torch.flatten(x, 1)
-      # Pass data through ``fc1``
-      x = self.fc1(x)
-      x = F.relu(x)
-      x = self.dropout2(x)
-      x = self.fc2(x)
+        x = self.conv2(x)
+        x = F.relu(x)
 
-      # Apply softmax to x
-      output = F.log_softmax(x, dim=1)
-      return output
-```
+        # Run max pooling over x
+        x = F.max_pool2d(x, 2)
+        # Pass data through dropout1
+        x = self.dropout1(x)
+        # Flatten x with start_dim=1
+        x = torch.flatten(x, 1)
+        # Pass data through ``fc1``
+        x = self.fc1(x)
+        x = F.relu(x)
+        x = self.dropout2(x)
+        x = self.fc2(x)
+
+        # Apply softmax to x
+        output = F.log_softmax(x, dim=1)
+        return output
+  ```
 
 In PyTorch the user does not fully create a graph, but if the user makes sure ```x``` is on the
 GPU by calling ```x.to_device()``` all of the functions will be executed on the GPU until the
@@ -115,11 +116,13 @@ Start by taking a look at the definition of the ```Tensor2D``` struct at the ver
 is asking some macros to automatically implement (derive) some traits (interfaces and behavior).
 ```Clone``` means we can call a Tensor2D element as below -
 
-```rust
-let some_tensor: Tensor2D = Tensor2D::new(0.1, 8, 8);
-let copy_of_some_tensor: Tensor2D = some_tensor.clone();
+=== "Rust"
 
-```
+  ```rust
+  let some_tensor: Tensor2D = Tensor2D::new(0.1, 8, 8);
+  let copy_of_some_tensor: Tensor2D = some_tensor.clone();
+
+  ```
 
 This creates a complete and total copy of ```some_tensor```. If we manipulate or move ```some_tensor```,
 ```copy_of_some_tensor``` will not be affected as they no longer have anything to do with each other.
@@ -224,19 +227,23 @@ points and see if you can narrow down the sizes of your caches.
 
 This might be a good time to experiment with changing the values in ```lib.rs``` for
 
-```rust
-let loop_count: usize = 10;
-let loop_range: Vec<usize> = (2u32..8u32).map(|x| 2usize.pow(x)).collect();
-```
+=== "Rust"
+
+  ```rust
+  let loop_count: usize = 10;
+  let loop_range: Vec<usize> = (2u32..8u32).map(|x| 2usize.pow(x)).collect();
+  ```
 
 ```loop_count``` is how many measurements are made per data point. ```loop_range``` is a vector of matrix sizes.
 In this case, the first element is 4, so the first measurement will be done with matrices sized 4x4.
 Currently, it takes a range between 2 and 8 (not including 8) and yields a vector of sizes of 2^N.
 So 4, 8, 16, 32, 64, 128. If you wanted all values in the range of 0 to 100 you could write
 
-```rust
-let loop_range: Vec<usize> = (0..101).collect();
-```
+=== "Rust"
+
+  ```rust
+  let loop_range: Vec<usize> = (0..101).collect();
+  ```
 
 You can zoom in on these parts of the graph by modifying ```lib.rs``` to just test values in these
 interesting ranges. Like right around the size of the last bend.
@@ -364,7 +371,7 @@ CPU based tests. The testing system launches lots of tests in parallel to speed 
 the amount of time it takes to run the tests. As we will see later, this parallel
 test launch can create some issues when testing our GPU functions.
 
-## 🧬Graphs in Graphics/GPU Programming
+## 🧬 Graphs in Graphics/GPU Programming
 Computational graphs are even making their way into the way you can program the GPU!
 Ways to define computational graphs have been added to [DirectX12][0] and [Vulkan][1].
 This development seems to be lead by game and graphics workloads being increasingly

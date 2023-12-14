@@ -1,12 +1,24 @@
 # Memory Hierarchies, Computational Graphs and Compilers
+In this module I wll be getting in to memory hierarchies. Memory isn't just memory. There's various types
+of memory, different sizes, different speeds, different locations. When we formulate our programs in a more
+restricted fashion, such as declaring our intent through a graph, that allows us to optimize where memory is kept.
+Memory is everything as compute itself is very cheap, keeping the part of your code that does computations fed
+with data is expensive. Knowing more about how memory works will also help you parallelize your code for a greater
+speedup. I'll also introduce how to work with GPU's from the dual perspective of memory and parallelism. It is
+introduced in this module instead of concurrency as programming GPU's is a microcosm of memory and parallelism and
+introducing these concepts early on your journey will allow you some time to come to terms with the mindbending
+prospects of parallel programming. Also GPU's have become ubiquitous these last few years. Just look at
+Nvidia's stock prices!
+
 Not all efficiency comes from optimizing the various computational details like multiplications, divisions
-and such of a function.
-Quite a large part of it, in fact, comes from optimizing how much you write to and read from memory.
-'Which memory?' you might ask, rightfully. The answering the where, when and what of memory will be
-the focus of this module. We can almost always get more cores to throw at a problem, we can also,
-at least on the CPU, quite easily get more memory, but that does not change the amount of time it takes
-to get a piece of memory, only how much data we can have in memory before we have to go to a lower level,
-e.g. go from RAM to disk. This is even more important given the relatively slow improvement of memory over time.
+and such of a function. Quite a large part of it, in fact, comes from optimizing how much you write to
+and read from memory. 'Which memory?' you might ask, rightfully. The answering the where, when and what
+of memory will be the focus of this module. We can almost always get more cores to throw at a problem,
+we can also, at least on the CPU, quite easily get more memory, but that does not change the amount of
+time it takes to get a piece of memory, only how much data we can have in memory before we have to go
+to a lower level, e.g. go from RAM to disk. This is even more important given the relatively slow
+improvement of memory over time.
+
 <figure markdown>
 ![Image](../figures/compute_vs_memory.png){ width="500" }
 <figcaption>
@@ -34,12 +46,13 @@ include PyTorch, after several attempts with various degrees of success, finally
 neural network you just defined.
 Or the functional programming style used by
 [JAX](https://jax.readthedocs.io/en/latest/notebooks/Common_Gotchas_in_JAX.html) in conjunction with
-the [XLA compiler](https://www.tensorflow.org/xla).
+the [XLA compiler](https://www.tensorflow.org/xla). Don't worry if you don't understand too much of that. Once
+you are at the end of this guide, you'll have a much better chance at understanding.
 
 ## Memory Hierarchies
 So what is memory anyways? Memory in a compute context is represented in several stages, all having
 their own capacity and speed.
-In order from smallest capacity and highest speed to largest capacity and lowest speed we have
+In order, from smallest capacity and highest speed to largest capacity and lowest speed, we have
 the registers, the L1-L3 caches, the main memory (RAM) and the disks.
 The registers are the fastest and smallest of the bunch. They reside right next to the parts of
 the CPU that does the computations.
@@ -96,8 +109,8 @@ An example view of what CPU memory hierarchy can look like with 8 cores.
 </figure>
 
 Nudging the programmer (that's you!), to better define your program, not just line-by-line, but as a whole,
-to constrain these sorts of contentions, is one of the myriad reasons why
-frameworks like PyTorch can greatly speed up your code, if you help it along.
+to constrain these sorts of contentions, is one of the myriad reasons why frameworks like PyTorch can greatly
+speed up your code, if you take the time to help it along.
 
 ## Expanding the Memory Hierarchy
 To top it off we can expand this memory hierarchy with additional components, such as accelerators, networking
@@ -105,8 +118,9 @@ and the internet!
 Let's start off with the GPU. It is an accelerator originally made for just computing graphics as fast as
 possible. It has a whole bunch of threads in it, meaning it can do very parallel work, like making every pixel
 of an image slightly darker. At the end of the 2000's, Nvidia saw a bunch of academics hacking the GPU to do
-stuff like fast fourier transforms using the fragment shader. Don't worry about what a fragment shader is, but shader
-basically means GPU program. So Nvidia releases CUDA as a pure compute (no graphics) API for using your GPU.
+stuff like fast fourier transforms using the fragment shader. Don't worry about what a fragment shader is,
+but shader basically means GPU program. So Nvidia releases CUDA as a pure compute (no graphics) API for using
+your GPU.
 It only runs on Nvidia GPU's though. Transfering memory from the CPU to the GPU and back, can be a
 quite explicit process. Not only does the CPU need to reserve some memory for copying to the GPU,
 the CPU and GPU have to be synchronized which can take a while, and then the data is usually transferred

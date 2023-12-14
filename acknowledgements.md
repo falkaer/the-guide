@@ -1,5 +1,5 @@
 # Acknowledgments
-This website was financed by the [Pioneer Centre for AI](https://www.aicentre.dk/)
+This website was financed by the [Pioneer Centre for AI][0]
 
 ## Feedback, Input and Sparring
 
@@ -17,3 +17,5 @@ This website was financed by the [Pioneer Centre for AI](https://www.aicentre.dk
 
 ## Icons
 * <a href="https://www.flaticon.com/free-icons/nebula" title="nebula icons">Nebula icons created by Eucalyp - Flaticon</a>
+
+[0]: https://www.aicentre.dk/

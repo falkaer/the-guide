@@ -47,46 +47,56 @@ representations. Don't do it with floats, even if the language allows you, it is
 other number we supply is usually called a mask. We could for example have a number where we wanted to
 isolate the first 8 bits and not be bothered by the rest. In that case we might write something like -
 
-```rust
-let initial_value: u16 = 0b10101010_11110101;
-let mask: u16 =                   0b11111111;
-let masked_value: u16 = initial_value & mask; // masked value should now be 0b11110101
-```
+=== "Rust"
+
+    ```rust
+    let initial_value: u16 = 0b10101010_11110101;
+    let mask: u16 =                   0b11111111;
+    let masked_value: u16 = initial_value & mask; // masked value should now be 0b11110101
+    ```
 
 Masks is also where hexadecimal numbers can really clean up. I used u16 in the example, but if we used
 64-bit numbers things could get very out of hand -
 
-```rust
-// Damn you 64-bits!
-let initial_value: u64 = 0b10101010_10101010_10101010_10101010_10101010_10101010_10101010_11110101;
-let mask: u64 =          0b11111111_00000000_00000000_00000000_00000000_00000000_00000000_00000000;
-let masked_value: u64 = initial_value & mask; // masked value should now be 0b11110101
-```
+=== "Rust"
+
+    ```rust
+    // Damn you 64-bits!
+    let initial_value: u64 = 0b10101010_10101010_10101010_10101010_10101010_10101010_10101010_11110101;
+    let mask: u64 =          0b11111111_00000000_00000000_00000000_00000000_00000000_00000000_00000000;
+    let masked_value: u64 = initial_value & mask; // masked value should now be 0b11110101
+    ```
 
 ... let's use hexadecimal numbers instead -
 
-```rust
-// Damn you 64-bits!
-let initial_value: u64 = 3_074_457_345_618_258_677; // or 0x2AAA_AAAA_AAAA_AAF5
-let mask: u64 = 0xFF00 0000 0000 0000; // FF is the same as turning 8 bits completely on. So 0xF == 0xb1111.
-let masked_value: u64 = initial_value & mask; // Masked value should be 0x2A00 0000 0000 0000
-```
+=== "Rust"
+
+    ```rust
+    // Damn you 64-bits!
+    let initial_value: u64 = 3_074_457_345_618_258_677; // or 0x2AAA_AAAA_AAAA_AAF5
+    let mask: u64 = 0xFF00 0000 0000 0000; // FF is the same as turning 8 bits completely on. So 0xF == 0xb1111.
+    let masked_value: u64 = initial_value & mask; // Masked value should be 0x2A00 0000 0000 0000
+    ```
 
 Or with a slightly more sane example.
 
-```rust
-let initial_value: u16 = 43_765;
-let mask: u16 = 0xFF;
-let masked_value: u16 = initial_value & mask; // masked value should now be 0b11110101
-```
+=== "Rust"
+
+    ```rust
+    let initial_value: u16 = 43_765;
+    let mask: u16 = 0xFF;
+    let masked_value: u16 = initial_value & mask; // masked value should now be 0b11110101
+    ```
 
 We could also use it to isolate specific bits. Like checking whether a single bit is turned on -
 
-```rust
-let initial_value: u16 = 0b10101010_11110101;
-let mask: u16 = 0b00000100;
-let third_bit_turned_on: bool = 0 < (initial_value & mask); // true
-```
+=== "Rust"
+
+    ```rust
+    let initial_value: u16 = 0b10101010_11110101;
+    let mask: u16 = 0b00000100;
+    let third_bit_turned_on: bool = 0 < (initial_value & mask); // true
+    ```
 
 This is really useful in embedded systems or any system where we have lots of flags and want to conserve
 bandwidth and/or space, like "the router is in an error state" or "package received". All of a sudden we can
@@ -103,8 +113,7 @@ _________________
 # Bitwise Rust
 Rust does not have a bit vector implementation in the standard library, but what it does instead is implement
 quite a number of bitwise or bitwise-adjacent operations directly on
-[integers][0].
-Rust does have the bitwise NOT, usually denoted ~, but it is ! like on boolean types. Like so -
+[integers][0]. Rust does have the bitwise NOT, usually denoted ~, but it is ! like on boolean types. Like so -
 
 ```rust
 let initial_value: u8 = 0b01010101;

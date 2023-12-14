@@ -3,9 +3,9 @@ Hello there!
 If you are reading this you might have been enticed by promises of performance and other
 some such advanced black magic, but first, a digression...
 
-There are so many things to keep track of as a modern day programmer and most systems hide these things from the user.
-You call something called... ```?numba?``` and annotate a few functions and it magically makes your code faster.
-You use something called ```?Py?...?Torch?...``` and it seems really slow for some reason.
+There are so many things to keep track of as a modern day programmer and most systems hide these things from
+the user. You call something called... ```?numba?``` and annotate a few functions and it magically makes your
+code faster. You use something called ```?Py?...?Torch?...``` and it seems really slow for some reason.
 You're sure you have a GPU in your machine, but it's still slow.
 ```PyTorch``` has something called a profiler, but you don't know how it works and you don't
 know what the hell ```DtoHMemCpy``` even is.

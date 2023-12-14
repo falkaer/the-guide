@@ -18,9 +18,8 @@ This is not a good way to accomplish this. But it is highly flexible and
 we're gonna do it anyways! Don't worry about the 'how' too much, I'll go into greater detail further down the page.
 
 ## Building the Linear Node
-Okay, so let's try building the linear operator again, but this time on
-the GPU! Don't worry too much about the particulars. The setup is quite
-a bit like what is described in [m1::s2][6].
+Okay, so let's try building the linear operator again, but this time on the GPU! Don't worry too much about
+the particulars. The setup is quite a bit like what is described in [Intro to GPU's][6].
 
 There are three central files for this. ```src::shared::tensor2d_gpu.rs```,
 ```src::shared::shaders::linear.wgsl``` and ```src::immediate::nodes.rs```.
@@ -99,9 +98,9 @@ linear operator is quite suboptimal, it is left as an optional exercise to
 implement a more optimal version using tiling and shared memory.
 
 ## Building ReLU
-We then implement ReLU, Softmax and the fused operators in the same way.
-ReLU you can just check out yourself in ```shaders::relu.wgsl``` or
-[online][3] along with an inline implementation in ```shaders::relu_inline.wgsl``` or [online][4].
+We then implement ReLU, Softmax and the fused operators in the same way. ReLU you can just check out yourself
+in ```shaders::relu.wgsl``` or [online][3] along with an inline implementation in
+```shaders::relu_inline.wgsl``` or [online][4].
 
 <figure markdown>
 ![Image](../figures/immediate_relu_benchmark.png){ width="800" }

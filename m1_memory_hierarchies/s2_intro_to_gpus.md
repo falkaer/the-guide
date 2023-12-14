@@ -183,7 +183,7 @@ code. We'll start off with the basics of the host code and then move on the GPU 
 for you to be able to read the following sections and understand what is going on in this entire module,
 as it doesn't go into the finer details of GPU programming, but is centered around a GPU-oriented paradigm.
 
-The rest of this section will be make use of the code location at ```m1_memory_hierarchies/code/gpu_add/``` or
+The rest of this section will be make use of the code location at ```m1_memory_hierarchies::code::gpu_add``` or
 [online](https://github.com/absorensen/the-guide/tree/main/m1_memory_hierarchies/code/gpu_add).
 Make sure to go and actually read the code. It is full of comments! And they're made just for you!
 If you want to learn more about wgpu you can visit [Learn Wgpu](https://sotrh.github.io/learn-wgpu/).
@@ -210,21 +210,23 @@ you can store what is known as a future. We could set in motion the loading of a
 were done and actually genuinely NEEDED to use the files for something, ```await``` on the future. The ```async```
 function, when called from a normal function also returns a future, but we can't use ```.await``` on it.
 
-```rust
-pub async fn load_four_files(path_a: &str, path_b: &str, path_c: &str, path_d: &str) -> (File, File, File, File) {
-    let file_future_a = load_file_async(path_a);
-    let file_future_b = load_file_async(path_b);
-    let file_future_c = load_file_async(path_c);
-    let file_future_d = load_file_async(path_d);
+=== "Rust"
 
-    let file_a = file_future_a.await; // Block on the future
-    let file_b = file_future_b.await;
-    let file_c = file_future_c.await;
-    let file_d = file_future_d.await;
+    ```rust
+    pub async fn load_four_files(path_a: &str, path_b: &str, path_c: &str, path_d: &str) -> (File, File, File, File) {
+        let file_future_a = load_file_async(path_a);
+        let file_future_b = load_file_async(path_b);
+        let file_future_c = load_file_async(path_c);
+        let file_future_d = load_file_async(path_d);
 
-    (file_a, file_b, file_c, file_d)
-}
-```
+        let file_a = file_future_a.await; // Block on the future
+        let file_b = file_future_b.await;
+        let file_c = file_future_c.await;
+        let file_d = file_future_d.await;
+
+        (file_a, file_b, file_c, file_d)
+    }
+    ```
 
 Ok, so why do we need ```async``` when dealing with the GPU? In some cases, we don't care about synchronization.
 We just want to keep transferring data to the GPU as fast as we can get it, the GPU might output to the display
@@ -335,11 +337,13 @@ When writing GPU programs, you should usually start writing a CPU-based version.
 something to verify your GPU program against. Often the part of your program that you want to offload to the GPU,
 will have loops. For example, in a vector addition snippet you might have -
 
-```rust
-for index in 0..ouput.len() {
-    output[index] = input_a[index] + input_b[index];
-}
-```
+=== "Rust"
+
+    ```rust
+    for index in 0..ouput.len() {
+        output[index] = input_a[index] + input_b[index];
+    }
+    ```
 
 When transferring your program to a GPU shader, as a way to get comfortable with thinking about this sort of
 parallelism, you should start with writing a single threaded version on the GPU. You can do this by dispatching
@@ -350,38 +354,42 @@ You do that by removing one of the for-loops in your code and replacing it with 
 dispatch. So in your first version of your vector addition shader, it might look like this sketch (don't know if
 it compiles) -
 
-```rust
-@compute @workgroup_size(32, 1, 1) 
-fn main(
-    @builtin(global_invocation_id) global_id: vec3<u32>,
-    ) {
-    let thread_id: u32 = global_id.x;
-    
-    if (thread_id < 1) {
-        for (var index: u32 = 0u; index < dimensions.element_count; index += 1u) { 
-            output[index] = input_a[index] + input_b[index];
+=== "WGSL"
+
+    ```rust
+    @compute @workgroup_size(32, 1, 1) 
+    fn main(
+        @builtin(global_invocation_id) global_id: vec3<u32>,
+        ) {
+        let thread_id: u32 = global_id.x;
+        
+        if (thread_id < 1) {
+            for (var index: u32 = 0u; index < dimensions.element_count; index += 1u) { 
+                output[index] = input_a[index] + input_b[index];
+            }
         }
     }
-}
-```
+    ```
 
 When that works, you can begin thinking about how to remove that pesky loop. You do that by removing a dimension
 in your shader, but adding one in your dispatch and then making accomodations in your shader. We can take that
 and transform it by instead dispatching more 1D threads: ```cpass.dispatch_workgroups(launch_blocks, 1, 1);```.
 Then we change the shader to have each thread work on a single element -
 
-```rust
-@compute @workgroup_size(32, 1, 1) 
-fn main(
-    @builtin(global_invocation_id) global_id: vec3<u32>,
-    ) {
-    let thread_id: u32 = global_id.x;
-    
-    if (thread_id < dimensions.element_count) {
-        output[thread_id] = input_a[thread_id] + input_b[thread_id];        
+=== "WGSL"
+
+    ```rust
+    @compute @workgroup_size(32, 1, 1) 
+    fn main(
+        @builtin(global_invocation_id) global_id: vec3<u32>,
+        ) {
+        let thread_id: u32 = global_id.x;
+        
+        if (thread_id < dimensions.element_count) {
+            output[thread_id] = input_a[thread_id] + input_b[thread_id];        
+        }
     }
-}
-```
+    ```
 
 If there had been more dimensions we could have continued expanding and removing dimensionality. We can continue
 until the third dimension, usually you can launch less threads in the third dimension than in the first two. You
@@ -406,49 +414,53 @@ Here's a small example, if we for some reason were intent on turning our vector 
 2D matrix addition, but we were deadset on keeping the thread grid for our dispatch one dimensional we
 could do something like this -
 
-```rust
-const BLOCK_SIZE: u32 = 32u;
-@compute @workgroup_size(32, 1, 1) 
-fn main(
-    @builtin(global_invocation_id) global_id: vec3<u32>,
-    ) {
-    let thread_id: u32 = global_id.x;
-    
-    if (thread_id < dimensions.first_dimension_count) {
-        for (
-            var index: u32 = thread_id; 
-            index < dimensions.second_dimension_count; 
-            index += BLOCK_SIZE
-        ) { 
-            output[index] = input_a[index] + input_b[index];
+=== "WGSL"
+
+    ```rust
+    const BLOCK_SIZE: u32 = 32u;
+    @compute @workgroup_size(32, 1, 1) 
+    fn main(
+        @builtin(global_invocation_id) global_id: vec3<u32>,
+        ) {
+        let thread_id: u32 = global_id.x;
+        
+        if (thread_id < dimensions.first_dimension_count) {
+            for (
+                var index: u32 = thread_id; 
+                index < dimensions.second_dimension_count; 
+                index += BLOCK_SIZE
+            ) { 
+                output[index] = input_a[index] + input_b[index];
+            }
         }
     }
-}
-```
+    ```
 
 Again, not verified/compiled code. But hold on for a second! We have to remember that there are other work groups
 too. We can't necessarily just stride through the single dimension in the same way. We would be reprocessing
 elements that had already been processed by a different work group. What we could do instead would be to step
 along the rows instead.
 
-```rust
-@compute @workgroup_size(32, 1, 1) 
-fn main(
-    @builtin(global_invocation_id) global_id: vec3<u32>,
-    ) {
-    let thread_id: u32 = global_id.x;
-    
-    if (thread_id < dimensions.first_dimension_count) {
-        for (
-            var index: u32 = thread_id; 
-            index < dimensions.second_dimension_count; 
-            index += dimensions.first_dimension_count
-        ) { 
-            output[index] = input_a[index] + input_b[index];
+=== "WGSL"
+
+    ```rust
+    @compute @workgroup_size(32, 1, 1) 
+    fn main(
+        @builtin(global_invocation_id) global_id: vec3<u32>,
+        ) {
+        let thread_id: u32 = global_id.x;
+        
+        if (thread_id < dimensions.first_dimension_count) {
+            for (
+                var index: u32 = thread_id; 
+                index < dimensions.second_dimension_count; 
+                index += dimensions.first_dimension_count
+            ) { 
+                output[index] = input_a[index] + input_b[index];
+            }
         }
     }
-}
-```
+    ```
 
 In other cases, using a stride of the work group size can work as well. In this case, stepping along the rows
 made better sense, but keep thinking in these terms, implement different versions and test them! It's the
@@ -456,11 +468,12 @@ only way to be sure! Once you have made a couple of different versions and done 
 add in a profiler, m4 has got you covered!
 
 ## Divergence, Overlap and Occupancy
-One statement I tried to sweep under the rug in the last section was - "each thread in a work group executes in lock step".
-It is highly desirable for a work group to have each thread executing in lock step. That is each thread is executing the
-same line in your program. If you have branches, like if-statements, some threads might execute path A and some threads
-might execute path B. This will lead to divergence. Divergence will result in the group of threads A executing
-while group of threads B will wait until A is finished, and then executed. Finally, they might join again.
+One statement I tried to sweep under the rug in the last section was - "each thread in a work group executes
+in lock step". It is highly desirable for a work group to have each thread executing in lock step. That is
+each thread is executing the same line in your program. If you have branches, like if-statements, some
+threads might execute path A and some threads might execute path B. This will lead to divergence. Divergence
+will result in the group of threads A executing while group of threads B will wait until A is finished,
+and then executed. Finally, they might join again.
 
 <figure markdown>
 ![Image](../figures/work_group_divergence.png){ width="700" }
@@ -510,36 +523,38 @@ workgroup will stall and wait until each thread has signalled that it is ready t
 is very handy when you are loading data into shared memory for reuse between the threads. A small
 example snippet -
 
-```rust
-var<workgroup> shared_data: array<f32, BLOCK_SIZE>;
+=== "WGSL"
 
-@compute @workgroup_size(32, 1, 1) 
-fn workgroup_phase(
-    @builtin(workgroup_id) group_id: vec3<u32>, 
-    @builtin(local_invocation_id) local_id: vec3<u32>,
-    ) {
-    var tid: u32 = local_id.x;
-    if (group_id.x == 0u) {
-        // In this first section we can use all 32 threads
-        var elements_left: u32 = sum_uniform.block_count;
-        var i: u32 = tid;
-        var sum_value: f32 = 0.0;
-        // How do we handle the odd case?
-        while (BLOCK_SIZE < elements_left) {
-            sum_value += data[i];
-            elements_left -= BLOCK_SIZE;
-            i += BLOCK_SIZE;
-        }
-        if (0u < elements_left) {
-            if(tid < elements_left) {
+    ```rust
+    var<workgroup> shared_data: array<f32, BLOCK_SIZE>;
+
+    @compute @workgroup_size(32, 1, 1) 
+    fn workgroup_phase(
+        @builtin(workgroup_id) group_id: vec3<u32>, 
+        @builtin(local_invocation_id) local_id: vec3<u32>,
+        ) {
+        var tid: u32 = local_id.x;
+        if (group_id.x == 0u) {
+            // In this first section we can use all 32 threads
+            var elements_left: u32 = sum_uniform.block_count;
+            var i: u32 = tid;
+            var sum_value: f32 = 0.0;
+            // How do we handle the odd case?
+            while (BLOCK_SIZE < elements_left) {
                 sum_value += data[i];
+                elements_left -= BLOCK_SIZE;
+                i += BLOCK_SIZE;
             }
-        }
+            if (0u < elements_left) {
+                if(tid < elements_left) {
+                    sum_value += data[i];
+                }
+            }
 
-        shared_data[tid] = sum_value;
-        workgroupBarrier();
-    }
-```
+            shared_data[tid] = sum_value;
+            workgroupBarrier();
+        }
+    ```
 
 As usual, this code isn't very well tested and there might be some cases where it isn't fully functional,
 but you can see the primitives for declaring shared memory, accessing it and synchronizing. When you start coding

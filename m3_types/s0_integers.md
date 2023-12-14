@@ -115,22 +115,23 @@ and in most cases it is fine. Except when that signed integer is negative. In
 which case we have used a type that allows us this undesired behavior. I ran this
 code in an online C++ environment -
 
-```c++
-// Online C++ compiler to run C++ program online
-#include <iostream>
-#include <vector>
+=== "C++"
 
-int main() {
-    // Write C++ code here
-    std::cout << "Hello world!";
-    std::vector<int> array{0, 1, 2, 3, 4};
-    int some_index{-2};
+    ```c++
+    #include <iostream>
+    #include <vector>
 
-    std::cout << array[some_index];
+    int main() {
+        // Write C++ code here
+        std::cout << "Hello world!";
+        std::vector<int> array{0, 1, 2, 3, 4};
+        int some_index{-2};
 
-    return 0;
-}
-```
+        std::cout << array[some_index];
+
+        return 0;
+    }
+    ```
 
 When running it for other negative indices than -2 it prints the value 0. This is probably
 uninitialized memory which hasn't been used yet. If we index with -2 we get the value
@@ -143,8 +144,7 @@ This is bad, and you shouldn't do it.
 ## Signed Integers
 Signed integers are a bit more complex. They can carry both positive and negative numbers.
 The outermost bit is reserved as a sign bit, denoting whether the number is positive or
-negative. Read about the range of signed integers as well as the concept two's complement
-[here][0].
+negative. Read about the range of signed integers as well as the concept two's complement [here][0].
 
 In the case of signed integers, over- and underflow are undefined in general. However,
 overflow for signed integers is [defined in Rust Debug][1]. You can se more about the types in Rust [here][2].

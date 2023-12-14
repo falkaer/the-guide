@@ -26,63 +26,73 @@ way of doing parallelism in Rust, both because it is such a small change from id
 and the cognitive load, if there is no communication between threads, is so very small.
 
 ## A Parallel Iterator Benchmark
-You can find the code for this section in ```src/m2_concurrency/code/data_parallelism``` or
+You can find the code for this section in ```m2_concurrency::code::data_parallelism``` or
 [online](https://github.com/absorensen/the-guide/tree/main/m2_concurrency/code/data_parallelism).
 
 First we define our data, how many elements we want, and how many iterations we will iterate through
 the data to do our benchmarks.
 
-```rust
-    let element_count: usize = 10_000_000;
-    let iteration_count: usize = 100;
+=== "Rust"
 
-    let mut data: Vec<f32> = (0..element_count).into_iter().map(|x| x as f32).collect();
-```
+    ```rust
+        let element_count: usize = 10_000_000;
+        let iteration_count: usize = 100;
+
+        let mut data: Vec<f32> = (0..element_count).into_iter().map(|x| x as f32).collect();
+    ```
 
 Now let's see what a non-iterator mapping of all the elements would look like.
 
-```rust
-    for _ in 0..iteration_count {
-        for element in &mut data {
-            *element = *element * 3.14;
+=== "Rust"
+
+    ```rust
+        for _ in 0..iteration_count {
+            for element in &mut data {
+                *element = *element * 3.14;
+            }
         }
-    }
-```
+    ```
 
 A key difference with this approach compared to the other two is that we are ensured this mapping happens in-place.
 The iterator version is here -
 
-```rust
-    for _ in 0..iteration_count {
-        data = data.iter().map(|x| *x * 3.14).collect();
-    }
-```
+=== "Rust"
+
+    ```rust
+        for _ in 0..iteration_count {
+            data = data.iter().map(|x| *x * 3.14).collect();
+        }
+    ```
 
 Once we have done this reformulation, Rayon is made to be a drop in replacement. We just
 import the needed Rayon prelude and replace ```.iter()``` with ```.par_iter()``` or
 ```.into_iter()``` with ```.into_par_iter()```.
 
-```rust
-    for _ in 0..iteration_count {
-        data = data.par_iter().map(|x| *x * 3.14).collect();
-    }
-```
+=== "Rust"
+
+    ```rust
+        for _ in 0..iteration_count {
+            data = data.par_iter().map(|x| *x * 3.14).collect();
+        }
+    ```
 
 Finally, for reasons I will explain in a little bit, there is a variant of all three where they instead of a
 multiplication call this function -
 
-```rust
-#[inline(always)]
-fn map_function(x: f32) -> f32 {
-    let mut x: f32 = x * x * x * x + x * x + x * x / x + x;
+=== "Rust"
 
-    for _ in 0..62 {
-        x = x * 2.0 + 4.0 + 12.0 / 59.0;
+    ```rust
+    #[inline(always)]
+    fn map_function(x: f32) -> f32 {
+        let mut x: f32 = x * x * x * x + x * x + x * x / x + x;
+
+        for _ in 0..62 {
+            x = x * 2.0 + 4.0 + 12.0 / 59.0;
+        }
+
+        x
     }
-
-    x
-}
-```
+    ```
 
 Now let's run the benchmark.
 
@@ -116,7 +126,7 @@ to more explicitly define our own parallel system with, perhaps, longer running 
 _________________
 
 ## Examples with Rayon
-You can find the code for this section in ```src/m2_concurrency/code/data_parallelism``` or
+You can find the code for this section in ```m2_concurrency::code::data_parallelism``` or
 [online](https://github.com/absorensen/the-guide/tree/main/m2_concurrency/code/data_parallelism).
 
 Ok, so I made two additional examples. There's lots of different adaptors for iterators and I'll just show two.
@@ -126,17 +136,21 @@ benchmark. Filter is like map, except it will only emit elements which result in
 closure. First we generate a vector of random floats with values between 0.0 and 0.1. Then we filter on them
 using the following lines -
 
-```rust
-    sums += data.iter().filter(|x| if 0.5 < **x { true } else { false }).count();
-```
+=== "Rust"
+
+    ```rust
+        sums += data.iter().filter(|x| if 0.5 < **x { true } else { false }).count();
+    ```
 
 If the random number generator used to generate the floats in ```data``` is completely uniform, every time we use
 this filter, the filter should emit half the elements. Then we just count the amount of elements emitted.
 The parallel version is very similar -
 
-```rust
-    sums += data.par_iter().filter(|x| if 0.5 < **x { true } else { false }).count();
-```
+=== "Rust"
+
+    ```rust
+        sums += data.par_iter().filter(|x| if 0.5 < **x { true } else { false }).count();
+    ```
 
 If we run this benchmark we get the following -
 
@@ -160,49 +174,55 @@ element 2 multiplied by filter element 2. Add it to the sum and then emit/store 
 and do the same for data element 1 times filter element 0 plus data element 2 times filter element 1 and so on. In Rust,
 it can look like this -
 
-```rust
-    //
-    // Convolution
-    //
-    let element_count: usize = 1920*1080;
-    let iteration_count: usize = 1000;
-    let filter_sizes: Vec<usize> = vec![3, 5, 7, 9, 11, 13, 15];
+=== "Rust"
 
-    println!("Running convolution benchmark for {} elements with {} iterations!", element_count, iteration_count);
-    println!("Filter sizes are: {:?}", filter_sizes);
-    let mut rng: ThreadRng = rand::thread_rng();
-    let data: Vec<f32> = (0..element_count).map(|_| rng.gen_range(0.0..1.0)).collect();
-    let mut filters: Vec<Vec<f32>> = Vec::<Vec<f32>>::new();
-    for size in &filter_sizes {
-        let filter: Vec<f32> = (0..*size).map(|_| rng.gen_range(-1.0..1.0)).collect();
-        filters.push(filter);
-    }
-    // Remove mutability to be sure.
-    let filters: Vec<Vec<f32>> = filters;
-```
+    ```rust
+        //
+        // Convolution
+        //
+        let element_count: usize = 1920*1080;
+        let iteration_count: usize = 1000;
+        let filter_sizes: Vec<usize> = vec![3, 5, 7, 9, 11, 13, 15];
+
+        println!("Running convolution benchmark for {} elements with {} iterations!", element_count, iteration_count);
+        println!("Filter sizes are: {:?}", filter_sizes);
+        let mut rng: ThreadRng = rand::thread_rng();
+        let data: Vec<f32> = (0..element_count).map(|_| rng.gen_range(0.0..1.0)).collect();
+        let mut filters: Vec<Vec<f32>> = Vec::<Vec<f32>>::new();
+        for size in &filter_sizes {
+            let filter: Vec<f32> = (0..*size).map(|_| rng.gen_range(-1.0..1.0)).collect();
+            filters.push(filter);
+        }
+        // Remove mutability to be sure.
+        let filters: Vec<Vec<f32>> = filters;
+    ```
 
 Note that you are completely free to just change around the first three values. You can also try
 running different filter sizes. Now that we have created our 7 filters we will apply them -
 
-```rust
-    for _ in 0..iteration_count {
-        let filtered: Vec<f32> = data.windows(*size).map(|x| {
-            x.iter().zip(filter).map(|(element, filter)| *element * *filter).sum()
-        } ).collect();
-        filtered.iter().sum::<f32>();
-    }
-```
+=== "Rust"
+
+    ```rust
+        for _ in 0..iteration_count {
+            let filtered: Vec<f32> = data.windows(*size).map(|x| {
+                x.iter().zip(filter).map(|(element, filter)| *element * *filter).sum()
+            } ).collect();
+            filtered.iter().sum::<f32>();
+        }
+    ```
 
 or in the parallel version -
 
-```rust
-    for _ in 0..iteration_count {
-        let filtered: Vec<f32> = data.par_windows(*size).map(|x| {
-            x.iter().zip(filter).map(|(element, filter)| *element * *filter).sum()
-        } ).collect();
-        filtered.iter().sum::<f32>();
-    }
-```
+=== "Rust"
+
+    ```rust
+        for _ in 0..iteration_count {
+            let filtered: Vec<f32> = data.par_windows(*size).map(|x| {
+                x.iter().zip(filter).map(|(element, filter)| *element * *filter).sum()
+            } ).collect();
+            filtered.iter().sum::<f32>();
+        }
+    ```
 
 Note that instead of the ```.iter()``` adaptor that we would normally use to get an iterator to a single
 element at a time, we now use ```.windows()```, which takes an argument. This argument is the size of the window.

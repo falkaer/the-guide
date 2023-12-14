@@ -11,13 +11,15 @@ Let's take a look at compensating for errors in extremely large summations. To d
 truth result we can hold up the quality of our summation to. I have a code snippet ready for you to generate
 your data -
 
-```rust
-    let element_count: usize = 100000000;
-    let element_value: f32 = 0.1;
-    let ground_truth: f32 = 10000000.0;
+=== "Rust"
 
-    let data: Vec<f32> = (0..element_count).into_iter().map(| _ | element_value).collect();
-```
+    ```rust
+        let element_count: usize = 100000000;
+        let element_value: f32 = 0.1;
+        let ground_truth: f32 = 10000000.0;
+
+        let data: Vec<f32> = (0..element_count).into_iter().map(| _ | element_value).collect();
+    ```
 
 Now we are going to try out three different techniques for summing these numbers. Start using f32 for the data
 and the accumulation. What happens if you accumulate in f64 instead? What if you use f16 for data and f32 for

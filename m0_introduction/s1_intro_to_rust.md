@@ -36,7 +36,7 @@ At the least, the code in the guide won't function without support for the 2021 
 * git clone the guides repository
 ```git clone https://github.com/absorensen/the-guide.git```
 * In your terminal navigate into the folder that just appeared
-* Navigate to ```m0_introduction/code/is_my_system_ready/```
+* Navigate to ```m0_introduction::code::is_my_system_ready```
 * In the command line write ```cargo run```. This might take a while as cargo will now download and build some
 dependencies, and then compile and run the code in debug mode.
 * For IDE, the guide has been developed with [VS Code](https://code.visualstudio.com/download) with the
@@ -65,7 +65,7 @@ Cargo can also handle unit testing of code. It requires that the project is spli
 library part, allowing the test to just test the library. In practice what is usually recommended is to just
 have a very small function in your application which tells your library to start running your code.
 
-Navigate to the project at ```m0_introduction/code/how_to_test/``` to see how a typical project is
+Navigate to the project at ```m0_introduction::code::how_to_test``` to see how a typical project is
 setup. Try running the commands ```cargo run```, followed by ```cargo test```. See how the code ran with
 ```cargo run```, but ```cargo test``` actually told you which functions weren't living up to expectations?
 Setting up these unit tests is also how the guide tells you that the code you have been asked to write is correct.

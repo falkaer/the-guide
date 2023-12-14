@@ -11,16 +11,18 @@ how to extend this concept into how we could design point cloud rendering system
 First off let's try just encoding three integers into a single integer. ```x``` will reside in bits 40-59,
 ```y``` will reside in bits 20-39 and ```z``` will reside in bits 0-19.
 
-```rust
-let x: u64 = 7;
-let y: u64 = 5;
-let z: u64 = 2;
+=== "Rust"
 
-let x_hash: u64 = 0x0FFF_FF00_0000_0000 & (x << 40);
-let y_hash: u64 = 0x0000_00FF_FFF0_0000 & (y << 20);
-let z_hash: u64 = 0x0000_0000_000F_FFFF & z;
-let hash: u64 = x_hash | y_hash | z_hash;
-```
+    ```rust
+    let x: u64 = 7;
+    let y: u64 = 5;
+    let z: u64 = 2;
+
+    let x_hash: u64 = 0x0FFF_FF00_0000_0000 & (x << 40);
+    let y_hash: u64 = 0x0000_00FF_FFF0_0000 & (y << 20);
+    let z_hash: u64 = 0x0000_0000_000F_FFFF & z;
+    let hash: u64 = x_hash | y_hash | z_hash;
+    ```
 
 So we have three usages of bitwise operators here. We shift, AND and OR. First we shift our initial number to start
 from the correct bits. We mask with the bitwise AND to ensure that we stick within the allotted bits. This also
@@ -29,65 +31,72 @@ track of what it is we trying to hash. Finally, we bitwise OR the whole thing.
 
 We could also do the masking before the shift for something even cleaner -
 
-```rust
-let x: u64 = 7;
-let y: u64 = 5;
-let z: u64 = 2;
+=== "Rust"
 
-let x_hash: u64 = (x & 0xFFFFF) << 40;
-let y_hash: u64 = (y & 0xFFFFF) << 20;
-let z_hash: u64 =  z & 0xFFFFF;
-let hash: u64 = x_hash | y_hash | z_hash;
-```
+    ```rust
+    let x: u64 = 7;
+    let y: u64 = 5;
+    let z: u64 = 2;
+
+    let x_hash: u64 = (x & 0xFFFFF) << 40;
+    let y_hash: u64 = (y & 0xFFFFF) << 20;
+    let z_hash: u64 =  z & 0xFFFFF;
+    let hash: u64 = x_hash | y_hash | z_hash;
+    ```
 
 We can of course also just start with a 0 and continually OR with the shifted and masked values.
 
-```rust
-let x: u64 = 7;
-let y: u64 = 5;
-let z: u64 = 2;
+=== "Rust"
 
-let mut hash: u64 = 0;
-hash |= (x & 0xFFFFF) << 40;
-hash |= (y & 0xFFFFF) << 20;
-hash |=  z & 0xFFFFF;
-```
+    ```rust
+    let x: u64 = 7;
+    let y: u64 = 5;
+    let z: u64 = 2;
+
+    let mut hash: u64 = 0;
+    hash |= (x & 0xFFFFF) << 40;
+    hash |= (y & 0xFFFFF) << 20;
+    hash |=  z & 0xFFFFF;
+    ```
 
 Since we have ensured we do not have any overlaps between our shifted and masked numbers, the ORs can be replaced
 by additions. We are also always free to use multiplication instead of the shifts, but the intent is less clear
 and you have to be sure that it is still doing the same as the corresponding shift, which again, is defined
 differently depending on the stype, direction and language.
 
-```rust
-let x: u64 = 7;
-let y: u64 = 5;
-let z: u64 = 2;
+=== "Rust"
 
-let mut hash: u64 = 0;
-hash += (x & 0xFFFFF) * 1_099_511_627_775;
-hash += (y & 0xFFFFF) * 1_048_575;
-hash +=  z & 0xFFFFF;
-```
+    ```rust
+    let x: u64 = 7;
+    let y: u64 = 5;
+    let z: u64 = 2;
+
+    let mut hash: u64 = 0;
+    hash += (x & 0xFFFFF) * 1_099_511_627_775;
+    hash += (y & 0xFFFFF) * 1_048_575;
+    hash +=  z & 0xFFFFF;
+    ```
 
 Ok, so just linearizing three integers into one integer is pretty clear. We can of course easily reconstruct
 the three numbers by just doing the opposite operations.
 
-```rust
-let x: u64 = 7;
-let y: u64 = 5;
-let z: u64 = 2;
+=== "Rust"
 
-let x_hash: u64 = (x & 0xFFFFF) << 40;
-let y_hash: u64 = (y & 0xFFFFF) << 20;
-let z_hash: u64 =  z & 0xFFFFF;
+    ```rust
+    let x: u64 = 7;
+    let y: u64 = 5;
+    let z: u64 = 2;
 
-let hash: u64 = x_hash | y_hash | z_hash;
+    let x_hash: u64 = (x & 0xFFFFF) << 40;
+    let y_hash: u64 = (y & 0xFFFFF) << 20;
+    let z_hash: u64 =  z & 0xFFFFF;
 
-let x: u64 = hash >> 40 & 0xFFFFF; // x == 7
-let y: u64 = hash >> 20 & 0xFFFFF; // y == 5
-let z: u64 = hash & 0xFFFFF; // z == 2
+    let hash: u64 = x_hash | y_hash | z_hash;
 
-```
+    let x: u64 = hash >> 40 & 0xFFFFF; // x == 7
+    let y: u64 = hash >> 20 & 0xFFFFF; // y == 5
+    let z: u64 = hash & 0xFFFFF; // z == 2
+    ```
 
 Easy peasy. We could easily split this code into encode and decode functions. Linearization of 3D coordinates
 would be good for encoding sparse data. If you used this for actual indices into an array you would have to allocate
@@ -97,34 +106,35 @@ or 16-bit encoding using less bits from the original data, as keys into a hash m
 Now, let's do this with floats instead! This requires us to use quantization. With quantization we want to take
 a float and adapt it to the domain of an integer. We need to know WHERE our domain resides and how BIG it is.
 
-```rust
-// This would be given for this specific grid
-// If we aren't TOO bothered by the loss of precision we can
-// multiply by the inverse of the scaling term.
-let x_scale: f32 = 5.0f;
-let x_offset: f32 = 0.32f;
+=== "Rust"
 
-let y_scale: f32 = 4.0f;
-let y_offset: f32 = 3.50f;
+    ```rust
+    // This would be given for this specific grid
+    // If we aren't TOO bothered by the loss of precision we can
+    // multiply by the inverse of the scaling term.
+    let x_scale: f32 = 5.0f;
+    let x_offset: f32 = 0.32f;
 
-let z_scale: f32 = 2.0f;
-let z_offset: f32 = 0.42f;
+    let y_scale: f32 = 4.0f;
+    let y_offset: f32 = 3.50f;
 
+    let z_scale: f32 = 2.0f;
+    let z_offset: f32 = 0.42f;
 
-let x: f32 = 7.2f;
-let y: f32 = 5.5f;
-let z: f32 = 2.2f;
+    let x: f32 = 7.2f;
+    let y: f32 = 5.5f;
+    let z: f32 = 2.2f;
 
-let x_quantized: u64 = ((x - x_offset ) / x_scale) as u64;
-let y_quantized: u64 = ((y - y_offset ) / y_scale) as u64;
-let z_quantized: u64 = ((z - z_offset ) / z_scale) as u64;
+    let x_quantized: u64 = ((x - x_offset ) / x_scale) as u64;
+    let y_quantized: u64 = ((y - y_offset ) / y_scale) as u64;
+    let z_quantized: u64 = ((z - z_offset ) / z_scale) as u64;
 
-let x_hash: u64 = (x_quantized & 0xFFFFF) << 40;
-let y_hash: u64 = (y_quantized & 0xFFFFF) << 20;
-let z_hash: u64 =  z_quantized & 0xFFFFF;
+    let x_hash: u64 = (x_quantized & 0xFFFFF) << 40;
+    let y_hash: u64 = (y_quantized & 0xFFFFF) << 20;
+    let z_hash: u64 =  z_quantized & 0xFFFFF;
 
-let hash: u64 = x_hash | y_hash | z_hash;
-```
+    let hash: u64 = x_hash | y_hash | z_hash;
+    ```
 
 We use an offset to move all of the values to have the smallest represented value start at 0. We then scale
 our float to have the maximum float value be the biggest integer we want to use. Usually this will involve finding
@@ -160,23 +170,24 @@ is the natural extension of spatial hashing. We just saw a grid resulting from s
 numbers. But what if interleaved the bits instead? This results in what is known as a
 [Z-Order Curve](https://en.wikipedia.org/wiki/Z-order_curve), encoded and decoded through Morton coding.
 
-```rust
-let x: u32 = 8;
-let y: u32 = 1;
-let z: u32 = 2;
+=== "Rust"
 
-let component_count: u32 = 3;
-let bits_of_precision: u32 = 10;
+    ```rust
+    let x: u32 = 8;
+    let y: u32 = 1;
+    let z: u32 = 2;
 
-let mut encoded: u32 = 0;
-let mut mask: u32 = 1;
-for index in 0..bits_of_precision {
-    encoded |= ((x & (mask << index)) <<  component_count * index);
-    encoded |= ((y & (mask << index)) << (component_count * index + 1));
-    encoded |= ((z & (mask << index)) << (component_count * index + 2));
-}
+    let component_count: u32 = 3;
+    let bits_of_precision: u32 = 10;
 
-```
+    let mut encoded: u32 = 0;
+    let mut mask: u32 = 1;
+    for index in 0..bits_of_precision {
+        encoded |= ((x & (mask << index)) <<  component_count * index);
+        encoded |= ((y & (mask << index)) << (component_count * index + 1));
+        encoded |= ((z & (mask << index)) << (component_count * index + 2));
+    }
+    ```
 
 Some mad lads looked at
 [optimization](https://www.forceflow.be/2013/10/07/morton-encodingdecoding-through-bit-interleaving-implementations/)
@@ -238,24 +249,26 @@ it would be faster.
 
 This is where this gem known from the development of Quake 3 enters the scene -
 
-```c++
-float Q_rsqrt( float number )
-{
- long i;
- float x2, y;
- const float threehalfs = 1.5F;
+=== "C++"
 
- x2 = number * 0.5F;
- y  = number;
- i  = * ( long * ) &y;                       // evil floating point bit level hacking
- i  = 0x5f3759df - ( i >> 1 );               // what the fuck?
- y  = * ( float * ) &i;
- y  = y * ( threehalfs - ( x2 * y * y ) );   // 1st iteration
-// y  = y * ( threehalfs - ( x2 * y * y ) );   // 2nd iteration, this can be removed
+    ```c++
+    float Q_rsqrt( float number )
+    {
+    long i;
+    float x2, y;
+    const float threehalfs = 1.5F;
 
- return y;
-}
-```
+    x2 = number * 0.5F;
+    y  = number;
+    i  = * ( long * ) &y;                       // evil floating point bit level hacking
+    i  = 0x5f3759df - ( i >> 1 );               // what the fuck?
+    y  = * ( float * ) &i;
+    y  = y * ( threehalfs - ( x2 * y * y ) );   // 1st iteration
+    // y  = y * ( threehalfs - ( x2 * y * y ) );   // 2nd iteration, this can be removed
+
+    return y;
+    }
+    ```
 
 It even has its [own wikipedia page](https://en.wikipedia.org/wiki/Fast_inverse_square_root). To be honest,
 I watched [this video](https://www.youtube.com/watch?v=p8u_k2LIZyo) about it some years ago, and can't quite

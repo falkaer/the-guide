@@ -78,11 +78,13 @@ being received it also prints.
 
 There are three values at the top.
 
-```rust
-    let max_work: usize = 100;
-    let master_wait_time: u64 = 200;
-    let worker_wait_time: u64 = 200;
-```
+=== "Rust"
+
+    ```rust
+        let max_work: usize = 100;
+        let master_wait_time: u64 = 200;
+        let worker_wait_time: u64 = 200;
+    ```
 
 Max work is the most amount of work messages will be processed, otherwise the program would run forever.
 ```master_wait_time``` is the amount of miliseconds the master thread will wait after sending a new
@@ -95,12 +97,10 @@ Now try and adjusting the wait times. How does it run when you reduce ```worker_
 Why do you think that is?
 
 ## Additional Reading
-A longer, very friendly introduction to channels and message passing in Rust can be found
-[here][0].
+A longer, very friendly introduction to channels and message passing in Rust can be found [here][0].
 
 This is slightly larger scale, but when running code on multiple compute nodes in an HPC installation,
-the most used method for sharing data between nodes is a standard called
-[MPI][1].
+the most used method for sharing data between nodes is a standard called [MPI][1].
 
 [0]: https://doc.rust-lang.org/book/ch16-02-message-passing.html
 [1]: https://en.wikipedia.org/wiki/Message_Passing_Interface

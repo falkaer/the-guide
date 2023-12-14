@@ -36,10 +36,12 @@ functions without using ```block_on()```. Instead each call to an ```async``` fu
 mentioned earlier. You can either use ```.await``` immmediately like so
 ```let result: u8 = my_async_func().await;```, or you can store it and ```.await``` later, like so
 
-```rust
-    let future_result = my_async_func();
-    let result: u8 = future_result.await;
-```
+=== "Rust"
+
+    ```rust
+        let future_result = my_async_func();
+        let result: u8 = future_result.await;
+    ```
 
 If you think back to the earlier page ```m2::s1``` about threads, you can imagine the same scenario as threading.
 You launch a bunch of jobs, store their handles, then when you are done launching jobs, you might even have some
@@ -55,15 +57,17 @@ just the system we are in control of, calling ```.await``` may result in the cur
 we could do is the ```join!()``` macro. This is sort of like calling ```.await``` on a bunch of futures at the same
 time. Like so -
 
-```rust
-let future_a = download_file_async(url_a);
-let future_b = download_file_async(url_b);
-let future_c = download_file_async(url_c);
+=== "Rust"
 
-(file_a, file_b, file_c) = join!(future_a, future_b, future_c);
+    ```rust
+    let future_a = download_file_async(url_a);
+    let future_b = download_file_async(url_b);
+    let future_c = download_file_async(url_c);
 
-println!("Successfully downloaded files from {}, {} and {}, url_a, url_b, url_c);
-```
+    (file_a, file_b, file_c) = join!(future_a, future_b, future_c);
+
+    println!("Successfully downloaded files from {}, {} and {}, url_a, url_b, url_c);
+    ```
 
 You can read more about ```join!()```
 [here](https://rust-lang.github.io/async-book/06_multiple_futures/02_join.html). Async is its own paradigm and
@@ -73,8 +77,7 @@ outside of your computer. In any case, you should try to limit how big the async
 or very soon all of your code, including your main, will be async.
 
 ## Additional Reading
-For an intro to the async functionality available in the core Rust library, there's a
-[book for that][0].
+For an intro to the async functionality available in the core Rust library, there's a [book for that][0].
 
 [Tokio][1] is a widely used async runtime. It is suggested, by Tokio itself, to not use it for cases
 where you are CPU compute bound, they suggest Rayon in that case, to not use it for accessing lots of files as the

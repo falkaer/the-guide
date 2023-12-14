@@ -39,26 +39,28 @@ goes where. You can almost think of it as a passthrough operation. It is used wh
 dimensions and when creating the buffers needed to run the graph, but at run time, encountering an
 ```Input``` or ```Output``` operator does nothing.
 
-```rust
-#[derive(Clone, Debug, Eq, Hash, PartialEq)]
-pub enum NodeOperator {
-    Input,
-    Output,
-    Transfer,
-    LinearLayer,
-    ReLU,
-    Softmax,
-    LinearReLU,
-    LinearReLUSoftmax,
-}
+=== "Rust"
 
-#[derive(Debug)]
-pub struct Node {
-    pub name: String,
-    pub operator: NodeOperator,
-    pub buffer_indices: Vec<usize>,
-}
-```
+    ```rust
+    #[derive(Clone, Debug, Eq, Hash, PartialEq)]
+    pub enum NodeOperator {
+        Input,
+        Output,
+        Transfer,
+        LinearLayer,
+        ReLU,
+        Softmax,
+        LinearReLU,
+        LinearReLUSoftmax,
+    }
+
+    #[derive(Debug)]
+    pub struct Node {
+        pub name: String,
+        pub operator: NodeOperator,
+        pub buffer_indices: Vec<usize>,
+    }
+    ```
 
 In this case I decided, when first verifying and then processing the input vector to generate the
 requisite buffers, put them in a vector of buffers and for each ```Node``` to just carry around the
@@ -83,26 +85,28 @@ Once again, the GPU graph runner, takes a vector of nodes, it validates the corr
 the nodes to its own intermediate representation (see below), and allocates any and all buffers.
 It uses the indices to share data between operators.
 
-```rust
-#[derive(Clone, Debug, Eq, Hash, PartialEq)]
-pub enum NodeOperatorGPU {
-    HostToDevice,
-    DeviceToHost,
-    DeviceToDevice,
-    LinearLayer,
-    ReLU,
-    Softmax,
-    LinearReLU,
-    LinearReLUSoftmax,
-}
+=== "Rust"
 
-#[derive(Debug)]
-pub struct NodeGPU {
-    pub name: String,
-    pub operator: NodeOperatorGPU,
-    pub buffer_indices: Vec<usize>,
-}
-```
+    ```rust
+    #[derive(Clone, Debug, Eq, Hash, PartialEq)]
+    pub enum NodeOperatorGPU {
+        HostToDevice,
+        DeviceToHost,
+        DeviceToDevice,
+        LinearLayer,
+        ReLU,
+        Softmax,
+        LinearReLU,
+        LinearReLUSoftmax,
+    }
+
+    #[derive(Debug)]
+    pub struct NodeGPU {
+        pub name: String,
+        pub operator: NodeOperatorGPU,
+        pub buffer_indices: Vec<usize>,
+    }
+    ```
 
 Note the ```DeviceToDevice``` operator is in there now. It is just a transfer of data from one
 operator to the next. It actually does nothing in itself, but it is used by operators to get the previous

@@ -1,27 +1,27 @@
 # Introduction to the Computing Landscape
-If you are new to programming, or perhaps have been able to get by using scripting languages, such as Python, only,
+If you are new to programming, or perhaps have been able to get by using scripting languages, such as Python,
 you might not have been introduced to the other options. Some of the concepts presented here
 lay the foundations for the choices dictating the rest of the guide.
 Though I have made some clearly defined choices about which tools to use in this material, you should at all times
 use the right tool for the job. Not only in which language or framework you might choose,
 but in how you put together and design your systems using those tools. Part of the guide's
-strategy is to introduce you to quite a lot of tools and concepts, also known as the "learn
-what to DuckDuckGo"-strategy, and then going into greater detail about core concepts and concepts
-relevant to your specialization.
+strategy is going into greater detail about core concepts such as memory and then introduce you to a multitude
+of tools and concepts, also known as the "learn what to DuckDuckGo"-strategy. Once you are ready to do a project
+of your own you can then go back to a handful of concepts and explore them in greater detail.
+
 The guide will introduce concepts that aid some programs in producing faster results than others.
-An important factor is limitations. Usually, the word limitations carries a negative connotation.
-Very few people think less freedom or flexibility sounds particularly enticing, but in computing,
-limitations can be a wonderful thing to have and set. Especially, once you are past the first prototype.
-In some cases, even when prototyping.
+An important factor in reliable and performant systems is limitations.
+Usually, the word limitations carries a negative connotation. Very few people think less freedom or
+flexibility sounds particularly enticing, but in computing, limitations can be a wonderful thing to have
+and set. Especially, once you are past the first prototype. In some cases, even when prototyping.
 
 ## Scripting Languages
 Chill out, take things one line of code at a time. Scripting languages aren't compiled, but run one
 line at a time. This leaves the system unable to look beyond the current line of code,
 unless you add a compiler to the mix, whic usually takes a look at all of your code.
 
-[Python][0] is likely the
-scripting language you are most familiar with. Python is very popular due to its apparent
-ease-of-use, but it is quite slow in its raw form. A key advantage of vanilla Python is the
+[Python][0] is likely the scripting language you are most familiar with. Python is very popular due
+to its apparent ease-of-use, but it is quite slow in its raw form. A key advantage of vanilla Python is the
 ability to glue together a number of libraries written in other languages. In time,
 improvements have been made, such as putting type hints into your code which helps catch
 errors and gives more informative function definitions.
@@ -159,10 +159,8 @@ the system you are on for support of an extension, which does allow access to sp
 however, end up with several versions of some elements of your code, based on whether some feature is there or not.
 
 ### Platform-Specific APIs
-Some GPU APIs are specific to specific operating systems.
-[DirectX11][20] and
-[DirectX12][21] targets Windows and XBox platforms, while
-[Metal][22] targets Apple devices. The guide won't concern itself too much
+Some GPU APIs are specific to specific operating systems. [DirectX11][20] and [DirectX12][21] targets Windows
+and XBox platforms, while [Metal][22] targets Apple devices. The guide won't concern itself too much
 with these. DirectX11 is somewhat similar to OpenGL, while DirectX12 and Metal are from the same, more low-level,
 generation as Vulkan. Metal however, seems to be a bit less low-level compared to DirectX12 and Vulkan.
 

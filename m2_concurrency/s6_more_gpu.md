@@ -1,5 +1,6 @@
 # More GPU
-This section is about giving a bit of additional context around GPUs.
+This section is about giving a bit of additional context around GPUs. It isn't necessary to understand any
+of the material after it.
 
 ## The Graphics Pipeline
 Originally, GPU's were made just for graphics. They were intiially quite closed in their

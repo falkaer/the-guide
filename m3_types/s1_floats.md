@@ -16,24 +16,26 @@ as 4.0 * (1.0 / 3.0), unless the inverse number that you are multiplying with is
 used optimization as a multiplication is much cheaper than a division. You will typically see this optimization
 if a division by a constant is happening in a loop -
 
-```rust
-let some_constant: f32 = 5.0;
-for element in &mut data {
-    *element = *element / some_constant;
-}
+=== "Rust"
 
-```
+    ```rust
+    let some_constant: f32 = 5.0;
+    for element in &mut data {
+        *element = *element / some_constant;
+    }
+    ```
 
 which, again, is not numerically equivalent to
 
-```rust
-let some_constant: f32 = 5.0;
-let inverse_some_constant: f32 = 1.0 / some_constant;
-for element in &mut data {
-    *element = *element * inverse_some_constant;
-}
+=== "Rust"
 
-```
+    ```rust
+    let some_constant: f32 = 5.0;
+    let inverse_some_constant: f32 = 1.0 / some_constant;
+    for element in &mut data {
+        *element = *element * inverse_some_constant;
+    }
+    ```
 
 But if ```some_constant``` was 4.0, 2.0 or 256.0 or some other version of 2^N, they would be.
 Finally, ```NaN```'s propagate.

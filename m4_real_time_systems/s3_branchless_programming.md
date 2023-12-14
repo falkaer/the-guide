@@ -3,28 +3,30 @@ The following sections are about to get a bit technical, so let's start things o
 summary.
 
 Branchless programming is a way of making your code faster. It becomes faster by structuring our data in a certain
-way, through refactoring lists of structs, each with their own fields into fewer structs with multiples of each field,
-through sorting data to execute all of elements requiring one type of jobs, then all elements of the next type of job
-and through either minimizing the amount of if statements, through minimizing how many different paths code can go down
-and moving if statements outside of our loops. As you might recall, loops often dictate the run time of your code.
+way, through refactoring lists of structs, each with their own fields into fewer structs with multiples of
+each field, through sorting data to execute all of elements requiring one type of jobs, then all elements
+of the next type of job and through either minimizing the amount of if statements, through minimizing how
+many different paths code can go down and moving if statements outside of our loops. As you might recall,
+loops often dictate the run time of your code.
 
-The reason this becomes faster is that we can optimize what data we get in [our cache line][15] through a paradigm called
-data-oriented design and because of a hardware concept called branch prediction. Despite being single threaded,
-a thread can still do somethings concurrently. A line of code can contain more instructions than we think of at first
-glance. Fetching a data element, changing something and then storing it contains several parts. If the next line is
-also fetching a data element, but a different element, and there are no data or execution dependencies between them,
-as in, what we do with the first element has no effect on how we process the second element, we can initiate loading
-of the second element, once we are done loading the first element. While the first element is being processed,
-the second element is being loaded. Once the second element is loaded, a third element can be loaded. This is
-implemented in hardware and results in significant performance boosts. The pipeline is a lot deeper than my example.
+The reason this becomes faster is that we can optimize what data we get in [our cache line][15] through a
+paradigm called data-oriented design and because of a hardware concept called branch prediction. Despite
+being single threaded, a thread can still do somethings concurrently. A line of code can contain more
+instructions than we think of at first glance. Fetching a data element, changing something and then storing
+it contains several parts. If the next line is also fetching a data element, but a different element, and
+there are no data or execution dependencies between them, as in, what we do with the first element has no
+effect on how we process the second element, we can initiate loading of the second element, once we are
+done loading the first element. While the first element is being processed, the second element is being
+loaded. Once the second element is loaded, a third element can be loaded. This is implemented in hardware
+and results in significant performance boosts. The pipeline is a lot deeper than my example.
 
 If the execution of the second element is can go down two different paths (think if-else), the hardware will predict
 which path will need to be executed and pre-load the needed data and instructions. But if the other path ends up
 being needed, all the work that has been accumulated ahead of time is thrown away and the other branch needs to be
 executed. This is known as a pipeline flush. Designing around this is a universal concept which can speed up your
-code, but it's not as simple as simply doing one thing, it has elements of hardware awareness, structuring and designing
-your architecture and data, and micro-optimizing your code like putting if statements outside of loops or reducing your
-usage of short circuiting boolean operators like ```||``` and ```&&```.
+code, but it's not as simple as simply doing one thing, it has elements of hardware awareness, structuring and
+designing your architecture and data, and micro-optimizing your code like putting if statements outside of
+loops or reducing your usage of short circuiting boolean operators like ```||``` and ```&&```.
 
 ## Branch Prediction
 While the speed at which CPUs and memory can execute hasn't risen aggresively in these last few years, that doesn't
@@ -47,15 +49,17 @@ hardware is able to predict which execution path should be followed. In the case
 all instructions which were part of the wrong path have to be flushed from the pipeline, and the new execution
 path has to be begun. If you have a hard time picturing the scenario, let me paint you a picture with code -
 
-```rust
-for index in 0..data.len() {
-    if index % 1337 == 0 && index != 0 {
-        data[index] -= 1; // Path A
-    } else {
-        data[index] += 1; // Path B
+=== "Rust"
+
+    ```rust
+    for index in 0..data.len() {
+        if index % 1337 == 0 && index != 0 {
+            data[index] -= 1; // Path A
+        } else {
+            data[index] += 1; // Path B
+        }
     }
-}
-```
+    ```
 
 Below you can see a more abstract representation of pipelined instructions -
 
@@ -91,44 +95,54 @@ means that because both ```a``` and ```b``` need to be true in order for ```&&``
 It's a branch! Supposing that ```a``` and ```b``` aren't too expensive to evaluate we can reduce the amount of
 branching in our code by evaluating both. One way to do so could be -
 
-```rust
-if 0 < (a as u8 & b as u8) {
-```
+=== "Rust"
+
+    ```rust
+    if 0 < (a as u8 & b as u8) {
+    ```
 
 or even -
 
-```rust
-if 0 < (a as u8 * b as u8) {
-```
+=== "Rust"
+
+    ```rust
+    if 0 < (a as u8 * b as u8) {
+    ```
 
 For ```||``` options can include -
 
-```rust
-if 0 < (a as u8 | b as u8)
-```
+=== "Rust"
+
+    ```rust
+    if 0 < (a as u8 | b as u8)
+    ```
 
 or -
 
-```rust
-if 0 < (a as u8 + b as u8)
-```
+=== "Rust"
+
+    ```rust
+    if 0 < (a as u8 + b as u8)
+    ```
 
 Another way to remove a potential if-statement branch could be to multiply by 0's and 1's the data we might
 like to use, by reformulating our code arithmetically -
 
-```rust
-fn main() {
-    let data: Vec<f32> = vec![0.5; 5];
+=== "Rust"
 
-    let a: bool = true;
-    let a_arithmetic: f32 = a as u8 as f32;
-    let b: bool = false;
-    let b_arithmetic: f32 = b as u8 as f32;
-    
-    let calculated: f32 = a_arithmetic * data[0] + b_arithmetic * data[1];
-    println!("Calculated: {}", calculated);
-}
-```
+    ```rust
+    fn main() {
+        let data: Vec<f32> = vec![0.5; 5];
+
+        let a: bool = true;
+        let a_arithmetic: f32 = a as u8 as f32;
+        let b: bool = false;
+        let b_arithmetic: f32 = b as u8 as f32;
+        
+        let calculated: f32 = a_arithmetic * data[0] + b_arithmetic * data[1];
+        println!("Calculated: {}", calculated);
+    }
+    ```
 
 As with everything else, this is something you should benchmark before deciding. In terms of readability it is
 usually harder to read, so just do it when you need better performance, after asserting correctness first,
@@ -138,32 +152,36 @@ Loop unrolling is the process of doing more work per loop, which also reduces th
 work done and administrative control flow work. This unroll will happen a certain amount at a time. Let's
 take a quick look at a loop unroll transformation, with an unroll of 4.
 
-```rust
-let mut data: Vec<f32> = vec![0.2; 19];
-for index in 0..data.len() {
-    data[index] *= 2.0;
-}
-```
+=== "Rust"
+
+    ```rust
+    let mut data: Vec<f32> = vec![0.2; 19];
+    for index in 0..data.len() {
+        data[index] *= 2.0;
+    }
+    ```
 
 And now for the unrolled version -
 
-```rust
-    let unroll_size: usize = 4;
-    let mut data: Vec<f32> = vec![0.2; 19];
-    let full_iterations: usize = data.len() / unroll_size; // 4 = 19 / 4
-    
-    for index in 0..full_iterations {
-        let index: usize = index * unroll_size;
-        data[index + 0] *= 2.0;
-        data[index + 1] *= 2.0;
-        data[index + 2] *= 2.0;
-        data[index + 3] *= 2.0;
-    }
-    
-    for index in (full_iterations * unroll_size)..data.len() {
-        data[index] *= 2.0;
-    }
-```
+=== "Rust"
+
+    ```rust
+        let unroll_size: usize = 4;
+        let mut data: Vec<f32> = vec![0.2; 19];
+        let full_iterations: usize = data.len() / unroll_size; // 4 = 19 / 4
+        
+        for index in 0..full_iterations {
+            let index: usize = index * unroll_size;
+            data[index + 0] *= 2.0;
+            data[index + 1] *= 2.0;
+            data[index + 2] *= 2.0;
+            data[index + 3] *= 2.0;
+        }
+        
+        for index in (full_iterations * unroll_size)..data.len() {
+            data[index] *= 2.0;
+        }
+    ```
 
 Of course, the tail iterations in the second for-loop won't be as fast the main loop, but again, this usually
 something the compiler will do for you in release mode.
@@ -203,14 +221,16 @@ look at how we might handle a whole bunch of rays.
 
 The typical way we might handle a bunch of rays in a path tracer, would be to define each ray as a struct, such as -
 
-```rust
-struct Ray {
-    origin: Vec3,
-    direction: Vec3,
-    color: Vec3,
-    material: Material, // Enum
-}
-```
+=== "Rust"
+
+    ```rust
+    struct Ray {
+        origin: Vec3,
+        direction: Vec3,
+        color: Vec3,
+        material: Material, // Enum
+    }
+    ```
 
 This is just as useful with graphs, as long as we have chosen a formulation of them which allows us to keep
 them in arrays instead of floating around in pointer-based structures.
@@ -225,31 +245,35 @@ to function, we would call this an Array-of-Structs (AoS).
 What we could do instead, to only cache exactly what we needed is called Struct-of-Arrays (SoA). We keep all of
 our rays in a deconstructed fashion -
 
-```rust
-struct VectorOfRays {
-    origins: Vec<Vec3>,
-    directions: Vec<Vec3>,
-    colors: Vec<Vec3>,
-    materials: Vec<Material>,
-}
-```
+=== "Rust"
+
+    ```rust
+    struct VectorOfRays {
+        origins: Vec<Vec3>,
+        directions: Vec<Vec3>,
+        colors: Vec<Vec3>,
+        materials: Vec<Material>,
+    }
+    ```
 
 or we might even take it a step further -
 
-```rust
-struct VectorOfRays {
-    origins_x: Vec<f32>,
-    origins_y: Vec<f32>,
-    origins_z: Vec<f32>,
-    directions_x: Vec<f32>,
-    directions_y: Vec<f32>,
-    directions_z: Vec<f32>,
-    color_r: Vec<f32>,
-    color_g: Vec<f32>,
-    color_b: Vec<f32>,
-    materials: Vec<Material>,
-}
-```
+=== "Rust"
+
+    ```rust
+    struct VectorOfRays {
+        origins_x: Vec<f32>,
+        origins_y: Vec<f32>,
+        origins_z: Vec<f32>,
+        directions_x: Vec<f32>,
+        directions_y: Vec<f32>,
+        directions_z: Vec<f32>,
+        color_r: Vec<f32>,
+        color_g: Vec<f32>,
+        color_b: Vec<f32>,
+        materials: Vec<Material>,
+    }
+    ```
 
 Now instead of operating on individual rays, or operating on lists of rays, we can do individual operations on each
 and every relevant element, getting them all in our cache line. This require our intersection function to have
@@ -266,20 +290,22 @@ Enter... drumroll please... Arrays-of-Structs-of-Arrays (AoSoA).
 We could instead use a coarser granularity by storing a number of rays in a shared struct and keep a list of
 those structs -
 
-```rust
-struct Ray4 {
-    origins_x: [f32; 4] = [0.0; 4],
-    origins_y: [f32; 4] = [0.0; 4],
-    origins_z: [f32; 4] = [0.0; 4],
-    directions_x: [f32; 4] = [0.0; 4],
-    directions_y: [f32; 4] = [0.0; 4],
-    directions_z: [f32; 4] = [0.0; 4],
-    color_r: [f32; 4] = [0.0; 4],
-    color_g: [f32; 4] = [0.0; 4],
-    color_b: [f32; 4] = [0.0; 4],
-    materials: [Material; 4] = [Material::default(); 4],
-}
-```
+=== "Rust"
+
+    ```rust
+    struct Ray4 {
+        origins_x: [f32; 4] = [0.0; 4],
+        origins_y: [f32; 4] = [0.0; 4],
+        origins_z: [f32; 4] = [0.0; 4],
+        directions_x: [f32; 4] = [0.0; 4],
+        directions_y: [f32; 4] = [0.0; 4],
+        directions_z: [f32; 4] = [0.0; 4],
+        color_r: [f32; 4] = [0.0; 4],
+        color_g: [f32; 4] = [0.0; 4],
+        color_b: [f32; 4] = [0.0; 4],
+        materials: [Material; 4] = [Material::default(); 4],
+    }
+    ```
 
 We can choose a coarser granularity by making this struct any size we like. Within reason, we have a good
 chance it might fit on the stack. Now we are free to move around rays, eliminate ones that are terminated,
@@ -337,34 +363,36 @@ If we instead look at code which uses an actual function from path tracing, in t
 we are doing much more compute per memory load and can see a significant increase in performance. Here's
 a sample of the code to show you what SIMD programming looks like -
 
-```rust
-fn ray_sphere_intersect_x8(
-    sphere_o: &uv::Vec3x8,
-    sphere_r_sq: &uv::f32x8,
-    ray_o: &uv::Vec3x8,
-    ray_d: &uv::Vec3x8,
-) -> uv::f32x8 {
-    let oc = *ray_o - *sphere_o;
-    let b = oc.dot(*ray_d);
-    let c = oc.mag_sq() - sphere_r_sq;
-    let descrim = b * b - c;
+=== "Rust"
 
-    let desc_pos = descrim.cmp_gt(0.0);
+    ```rust
+    fn ray_sphere_intersect_x8(
+        sphere_o: &uv::Vec3x8,
+        sphere_r_sq: &uv::f32x8,
+        ray_o: &uv::Vec3x8,
+        ray_d: &uv::Vec3x8,
+    ) -> uv::f32x8 {
+        let oc = *ray_o - *sphere_o;
+        let b = oc.dot(*ray_d);
+        let c = oc.mag_sq() - sphere_r_sq;
+        let descrim = b * b - c;
 
-    let desc_sqrt = descrim.sqrt();
+        let desc_pos = descrim.cmp_gt(0.0);
 
-    let t1 = -b - desc_sqrt;
-    let t1_valid = t1.cmp_gt(0.0) & desc_pos;
+        let desc_sqrt = descrim.sqrt();
 
-    let t2 = -b + desc_sqrt;
-    let t2_valid = t2.cmp_gt(0.0) & desc_pos;
+        let t1 = -b - desc_sqrt;
+        let t1_valid = t1.cmp_gt(0.0) & desc_pos;
 
-    let t = t2_valid.blend(t2, uv::f32x8::splat(std::f32::MAX));
-    let t = t1_valid.blend(t1, t);
+        let t2 = -b + desc_sqrt;
+        let t2_valid = t2.cmp_gt(0.0) & desc_pos;
 
-    t
-}
-```
+        let t = t2_valid.blend(t2, uv::f32x8::splat(std::f32::MAX));
+        let t = t1_valid.blend(t1, t);
+
+        t
+    }
+    ```
 
 In this case I only use functions implemented directly by utraviolet's ```uv::Vec3x8``` and
 ```uv::f32x8``` types.
