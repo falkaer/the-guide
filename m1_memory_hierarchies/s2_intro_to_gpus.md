@@ -32,7 +32,7 @@ it's made by Apple or AMD.
 
 In general, I will be using terminology specific to the compute part of the graphics API's and I will
 keep to ```wgpu``` and ```wgsl``` terminology. You might see significant differences in terminology
-if you follow up this guide with some ```CUDA``` programming.
+if you follow up this guide while having previous ```CUDA``` programming experience.
 
 ## GPU Hardware
 First off, when dealing with the GPU, you will have to manipulate the GPU from the CPU with commands
@@ -550,6 +550,53 @@ of if-statements (minimize the amount of work group divergence) and make sure to
 into shared memory as a separate issue, using strides the same size as a work group (using coalesced accesses)
 you can get very close to, if not better than the cache manager. For 2D problems like tiled matrix multiplication
 you are likely to see a speed up quite early in the optimization process.
+
+## Were you Scattering or were you Gathering?
+While a complete guide on GPGPU algorithm design might be... more thorough at least, one core design aspect
+you should definitely know is scattering and gathering.
+
+<figure markdown>
+![Image](../figures/scattering_or_gathering.jpg){ width="700" }
+<figcaption>
+Answer!
+</figcaption>
+</figure>
+
+An example of how we use either to accomplish the same thing is a 1D convolution. As you might recall, we have three
+elements in play. We have an input signal, an array of size N. We have a filter with weights, an array of size M.
+M will usually be an odd number from 1 to 19.
+Finally, we have an output, usually also size N. The input signal can also be padded with 0's in each end in order
+to minimize branching. Or the output is N-M+1 smaller in order to have an output which doesn't have (M-1)/2 0's at
+the ends.
+
+Anyways, for weight in our kernel we sample a different element in our signal, multiply it with a weight in
+our filter, accumulate the result and output a new signal.
+
+<figure markdown>
+![Image](../figures/1d_convolution.png){ width="700" }
+<figcaption>
+A figure showing a signal being convolved with a filter.
+<a href="https://www.researchgate.net/figure/Calculations-involved-in-a-1D-convolution-operation_fig3_324177888">
+Image credit </a>
+</figcaption>
+</figure>
+
+I hope convolution makes sense now. Scattering and gathering are two different ways of executing this fairly
+simple process which has quite an impact on performance. If we were doing 1D convolution on a GPU, from which
+point of view do we program the threads? If they are scattering, they take the point of view of each input element.
+Each element takes its own value, multiplies by a filter value and accumulates in the output array. Now we have a
+whole segment of threads which can all read from their own input element completely unobstructed, but which have
+a huge amount of contention as they have to synchronize their writes to either shared or global memory for the
+output. This also removes the ability for each thread to accumulate the result locally in a register. If they
+instead followed the gathering paradigm, each thread would take the point of view of their own output element.
+They would each do lots of reads from both the input signal and the filter weights, they would do local
+accumulation in a register, and each have a single write to memory with no overlap. As you might remember, you
+should always prefer more reads than writes. Reads are very parallelizable, writes usually require synchronization.
+
+This can be extended to lots of different algorithms. For matrix-matrix multiplication, it's recommended to use
+gathering, from the point of view of the output element for each thread. For some more material on
+scattering and gathering, there is a paper on it
+[from '07](https://cse.hkust.edu.hk/catalac/papers/scatter_sc07.pdf).
 
 Now back to the memory hierarchies!
 
