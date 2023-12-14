@@ -56,9 +56,9 @@ or which doesn't exist. The pointer at this point is likely to either be 0 or co
 integer_array = malloc(element_count * sizeof(int));
 ```
 
-We ask for a memory allocation ([malloc](https://en.cppreference.com/w/c/memory/malloc)) from the
+We ask for a memory allocation ([malloc][20]) from the
 operating system. What we get back is just a runtime dependent address.
-The address itself is what is known as a [word](https://en.wikipedia.org/wiki/Word_(computer_architecture)).
+The address itself is what is known as a [word][21].
 The size of the word dictates how much memory you can address in a system. If you have a 32-bit, 4 bytes, word
 and you use byte addressing, meaning one byte for every address, we can at most address 2GB of memory with a
 single word. If we have 64-bit words we can address more memory than we could possibly get. When you
@@ -113,7 +113,7 @@ first element. No, we want to go to the address 46, where the second element in 
 *stride* of 4 bytes.
 We also need to keep track of the size of our allocation close to the pointer itself,
 as trying to access an element outside of our allocation will be catastrophic, and likely result in a
-[segmentation fault](https://en.wikipedia.org/wiki/Segmentation_fault). So, no ```integer_array[42]```.
+[segmentation fault][22]. So, no ```integer_array[42]```.
 Back to the line on hand. We put our ```integer_array``` in a parentheses to make sure the
 dereferencing doesn't happen until after we have changed the address. So we increment the base pointer (42)
 with a stride of 4 (46), and then dereference (*) to assign a value of 1 to the second element in our array.
@@ -156,7 +156,7 @@ we should remember to return it to the operating system. If we don't we might ge
 which is when our program uses more and more memory until the program is stopped or crashes.
 The operating system might keep track of the memory though and clean up once our less than stellar code terminates.
 
-In C, we can return our memory like this, using the [free](https://en.cppreference.com/w/c/memory/free) function.
+In C, we can return our memory like this, using the [free][23] function.
 
 ```c
 int element_count = 42;
@@ -176,7 +176,7 @@ free(integer_array);
 Spot the error?
 
 We had two pointers and forgot to ```free``` using the base pointer, ```base_integer_array```.
-This is [undefined behavior](https://en.wikipedia.org/wiki/Undefined_behavior),
+This is [undefined behavior][24],
 which means that there are literally no definitions of what will happen.
 It is really bad. What we should have done was this.
 
@@ -240,12 +240,12 @@ While it is import that you increase your understanding of what it takes to get 
 predictable, boring code. Which is the best kind. What you are most likely interested in
 is for you to write more performant code. An absolutely
 essential part of getting performant code is how we access the underlying memory. Yes, we can address
-memory a single byte at a time with [byte addressing](https://en.wikipedia.org/wiki/Byte_addressing).
+memory a single byte at a time with [byte addressing][25].
 But, whenever we ask for a byte, the memory is transported as a cache line through the memory hierarchy.
 As in, the L3, L2 and L1 cache all receive an entire cache line. That cache line is usually 64 bytes.
 
 What is in the cache line is dictated by
-[cache line alignment](https://en.algorithmica.org/hpc/cpu-cache/alignment/).
+[cache line alignment][26].
 If for example you had made a struct (it's like an object, but just the data) like the one below
 and you elected to turn off the auto-alignment with ```__attribute__ ((packed))```
 
@@ -308,7 +308,7 @@ more standard 64 byte cache line.
 
 Now that we have learned a bit about cache lines, we are equipped to actually talk about access patterns.
 I have made some Rust code for you which is located at ```m1_memory_hierarchies/code/access_patterns/``` or
-[online](https://github.com/absorensen/the-guide/tree/main/m1_memory_hierarchies/code/access_patterns).
+[online][27].
 
 First off is sequential access. It is the one we usually strive for. We start at one end and go through every
 element until the end, from index 0 to the end.
@@ -353,7 +353,7 @@ get faster. But what do you know, sometimes the nice and predictable path,
 which might seem like we are doing more work actually runs faster. What a time to be alive!
 
 ## Stacking Heaps of Trouble
-If you aren't familiar with the [stack and queue](https://en.wikibooks.org/wiki/Data_Structures/Stacks_and_Queues)
+If you aren't familiar with the [stack and queue][28]
 data structure types, this would be a good time to follow the link and familiarize yourself.
 
 The stack is not just a data structure, but also a core part of how all of the variables
@@ -382,9 +382,7 @@ from the heap. But we also can't return pointers to a stack variable as it might
 or be overwritten at any moment.
 
 The heap, in this context, is not the actual data structure known as a heap.
-Instead it is a bunch of unstructured memory living in the
-[same reserved space](https://courses.grainger.illinois.edu/cs225/fa2021/resources/stack-heap/)
-as the stack.
+Instead it is a bunch of unstructured memory living in the [same reserved space][29] as the stack.
 
 <figure markdown>
 ![Image](../figures/stack_and_heap.png){ width="500" }
@@ -410,8 +408,8 @@ ownership changes hands.
 ## The Dynamic Array
 The dynamic array is ubiquitous in C++ and Rust. It is quite often what we think
 about, when we think of arrays in those languages. C++ has
-[```vector<T>```](https://en.cppreference.com/w/cpp/container/vector)
-and Rust has [```Vec<T>```](https://doc.rust-lang.org/std/vec/struct.Vec.html).
+[```vector<T>```][30]
+and Rust has [```Vec<T>```][31].
 I highly recommend reading the first parts of the Rust Vec page.
 They are basically the same though and I will refer to them as vector from here on out.
 A dynamic array bundles up the behavior we saw earlier with the pointers,
@@ -656,7 +654,7 @@ for you to simply access it like it was a multi-dimensional array.
 To wrap it up I have made a performance test of these approaches. The code
 doesn't match completely as we need bigger dimensions to get a good test.
 The code is at ```m1_memory_hierarchies/code/the_vector/``` or
-[online](https://github.com/absorensen/the-guide/tree/main/m1_memory_hierarchies/code/the_vector).
+[online][32].
 
 Implementing all of the methods described above in both row-major and column-major form,
 as well as an element-wise version, where we flatten the multidimensionality to save
@@ -766,14 +764,14 @@ see whether there is some other solution that might work better.
 Rust isn't fighting you in this case, even if it can be strict,
 it is trying to protect you from having multiple write-enabled
 references to the same data, as in the Python example, which could make for incorrect code.
-C++ does have these [move operations](https://en.cppreference.com/w/cpp/utility/move)
+C++ does have these [move operations][33]
 as well, it is even highly recommended a lot of the time. It is however,
 not the default behavior of the language.
 
 Rust has something called traits (don't worry about it).
 One of these traits is the ```Copy``` trait. If a type implements
 the ```Copy``` trait, it will be
-[copied rather than moved](https://blog.logrocket.com/disambiguating-rust-traits-copy-clone-dynamic/)
+[copied rather than moved][34]
 when assigned to a new value or passed as an argument to a function.
 It is sort of like an implicit version of ```.clone()```, except
 in the case of deeper structures, such as ```Vec<T>```, in that case,
@@ -880,7 +878,7 @@ Until we hit the end of the scope, and ```x``` and ```y``` disappear, there
 are two live references to the the list created at line 1. While a fine enough
 solution at first glance, sometimes, answering the question "what is alive"
 can be quite difficult. More on that in the
-[garbage collectors section](https://absorensen.github.io/the-guide/m1_memory_hierarchies/s0_soft_memory_hierarchies/#garbage-collectors).
+[garbage collectors section][35].
 
 When dealing with raw pointers, like we saw earlier, once a system grows
 beyond absolute simplicity, sharing multiple pointers to the same object
@@ -891,8 +889,8 @@ crux of safety and your program not blowing up in C and C++.
 
 In C++11+ and Rust, we can elect to use something called smart pointers. Which
 can handle some of the intricacies for us.
-First off there is the [unique_ptr<T>](https://en.cppreference.com/w/cpp/memory/unique_ptr),
-as in C++, or the [Box<T>](https://doc.rust-lang.org/std/boxed/index.html) in Rust.
+First off there is the [unique_ptr<T>][36],
+as in C++, or the [Box<T>][37] in Rust.
 I will just refer to ```Box``` from here on out, their behaviors seem to be more or less the same.
 ```Box<T>``` is like a ```T *``` in C (pointer to object of type T).
 With two notable exceptions. It cannot be copied. As in, you cannot have multiple
@@ -911,10 +909,8 @@ println!("{}", *other_box); // prints 43
 ```
 
 Next up are the shared pointers. They are essentially what Python is using in the example
-from earlier. In C++ it is called [shared_ptr<T>](https://en.cppreference.com/w/cpp/memory/shared_ptr),
-in Rust it comes in two versions;
-[Rc<T>](https://doc.rust-lang.org/std/rc/index.html) and
-[Arc<T>](https://doc.rust-lang.org/std/sync/struct.Arc.html).
+from earlier. In C++ it is called [shared_ptr<T>][38],
+in Rust it comes in two versions; [Rc<T>][39] and [Arc<T>][40].
 ```Rc``` stands for reference counted. It is only made for single threaded usage as the
 reference count itself is susceptible to a data race, which you may recall, is several
 reads and/or writes to the same value. This could result in the count of live references
@@ -951,8 +947,8 @@ fn main() {
 
 ```Arc<T>``` is here to solve exactly that issue.
 It uses atomic reference counting. Atomics will be introduced in the
-[parallelism](https://absorensen.github.io/the-guide/m2_concurrency/)
-module. But in this context, it means that the reference counting is thread-safe, but a bit slower.
+[concurrency][41] module. But in this context, it means that the reference counting is
+thread-safe, but a bit slower.
 
 ```rust
 use std::sync::Arc;
@@ -996,8 +992,7 @@ Go on.
 I'll wait.
 
 To solve this issue, the weak pointer comes to the rescue. It is along for the party,
-but doesn't actually keep things alive.
-In Rust it is called [Weak<T>](https://doc.rust-lang.org/std/rc/struct.Weak.html).
+but doesn't actually keep things alive. In Rust it is called [Weak<T>][42].
 It can reference the same underlying object as the shared pointer it comes from,
 but does not contribute to the live reference count. As such, it can allow you
 to have cyclical references, without causing a memory leak.
@@ -1018,10 +1013,8 @@ fn main() {
 }
 ```
 
-For more information on smart pointers in Rust, there is a nice example
-[here](https://doc.rust-lang.org/book/ch15-00-smart-pointers.html)
-and another example about
-[reference cycles](https://doc.rust-lang.org/book/ch15-06-reference-cycles.html),
+For more information on smart pointers in Rust, there is a nice example [here][43]
+and another example about [reference cycles][44],
 which is what we needed weak pointers for.
 
 ## The Vector Reloaded
@@ -1063,9 +1056,7 @@ Matrix multiplication with the second matrix transposed.
 </figure>
 
 Now, lets try out a simple example! Checkout the code at
-```m1_memory_hierarchies/code/strided_access_and_transposition``` or check it out
-[online](https://github.com/absorensen/the-guide/blob/main/m1_memory_hierarchies/code/strided_access_and_transposition/src/main.rs)
-.
+```m1_memory_hierarchies/code/strided_access_and_transposition``` or check it out [online][45].
 
 Interestingly, when running the code there doesn't seem to be much of a difference until
 the matrix sizes become quite big. Why do you think that is?
@@ -1131,9 +1122,8 @@ Offset some of the cost of permutations, by just permuting rows.
 </figcaption>
 </figure>
 
-Now, lets try out a simple example! Checkout the code at
-```m1_memory_hierarchies/code/permuted_arrays``` or check it out
-[online](https://github.com/absorensen/the-guide/blob/main/m1_memory_hierarchies/code/permuted_arrays/src/main.rs)
+Now, lets try out a simple example! Checkout the code at ```m1_memory_hierarchies/code/permuted_arrays```
+or check it out [online][46]
 
 <figure markdown>
 ![Image](../figures/permuted_arrays_benchmark_0.png){ width="500" }
@@ -1230,9 +1220,8 @@ As we compacted the data, we can keep track of the starting index of each row in
 </figcaption>
 </figure>
 
-Now for a simple performance benchmark. Checkout the code at
-```m1_memory_hierarchies/code/jagged_arrays``` or check it out
-[online](https://github.com/absorensen/the-guide/blob/main/m1_memory_hierarchies/code/jagged_arrays/src/main.rs)
+Now for a simple performance benchmark. Checkout the code at ```m1_memory_hierarchies/code/jagged_arrays```
+or check it out [online][47].
 
 <figure markdown>
 ![Image](../figures/jagged_arrays_benchmark_0.png){ width="500" }
@@ -1336,9 +1325,8 @@ that as a key for the first linear layer and its contents, and then "ReLU0", "Li
 "ReLU1", "Softmax0" and so on. If possible, it is more efficient to use small types as
 your key. Such as an integer.
 
-Now for a simple performance benchmark. Checkout the code at
-```m1_memory_hierarchies/code/hash_maps``` or check it out
-[online](https://github.com/absorensen/the-guide/blob/main/m1_memory_hierarchies/code/hash_maps/src/main.rs)
+Now for a simple performance benchmark. Checkout the code at ```m1_memory_hierarchies/code/hash_maps```
+or check it out [online][48].
 
 As you can see the hash map using integers clearly outperforms Strings. To be fair, every insertion in the
 string based map, requires a clone of the original string, the read and update only requires a reference.
@@ -1353,7 +1341,7 @@ so it's probably only worth it if you are doing A LOT of accesses for each layer
 
 Generally, hash maps have an alright performance. C#'s dictionary lookup performance will usually go down
 hill at around 30k entries though. This doesn't happen for arrays. You can read more about different hash table
-implementations [here](https://www.cs.princeton.edu/courses/archive/fall06/cos226/lectures/hash.pdf).
+implementations [here][49].
 
 ## Graphs and Trees
 Now that we have dicked around with variations on a theme (that theme was arrays if you were in doubt),
@@ -1555,9 +1543,7 @@ means of representing an empty value, but the greater the sparseness, the more i
 tree structure becomes. The implicit/predictable structure makes the linearized treeqv easily serializeable
 (writing it to a file on disk) or transferable to and useable on GPU's.
 
-A better explanation of [graphs in Rust](https://github.com/nrc/r4cppp/blob/master/graphs/README.md)  
-and graphs in Rust using
-[indices](http://smallcultfollowing.com/babysteps/blog/2015/04/06/modeling-graphs-in-rust-using-vector-indices/)  
+A better explanation of [graphs in Rust][19] and graphs in Rust using [indices][18].
 
 ### 🧬 Octrees
 Octrees are elevant for all of the specializations that aren't deep learning, especially *computer graphics*.
@@ -1577,9 +1563,9 @@ by a sequence numbers from 0 to 7.
 
 Now let's talk about payloads. A typical use case within graphics is to use an octree to reason about which scene
 geometry to render or to use for nearest neighbor queries. Let's start with the simpler payload,
-[point clouds](https://en.wikipedia.org/wiki/Point_cloud).
+[point clouds][50].
 We have a list of three dimensional points. We want to find the nearest one relative to our query point.
-This is quite useful for algorithms like [ICP](https://en.wikipedia.org/wiki/Iterative_closest_point).
+This is quite useful for algorithms like [ICP][51].
 We start with the whole array of points and then continually go through our points sending them to one of the 8
 children until a child receives only a single point, at which point that child node becomes a leaf node.
 Once the octree is built we can traverse the tree keeping track of which points have been closest
@@ -1628,29 +1614,27 @@ just been cleaned up referenced anew.
 Garbage collectors aren't really that relevant to the rest of the guide,
 but if you are coming from Python, C#, Go or Java this section will use some of the concepts
 previously introduced on this page to give you a quick perspective to how garbage collectors work.
-This post takes a look at
-[how python handles garbage collection](https://stackify.com/python-garbage-collection/)
-although, a bit light on the details for the generational garbage collection. In the following
+This post takes a look at [how python handles garbage collection][52] although, a bit light on the
+details for the generational garbage collection. In the following
 sections I will introduce three different types of garbage collectors, and finally
 set you up with a few tricks for working with the garbage collector.
 
 ### Reference Counted Garbage Collectors
-[Reference counting garbage collection](https://en.wikipedia.org/wiki/Reference_counting) is one of the
-simplest forms of dealing with garbage collection. Imagine that there is an ```Rc<T>```, like we saw earlier,
-wrapped around every heap-allocated variable. Once the amount of references reaches 0,
-the object is deallocated. Simple, can be handled locally, scales well, doesn't burden the
-entire system with a lockdown to clean up, which makes it good for real-time systems which need
-to be responsive at all times and not have noticeable freezes. What makes it not quite usable is,
-that it is up to the programmer to not create cyclical references. Node A and Node B cannot refer
-to each other without causing a memory leak, despite not being referenced by
+[Reference counting garbage collection][53] is one of the simplest forms of dealing with garbage collection.
+Imagine that there is an ```Rc<T>```, like we saw earlier, wrapped around every heap-allocated variable.
+Once the amount of references reaches 0, the object is deallocated. Simple, can be handled locally,
+scales well, doesn't burden the entire system with a lockdown to clean up, which makes it good for
+real-time systems which need to be responsive at all times and not have noticeable freezes. What
+makes it not quite usable is, that it is up to the programmer to not create cyclical references.
+Node A and Node B cannot refer to each other without causing a memory leak, despite not being referenced by
 anything else. They cannot be cleaned, unless one of the references is a weak reference. Just like the
 ```Weak<T>``` type we saw in the smart pointer section. But it is up to the programmer to make sure that
 the weak references are used correctly throughout the system, which isn't necessarily non-trivial.
 
 ### Tracing Garbage Collectors
-[Tracing garbage collection](https://en.wikipedia.org/wiki/Tracing_garbage_collection) on the other hand
-follows every root, this could for example be the variable holding the pointer to the root node of your graph,
-if there even is such a thing, and then following every pointer making sure to mark all the objects it finds along
+[Tracing garbage collection][54] on the other hand follows every root, this could for example be the
+variable holding the pointer to the root node of your graph, if there even is such a thing,
+and then following every pointer making sure to mark all the objects it finds along
 the way as not being ready for clean-up. This does however require that all the memory is frozen. There can't all
 of a sudden be new references to some of the objects or some of them be removed. Once the marking process has
 completed, all of the objects are traversed and every object not marked is cleaned up.
@@ -1661,8 +1645,7 @@ are possibly accessible from roots and are candidates for collection. Gray objec
 from roots and might have pointers to objects marked in white. Black marked objects are definitely accessible
 from roots and definitely do not have pointers to the white set.
 
-You can read more about tri-color marking
-[here](https://bwoff.medium.com/understanding-gos-garbage-collection-415a19cc485c).
+You can read more about tri-color marking [here][55].
 
 ### Generational Garbage Collection
 Generational garbage collection is a different technique which sequesters allocated objects into different memory regions.
@@ -1671,9 +1654,7 @@ is promoted from one region to the next, older region. The youngest region will 
 than the two older regions and it is estimated that most garbage collection will happen in the youngest region.
 This strategy might not find all unreachable objects, however, and can be supplemented by an occasional
 expensive full mark-and-sweep to ensure that no memory leaks go undetected for too long.
-For more on
-[generational garbage collection](https://en.wikipedia.org/wiki/Tracing_garbage_collection#Generational_GC_(ephemeral_GC))
-.
+For more on [generational garbage collection][56].
 
 ## Virtualized Memory Hierarchy
 A simplified definition of virtualized memory is a single address space that doesn't correspond 1-to-1 to physical
@@ -1682,7 +1663,7 @@ the caches, compiler and branch prediction take care of hiding memory access lat
 however, what if we don't have all of our data in main memory?
 
 ### Virtualized Memory and Operating Systems
-The operating system itself can, and will, [virtualize your memory](https://en.wikipedia.org/wiki/Virtual_memory).
+The operating system itself can, and will, [virtualize your memory][57].
 It may at some point decide to spare the main memory, probably because it doesn't have any more, and instead
 allocates temporary space on the disk to swap in and out of main memory. This is painfully slow, but happens
 seamlessly behind the scenes to be able to continue to allocate more memory for your program. The programmer
@@ -1727,9 +1708,7 @@ optimize our virtualized data set. We could give a priority to each of the sampl
 sampled last and in which block they were located, on which physical memory they were located (the cloud is just
 someone else's computer). Optimizing these types of systems can be quite a fun algorithms and systems optimization
 process. For more on working with data outside of your computers memory, like on disk, see the first
-three weeks of
-[Algorithmic Techniques for Modern Data Models](https://www2.compute.dtu.dk/courses/02289/2022/) by Inge Li Gørtz,
-Eva Rotenberg and Philip Bille.
+three weeks of [Algorithmic Techniques for Modern Data Models][58].
 
 ### 🧬 Virtualized Rendering
 Another use of this is the rendering of data sets too large to fit in a users computer. You preprocess
@@ -1777,3 +1756,44 @@ If you are into spatial data structures and/or graphics, computer vision, etc he
 [15]: https://doc.cgal.org/latest/Orthtree/index.html
 [16]: https://publik.tuwien.ac.at/files/publik_252607.pdf
 [17]: https://www.evl.uic.edu/vchand2/thesis/papers/Marching%20Cubes.pdf
+[18]: http://smallcultfollowing.com/babysteps/blog/2015/04/06/modeling-graphs-in-rust-using-vector-indices/
+[19]: https://github.com/nrc/r4cppp/blob/master/graphs/README.md
+[20]: https://en.cppreference.com/w/c/memory/malloc
+[21]: https://en.wikipedia.org/wiki/Word_(computer_architecture)
+[22]: https://en.wikipedia.org/wiki/Segmentation_fault
+[23]: https://en.cppreference.com/w/c/memory/free
+[24]: https://en.wikipedia.org/wiki/Undefined_behavior
+[25]: https://en.wikipedia.org/wiki/Byte_addressing
+[26]: https://en.algorithmica.org/hpc/cpu-cache/alignment/
+[27]: https://github.com/absorensen/the-guide/tree/main/m1_memory_hierarchies/code/access_patterns
+[28]: https://en.wikibooks.org/wiki/Data_Structures/Stacks_and_Queues
+[29]: https://courses.grainger.illinois.edu/cs225/fa2021/resources/stack-heap/
+[30]: https://en.cppreference.com/w/cpp/container/vector
+[31]: https://doc.rust-lang.org/std/vec/struct.Vec.html
+[32]: https://github.com/absorensen/the-guide/tree/main/m1_memory_hierarchies/code/the_vector
+[33]: https://en.cppreference.com/w/cpp/utility/move
+[34]: https://blog.logrocket.com/disambiguating-rust-traits-copy-clone-dynamic/
+[35]: https://absorensen.github.io/the-guide/m1_memory_hierarchies/s0_soft_memory_hierarchies/#garbage-collectors
+[36]: https://en.cppreference.com/w/cpp/memory/unique_ptr
+[37]: https://doc.rust-lang.org/std/boxed/index.html
+[38]: https://en.cppreference.com/w/cpp/memory/shared_ptr
+[39]: https://doc.rust-lang.org/std/rc/index.html
+[40]: https://doc.rust-lang.org/std/sync/struct.Arc.html
+[41]: https://absorensen.github.io/the-guide/m2_concurrency/
+[42]: https://doc.rust-lang.org/std/rc/struct.Weak.html
+[43]: https://doc.rust-lang.org/book/ch15-00-smart-pointers.html
+[44]: https://doc.rust-lang.org/book/ch15-06-reference-cycles.html
+[45]: https://github.com/absorensen/the-guide/blob/main/m1_memory_hierarchies/code/strided_access_and_transposition/src/main.rs
+[46]: https://github.com/absorensen/the-guide/blob/main/m1_memory_hierarchies/code/permuted_arrays/src/main.rs
+[47]: https://github.com/absorensen/the-guide/blob/main/m1_memory_hierarchies/code/jagged_arrays/src/main.rs
+[48]: https://github.com/absorensen/the-guide/blob/main/m1_memory_hierarchies/code/hash_maps/src/main.rs
+[49]: https://www.cs.princeton.edu/courses/archive/fall06/cos226/lectures/hash.pdf
+[50]: https://en.wikipedia.org/wiki/Point_cloud
+[51]: https://en.wikipedia.org/wiki/Iterative_closest_point
+[52]: https://stackify.com/python-garbage-collection/
+[53]: https://en.wikipedia.org/wiki/Reference_counting
+[54]: https://en.wikipedia.org/wiki/Tracing_garbage_collection
+[55]: https://bwoff.medium.com/understanding-gos-garbage-collection-415a19cc485c
+[56]: https://en.wikipedia.org/wiki/Tracing_garbage_collection#Generational_GC_(ephemeral_GC)
+[57]: https://en.wikipedia.org/wiki/Virtual_memory
+[58]: https://www2.compute.dtu.dk/courses/02289/2022/
