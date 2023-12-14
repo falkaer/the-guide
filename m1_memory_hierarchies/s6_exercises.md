@@ -71,10 +71,12 @@ just doing the 1D convolution is plenty complicated for someone coming from Pyth
 to use shared memory doing it. Doing matrix multiplication as well is good practice, but not strictly necessary.
 
 ### m1::e3 - 1D Convolution
-Go to ```m1_memory_hierarchies::code::gpu_hand_in``` and follow the instructions.
+Go to ```m1_memory_hierarchies::code::gpu_hand_in``` or [online][0] and follow the instructions.
 You need to do 3 different version of 1D convolution, a naive version, one with zero padding of the input
 signal and one with optimal usage of shared memory.
 
 ### m1::e4 - Matrix Multiplication
 For the second section, also in ```gpu_hand_in``` you need to do a matrix multiplication and a
 tiled matrix multiplication (using shared memory). You should also try out doing a padded version.
+
+[0]: https://github.com/absorensen/the-guide/tree/main/m1_memory_hierarchies/code/gpu_hand_in

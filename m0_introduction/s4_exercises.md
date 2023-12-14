@@ -8,7 +8,7 @@ problems until you feel comfortable moving forward.
 You won't be confronted much with the borrow checker in these small problems. To get better practice structure,
 smart pointers, dynamic dispatch and traits, I recommend moving on to doing [Ray Tracing in One Weekend][2] in Rust.
 There is a code snippet which shows your image on screen instead of writing it to file in
-```m1_memory_hierarchies::code::image_on_screen```.
+```m1_memory_hierarchies::code::image_on_screen``` or [online][0].
 
 Once you have completed this part 1 out of 3, I suggest modifying the resulting code in the following ways -
 
@@ -21,6 +21,7 @@ Once you have completed this part 1 out of 3, I suggest modifying the resulting 
 If you are more inclined towards neural networks, [this tutorial][3] about neural networks and genetic
 algorithms might be more stimulating.
 
+[0]: https://github.com/absorensen/the-guide/tree/main/m1_memory_hierarchies/code/image_on_screen
 [1]: https://adventofcode.com/
 [2]: https://raytracing.github.io/books/RayTracingInOneWeekend.html
 [3]: https://pwy.io/posts/learning-to-fly-pt1/

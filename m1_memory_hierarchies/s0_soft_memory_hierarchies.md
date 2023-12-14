@@ -1031,15 +1031,15 @@ one dimensional memory as we learned about earlier, we can look at a few other f
 concepts in different ways to arrange tensors.
 
 ### Strided Access and Transposition
-One of the most used operations is the matrix-matrix multiplication.
+One of the most used operations is the matrix multiplication.
 If we assume two 2D matrices as input and output into another 2D matrix,
-one of those input matrices will be accessed with a stride access in
+one of those input matrices will be accessed with a strided access in
 a column major form.
 
 <figure markdown>
 ![Image](../figures/mat_mul_strided_access.png){ width="500" }
 <figcaption>
-Matrix-matrix multiplication. The numbers indicate access order.
+Matrix multiplication. The numbers indicate access order.
 </figcaption>
 </figure>
 
@@ -1058,7 +1058,7 @@ the time and effort.
 <figure markdown>
 ![Image](../figures/mat_mul_strided_access_transposed.png){ width="500" }
 <figcaption>
-Matrix-matrix multiplication with the second matrix transposed.
+Matrix multiplication with the second matrix transposed.
 </figcaption>
 </figure>
 
