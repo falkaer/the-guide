@@ -1,4 +1,8 @@
 # Soft Memory Hierarchies
+Memory hierarchies are at the core of almost everything in programming. We'll take a look at memory hierarchies
+in hardware, how you can exploit awareness of memory hierarchies to improve performance and energy efficiency,
+and how common data constructs relate to the memory hierarchies.
+
 <figure markdown>
 ![Image](../figures/amd_athlon_hierarchy.png){ width="600" }
 <figcaption>
@@ -11,7 +15,7 @@ Image credit </a>
 As mentioned in the module intro, the CPU's memory hierarchy is represented by a series of hardware components
 with different sizes and speeds. But don't fret, memory hierarchies and their hardware design subtleties won't
 be the primary focus of this module. This section will focus on the various programming constructs to better
-use the memory hierarchy. First off we will start bridging hardware and software.
+use the memory hierarchy. First we will start bridging hardware and software.
 
 ## Getting to the Point(er)
 One of the core mechanisms in using memory is the notorious pointer. All it does is point to pieces of memory.

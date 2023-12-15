@@ -1,12 +1,17 @@
 # Computational Graphs
-Conveying the importance of computational graphs to people who were probably using Python to
-program neural networks was the motivation for doing this whole thing in the first place.
-So now let's get to business.
+Formulating your program, or merely pieces thereof, as a graph allows your program, or a library you are using,
+to analyze and optimize your program. A graph represents a flow of data and control, which are types of the
+limitations we so crave to optimize our programs. Formulating programs as graphs also allows us to check the
+validity of our program before running it. It can be confirmed that all dimensions fit, that one computation
+will run before the result is needed, it can be seen ahead of time that some nodes can be fused (combined)
+into a single node in order to remove redundancies. It can also be checked whether all results are used. If a
+result is never used we can eliminate all computations that are exclusively used to generate that result.
 
-Computational graphs are more or less a way to communicate the flow of your program.
-It can allow a library or a framework to keep data at various levels of the memory hierarchy.
-It can allow it to check that all of the dimensions fit for the data,
-it can make assumptions about fusing nodes (combining them), remove redundancies and unused elements.  
+Few languages have direct support for computational graphs as they often require domain-specific knowledge to
+analyze and create. Again, limitations are a good thing. Specificity is a good thing. A computational graph
+which has been created specifically for a domain, such as graphics or machine learning, can make assumptions
+and optimizations that a generalized version might not be able to. They will also likely be significantly less
+complex to code and use if they only cater to a single case.
 
 Let's take a look at this defined network from PyTorch's own [documentation][6].
 
@@ -100,7 +105,7 @@ An example computational graph.
 </figcaption>
 </figure>
 
-The code for the rest of the module can be found at ```m1_memory_hierarchies/code/computational_graphs/``` or
+The code for the rest of the module can be found at ```m1_memory_hierarchies::code::computational_graphs``` or
 [online][8]. It's quite long (more than 6k lines of code). You don't need to read the whole thing, you can just
 skim the most relevant sections which will typically be named specifically.
 
@@ -109,7 +114,7 @@ First of all we are going to start on the CPU.
 We are going to create a data type which will hold the data our operators consume on the CPU.
 Let's call it ```Tensor2D```. Our 2D tensor will actually be a simple piece of one dimensional memory under the
 hood and we will keep track of the number of rows and columns to find out how to access each piece of data.
-If you are in the root directory for ```computational_graphs``` go to ```src/shared/tensor_2d.rs``` or
+If you are in the root directory for ```computational_graphs``` go to ```src::shared::tensor_2d.rs``` or
 [online][9].
 
 Start by taking a look at the definition of the ```Tensor2D``` struct at the very top. The ```derive``` stuff
@@ -197,11 +202,11 @@ might not be faster. In some cases for highly complex loops, it can instead make
 more loops, which is a process called ```loop fission```. I have only used a small subset of loop optimizations,
 but you can read about more ways of optimzing a loop [here][3].
 
-Ok, so try and run the code locally! To begin with go to the file ```src/lib.rs```. Comment out all
+Ok, so try and run the code locally! To begin with go to the file ```src::lib.rs```. Comment out all
 of the lines within and including the ```if configuration.compatible_gpu_found {``` line. Then in your terminal
 navigate to the root folder, the one containing the ```src``` folder, and write ```cargo run --release```. Your
 computer will now run a bunch of benchmarks relevant to the rest of this section. You can find the output
-in ```computational_graphs/outputs/benchmarks/cpu```. The one that should have been generated on your computer
+in ```computational_graphs::outputs::benchmarks::cpu```. The one that should have been generated on your computer
 that we want to look at now is called ```cpu_linear_benchmark.png```. If you weren't able to run
 it locally, don't worry, I got you covered!
 

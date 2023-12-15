@@ -1,17 +1,19 @@
 # Building a Computational Graph Compiler
 Ok, so we are almost done with this module. Let's put it all together and execute the graphs,
-except I have three more variations to explain before I present the benchmark graph.
+except I have three more variations to explain before I present the benchmark plots. This is where everything
+will pay off and we can see the performance improvements we get from formulating programs as graphs and
+optimize them.
 
-Compiling the shaders for each operator is actually quite expensive, so I put a flag on the GPU graph
-runner which if ```true``` will cache all of the compiled shaders for reuse later.
+Compiling the shaders for each operator is actually quite expensive and not something we need to do every time
+we launch a GPU program, so I put a flag on the GPU graph runner which if ```true``` will cache all of the
+compiled shaders for reuse later. The compiled shaders are stored in a hash map.
 
-Next up, we have the fused variant. This is our own little mini-compiler. This one is for both the CPU
-and the GPU graph runners. If ```true``` the graph runners will replace any instance of
-```Linear/ReLU/Softmax``` or ```Linear/ReLU``` with a fused version. But as softmax can only ever
-be the final operation and a ReLU the one before the softmax, and thus there will always be at
-most a single instance of a fused ```Linear/ReLU/Softmax``` operator, we will mostly see the
-effect of ```Linear/ReLU``` fused operators. Remember, that for a network of depth N we have
-N - 2 operators that are randomly either a linear or ReLU operator.
+Next up, we have the fused variant. This one is for both the CPU and the GPU graph runners.
+If ```true``` the graph runners will replace any instance of ```Linear/ReLU/Softmax``` or ```Linear/ReLU```
+with a fused version. Softmax can only ever be the final operation and a ReLU the one before the softmax,
+and thus there will always be at most a single instance of a fused ```Linear/ReLU/Softmax``` operator,
+we will mostly see the effect of ```Linear/ReLU``` fused operators. Remember, that for a network of depth N
+we have N - 2 operators that are randomly either a linear or ReLU operator.
 
 Finally, there is the graph loop variant. This variant is not just creating a computational graph, but
 moves the loop from the measuring function closer into the graph runner itself. One thing to note though
@@ -59,12 +61,12 @@ Windows 10. The L1/L2/L3 caches were 320 KB, 5 MB and 12 MB respectively.
 </figure>
 
 As we can see from the benchmarks, if you have small enough matrices, it can at some point be more efficient to just
-use the CPU. But the graph running in a loop seems to work to be better over all. If you were a machine learning
+use the CPU. But the graph running in a loop seems to be better overall. If you were a machine learning
 researcher, these graphs are sort of an overview of why you should use a system that formulates a computational
 graph, and why you should use optimization on that graph if it is available. The difference in performance you pay
 for. Either with your time or your budget. So if you use something like PyTorch, do be sure to optimize, and be
-sure to check whether the ```torch.compile()``` function works for your setup. Next up is the parallelism module
-where you will be introduced, very superficially, to a couple of different concepts in parallelism. Hopefully,
+sure to check whether the ```torch.compile()``` function works for your setup. Next up is the concurrency module
+where you will be introduced, very superficially, to a couple of different concepts in concurrency. Hopefully,
 this will help you to understand stuff like model distributed parallelism and data distributed parallelism.
 
 _________________

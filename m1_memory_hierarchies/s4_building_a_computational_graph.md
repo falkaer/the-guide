@@ -1,12 +1,13 @@
 # Building a Computational Graph
-Ok, so now we have the basic building blocks ready. We also have a very simplifying set of constraints. This
-allows us to just represent this graph as a straight line. So we can just represent our graph as a
-series of nodes in a list. This list needs to be runnable on both the CPU and the GPU, so we'll look
-at how we can make a CPU graph runner and a GPU graph runner which can interpret the same list of
-commands and still work just fine. First we are going to do this on the CPU, then the GPU. Then
-we are going to run the GPU graph in a loop instead of reconstructing it with every iteration.
-This also the part where we really start to let loose, creating graphs of different sizes,
-creating arbitrary permutations of linear and ReLU nodes and seeing what the benchmarks can show us.
+Ok, so now we have the basic building blocks ready. I have introduced what computational graphs are, we have
+taken a quick look at what GPU's are and we also have a very simplifying set of constraints.
+Given our constraints we can represent our graph as a series of nodes in a list. This list needs to be
+runnable on both the CPU and the GPU, so we'll look at how we can make a CPU graph runner and a GPU
+graph runner which can interpret the same list of commands and still work just fine. First we are
+going to do this on the CPU, then the GPU. Then we are going to run the GPU graph in a loop instead
+of reconstructing it every iteration. This also the part where we really start to let loose, creating
+graphs of different sizes, creating arbitrary permutations of linear and ReLU nodes and seeing what
+the benchmarks can show us.
 
 ## Building the CPU Graph
 The CPU version of the computational graph is found in ```src::graph::nodes.rs```,

@@ -14,7 +14,7 @@ data to the CPU. If that linear operator is then followed by a ReLU operator, it
 have to do the whole thing over again. Compile the ReLU code for the GPU,
 allocate buffers, transfer, execute, transfer back. Then possibly deallocate.
 
-This is not a good way to accomplish this. But it is highly flexible and
+This is a suboptimal way to accomplish this. But it is highly flexible and
 we're gonna do it anyways! Don't worry about the 'how' too much, I'll go into greater detail further down the page.
 
 ## Building the Linear Node
@@ -51,7 +51,7 @@ We have several instances of ```array<f32>``` which is the raw data from our
 ```Tensor2D```s. You can reconstruct the entire ```Tensor2D``` by combining
 this data with the dimension sizes from the ```TensorDimension``` struct.
 
-So now we get to the code itself. For the matrix-matrix multiplication, the
+So now we get to the code itself. For the matrix multiplication, the
 dimensionality of the problem lends itself to a two dimensional solution.
 So above the ```main``` function, which can be named anything by the way,
 we define that our work group will have a size of 8 on the x-axis and
@@ -119,16 +119,12 @@ is in any way faster.
 Next up, we have the softmax operator. You will find the three shaders
 needed for the softmax operator in ```shaders::softmax.wgsl``` or [online][5].
 
-In this case, finding and communicating the maximum value and
-the sum is a lot more complicated on a GPU. The implementation
-provided is not even using all the possible threads, but just a
-single work group to make the code more readable. Implementing
-a tree reduction with iterative calls to max and sum shaders
-is left as an exercise. So you don't need to know
-what that is right now, just know that it is not just
-implemented suboptimally, but even without more than 32 threads.
-I did however cheat a little bit and use shared memory, to make it a bit faster.
-Don't worry about shared memory, I will introduce it later on.
+In this case, finding and communicating the maximum value and the sum is a lot more complicated on a GPU.
+The implementation provided is not even using all the possible threads, but just a single work group to make
+the code more readable. Implementing a tree reduction with iterative calls to max and sum shaders is left as
+an exercise. So you don't need to know what that is right now, just know that it is not just implemented
+suboptimally, but even without more than 32 threads. I did however cheat a little bit and use shared memory,
+to make it a bit faster.
 
 <figure markdown>
 ![Image](../figures/immediate_softmax_benchmark.png){ width="800" }
@@ -143,15 +139,13 @@ Of course, the CPU implementation is faster, even if I had parallelized it corre
 large to offset the cost of the transfer.
 
 ## Building Fused Operators
-Finally, the fused operators are basically implemented through doing
-a single transfer to and from, and calling the kernels and bindings
-in succession. This is done CPU-side and there are no unique shaders
-for them. Again, don't worry about the stuff happening CPU side.
-Just know that it is implemented slighty suboptimally, and
-these shaders aren't implemented optimally.
+Finally, the fused operators are basically implemented through doing a single transfer to and from, and
+calling the kernels and bindings in succession. This is done CPU-side and there are no unique shaders for them.
+Again, don't worry about the stuff happening CPU side. Just know that it is implemented slighty suboptimally,
+and these shaders aren't implemented optimally.
 
-The only really interesting of the performance benchmarks, as I don't have many different implementations of
-each operator is the fused ones.
+The only really interesting part of the performance benchmarks, as I don't have many different implementations of
+each operator, is the fused ones.
 
 <figure markdown>
 ![Image](../figures/immediate_linear_relu_softmax_fused_benchmark.png){ width="800" }

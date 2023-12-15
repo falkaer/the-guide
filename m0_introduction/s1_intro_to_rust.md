@@ -1,13 +1,15 @@
 # Introducing Rust
-Why use [Rust](https://www.rust-lang.org/) for the guide? Say you've decided you want to eat 35 burgers.
-Python is the friend that helps you order them to be delivered at your door.
-C++ is the friend who says 'do whatever you want'. Rust on the other hand,
+Why use [Rust](https://www.rust-lang.org/) for the guide?
+
+Say you've decided you want to eat 35 burgers. Python is the friend that helps you order them to be
+delivered at your door. C++ is the friend who says 'do whatever you want'. Rust
 is the friend who stops you and then recommends you a salad. That may be annoying at times,
 especially if you were just craving 35 entire burgers, but it is what is best for you.
 Since the guide is not a beginners introduction to programming, and I will be introducing
 at times fairly advanced concepts, having a language that keeps you on the straight and
 narrow, even if it seems pedantic and like it is getting in your way, is a genuine advantage.
 If the Rust compiler accepts your code without any unsafe sections, it is probably going to work.
+
 Another point in Rust's favor was the easy setup and use on Windows, Linux and macOS.
 The setup time needed to be less than 10 minutes and the chosen language needed an
 easy-to-use, preferably integrated, package manager which didn't cause too many versioning issues.  

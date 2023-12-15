@@ -1,7 +1,4 @@
 # Intro to GPU's
-Now, I'll just give you a quick introduction to GPU's as the next section is about immediate mode
-GPU computation.
-
 GPU's are fairly ubiquitous at this point. They started off as purely for graphics, but
 around 2008, enough researchers had tinkered with workarounds to use them for general
 computing, that Nvidia put out CUDA, opening up GPU's for more general usage. GPU's still do lots
@@ -11,8 +8,8 @@ to use them. You can just use the pure compute capabilities. This guide won't ge
 for the graphics specialization.
 
 Ok, so anyways, GPU's are pretty hot stuff right now as the software support becomes deeper and deeper,
-the hardware increasingly has support for neural network specific operations and ChatGPT has
-increased the hype and demand for AI to exasperating levels.
+the hardware increasingly has hardware support for specific operations in deep learning, ray tracing and
+optical flow, and deep learning has hit the mainstream.
 
 You can think of the GPU as an expansion of the memory hierarchies we have been examining earlier.
 It is not running in lock step, and you have to program more things explicitly, while also changing
@@ -65,7 +62,7 @@ in transfer speed. The same thing happens on the GPU, a staging area visible fro
 memory is stored, and then moved from the controlled area to the rest of GPU memory, where the GPU is free to do
 what it wants with it, without interruptions and guarantees.
 
-### Threads, Warps and Blocks
+### Threads, Work Groups and Blocks
 Threads are sort of like a CPU core, except a CPU core is a physical entity, whereas a thread is more like
 a set of variables (think back to the stack and function calls) which is following its own set of instructions.
 Thread 1 could be running program A with various states in registers and local variables X. It makes a call
@@ -78,14 +75,14 @@ just focus on you having called a single operation. In that case all of your thr
 the same program. They might however, go down different branches (think if-statements!), but this is more expensive
 on the GPU than the CPU, and should in general be avoided as much as possible. Each thread will have its own local
 variables. Threads on a GPU are launched in groups. Depending on the platform and the API they will be
-called something different. In wgpu, which is what we will be using, it is called a workgroup, while
-in CUDA terminology it is called a warp. On Nvidia GPU's it will be at most 32 threads per workgroup
+called something different. In wgpu, which is what we will be using, it is called a work group, while
+in CUDA terminology it is called a warp. On Nvidia GPUs it will be at most 32 threads per work group
 and on AMD it will be at most 64 threads. The "at most" might seem a bit weird, but there is something called
 register pressure. All of the execution units that can run those 32 or 64 threads at the same time, share
 a lot of the same physical memory, so if your program uses lots of memory, you might have to decrease
 the amount of threads to have enough memory to run your program.
 
-Anyways. Once you decided to write a matrix-matrix multiplication shader, you need to figure out which threads
+Anyways. Once you decided to write a matrix multiplication shader, you need to figure out which threads
 are gonna go where. In that case, I would begin by launching 1 thread for every output element.
 
 When programming for a GPU you have some maximum amount of threads you can launch. This is usually
@@ -608,7 +605,7 @@ They would each do lots of reads from both the input signal and the filter weigh
 accumulation in a register, and each have a single write to memory with no overlap. As you might remember, you
 should always prefer more reads than writes. Reads are very parallelizable, writes usually require synchronization.
 
-This can be extended to lots of different algorithms. For matrix-matrix multiplication, it's recommended to use
+This can be extended to lots of different algorithms. For matrix multiplication, it's recommended to use
 gathering, from the point of view of the output element for each thread. For some more material on
 scattering and gathering, there is a paper on it
 [from '07](https://cse.hkust.edu.hk/catalac/papers/scatter_sc07.pdf).

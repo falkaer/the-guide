@@ -1,4 +1,7 @@
 # Threads
+Now I will introduce how to explicitly define a thread and give it some work to do. This can be very good for
+workloads which are long running and data independent.
+
 This section is somewhat based on [The Book](https://doc.rust-lang.org/book/ch16-00-concurrency.html).
 In the last section we looked at what a parallelization library like Rayon can do. Under the hood, it does
 quite a lot of stuff. It subdivides a collection, in the examples I showed you, these collections were all
@@ -54,9 +57,9 @@ Windows 10. The L1/L2/L3 caches were 320 KB, 5 MB and 12 MB respectively.
 </figure>
 
 This is all over the place. Two things to note - the main thread, despite not printing until it has spawned
-all of the other threads, prints before some of them. Also, we don't have a handle to any of the threads after spawning
-them. Thus we don't have any means of synchronized execution or anything like that. The threads might still be alive
-when the main thread is done executing.
+all of the other threads, prints before some of them. Also, we don't have a handle to any of the threads
+after spawning them. Thus we don't have any means of synchronized execution or anything like that.
+The threads might still be alive when the main thread is done executing.
 
 ## Joining, Wishing, Waiting
 Another thing we could do, is to hold on to each thread handle. That would allow us to make sure that

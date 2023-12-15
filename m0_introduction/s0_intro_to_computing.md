@@ -2,12 +2,12 @@
 If you are new to programming, or perhaps have been able to get by using scripting languages, such as Python,
 you might not have been introduced to the other options. Some of the concepts presented here
 lay the foundations for the choices dictating the rest of the guide.
-Though I have made some clearly defined choices about which tools to use in this material, you should at all times
+Though I have made some clearly defined choices about which tools to use in this guide, you should at all times
 use the right tool for the job. Not only in which language or framework you might choose,
 but in how you put together and design your systems using those tools. Part of the guide's
 strategy is going into greater detail about core concepts such as memory and then introduce you to a multitude
 of tools and concepts, also known as the "learn what to DuckDuckGo"-strategy. Once you are ready to do a project
-of your own you can then go back to a handful of concepts and explore them in greater detail.
+of your own you can then go back to a handful of concepts and explore them in greater detail. The additional reading sections might be useful when going back.
 
 The guide will introduce concepts that aid some programs in producing faster results than others.
 An important factor in reliable and performant systems is limitations.
