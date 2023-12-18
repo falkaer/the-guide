@@ -7,7 +7,8 @@ use the right tool for the job. Not only in which language or framework you migh
 but in how you put together and design your systems using those tools. Part of the guide's
 strategy is going into greater detail about core concepts such as memory and then introduce you to a multitude
 of tools and concepts, also known as the "learn what to DuckDuckGo"-strategy. Once you are ready to do a project
-of your own you can then go back to a handful of concepts and explore them in greater detail. The additional reading sections might be useful when going back.
+of your own you can then go back to a handful of concepts and explore them in greater detail. The additional
+reading sections might be useful when going back.
 
 The guide will introduce concepts that aid some programs in producing faster results than others.
 An important factor in reliable and performant systems is limitations.

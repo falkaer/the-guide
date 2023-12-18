@@ -44,6 +44,9 @@ Image credit </a>
 </figcaption>
 </figure>
 
+If you are working with a library like PyTorch and running training on a GPU you might be able to get
+PyTorch to make use of tensor cores by [automatic mixed precision][8]
+
 ## Additional Reading
 You can check out some material on [tensor cores][2] and [programming tensor cores][3] in CUDA. Or you
 can check out [cooperative matrices][4] and [machine learning][5] in Vulkan. There's also some material on  
@@ -58,3 +61,4 @@ Accelerating inference [with sparsity][6] and a series of videos regarding how t
 [5]: https://developer.nvidia.com/blog/machine-learning-acceleration-vulkan-cooperative-matrices/
 [6]: https://developer.nvidia.com/blog/accelerating-inference-with-sparsity-using-ampere-and-tensorrt/
 [7]: https://developer.nvidia.com/blog/video-mixed-precision-techniques-tensor-cores-deep-learning/
+[8]: https://pytorch.org/tutorials/recipes/recipes/amp_recipe.html

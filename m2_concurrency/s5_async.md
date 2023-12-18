@@ -1,4 +1,8 @@
 # Async
+Async operations are basically non-blocking operations. They allow us to set multiple processes in motion instead of
+waiting for each operation to finish, we get to decide when to wait for the results. We keep track of these
+processes in flight by using something called futures to come back to the process.
+
 If you went into the code from the memory hierachies module you will have already seen some async operations, which
 was solely to interact with the GPU, as the WebGPU specification, on which WGPU is based, requires that all
 interactions are async. This makes sense, as the CPU we are calling it from, does not have direct control of the

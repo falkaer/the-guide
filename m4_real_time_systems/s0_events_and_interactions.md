@@ -1,11 +1,10 @@
 # Events and Interactions
-[Events][0] are, well, an event. Something happens, and the event
-is processed somehow, by one or more actors, reacting to that event. Usually, events are asynchronous
-in origin. Distributed architectures can also be based on events with different reacting to and generating
-their own events. There is even a type of systems architecture based around events, called
-[event driven architecture][1], which I won't be going
-into at all. I will be focusing on events in the context of the kind of real-time systems you can easily make
-for your final projects, usually a desktop application.
+[Events][0] are, well, an event. Something happens, and the event is processed somehow, by one or more actors,
+reacting to that event. Usually, events are asynchronous in origin. Distributed architectures can also be
+based on events with different reacting to and generating their own events. There is even a type of systems
+architecture based around events, called [event driven architecture][1], which I won't be going into at all. I
+will be focusing on events in the context of the kind of real-time systems you can easily make for your final
+projects, usually a desktop application.
 
 If we import some event library, we could generate events, for example every time a user clicks the left mouse
 button, and then any actor subscribing to that event would receive the signal that that event had happened.
@@ -60,9 +59,9 @@ the main graphics window it might receive a command through a channel, if it is 
 animation on a button. This is a lot easier to debug and follow with a clear separation of flow and state.
 
 I made some code for showing how you can work with events in practice. You can find the code in
-```m2_concurrency::code::egui-winit-wgpu-template``` or
-[online][3]. Note that the events stem from Rust's more-or-less defacto window handling library,
-[winit][2]. Try and make sense of what is happening and run the code!
+```m2_concurrency::code::egui-winit-wgpu-template``` or [online][3]. Note that the events stem from
+Rust's more-or-less defacto window handling library, [winit][2]. Try and make sense of what is happening
+and run the code!
 
 When handling events like this, it can sometimes be worth it to ensure that a user holding down a button
 doesn't generate thousands of events, but a couple of events in order to not completely flood your system. If you

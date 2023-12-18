@@ -93,8 +93,8 @@ nav:
     - S3 - Atomics: m2_concurrency/s3_atomics.md
     - S4 - Message Passing: m2_concurrency/s4_message_passing.md
     - S5 - Async: m2_concurrency/s5_async.md
-    - S6 - More GPU: m2_concurrency/s6_more_gpu.md
-    - S7 - Parallel Graphs: m2_concurrency/s7_parallel_graphs.md
+    - S6 - 🧬 More GPU: m2_concurrency/s6_more_gpu.md
+    - S7 - 🧬 Parallel Graphs: m2_concurrency/s7_parallel_graphs.md
     - S8 - 👨🏼‍💻 Exercises: m2_concurrency/s8_exercises.md
   - M3 - Types:
     - m3_types/README.md

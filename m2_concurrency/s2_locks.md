@@ -1,4 +1,8 @@
 # Locks
+In this section we will take a look at a mechanism, the lock, for synchronizing when something is being worked on.
+This allows synchronization between threads. More than one thread can access the same piece of data as long as
+it is only the thread which holds the lock which can access it.
+
 We just took a look at how to launch and distribute some work to multiple threads.
 But we did some extra work to separate the data into neat chunks, with no overlap
 between which thread read and wrote to which data. So, how would we ensure

@@ -190,7 +190,7 @@ it can look like this -
             let filter: Vec<f32> = (0..*size).map(|_| rng.gen_range(-1.0..1.0)).collect();
             filters.push(filter);
         }
-        // Remove mutability to be sure.
+        // Remove mutability to be safe.
         let filters: Vec<Vec<f32>> = filters;
     ```
 

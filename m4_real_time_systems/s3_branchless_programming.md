@@ -341,12 +341,12 @@ different, very basic, functions. Note that the memory-to-compute ratio is quite
 simple compared to the amount of load operations. SIMD doesn't magically make your program any less memory bound, as
 such you have to try and optimize your code before going fully SIMD.
 
-Find the code in ```m2_concurrency::code::sorting_functions``` or [online][12].  
+Find the code in ```m4_real_time_systems::code::sorting_functions``` or [online][12].  
 
 <figure markdown>
 ![Image](../figures/sorting_functions_benchmark.png){ width="500" }
 <figcaption>
-Benchmark for the program in ```m2_concurrency::code::sorting_functions```.
+Benchmark for the program in ```m4_real_time_systems::code::sorting_functions```.
 This benchmark was run on my laptop boasting an Intel i7-1185G7, 3.0 GHz with 32GB of RAM. The operating system was
 Windows 10. The L1/L2/L3 caches were 320 KB, 5 MB and 12 MB respectively. The CPU supports
 Intel® SSE4.1, Intel® SSE4.2, Intel® AVX2, Intel® AVX-512.
@@ -398,12 +398,12 @@ In this case I only use functions implemented directly by utraviolet's ```uv::Ve
 ```uv::f32x8``` types.
 
 Be sure to check out the 4 references at the top of the code.
-Find the code in ```m2_concurrency::code::sphere_intersection``` or [online][11].
+Find the code in ```m4_real_time_systems::code::sphere_intersection``` or [online][11].
 
 <figure markdown>
 ![Image](../figures/sphere_intersection_benchmark.png){ width="500" }
 <figcaption>
-Benchmark for the program in ```m2_concurrency::code::sphere_intersection```.
+Benchmark for the program in ```m4_real_time_systems::code::sphere_intersection```.
 This benchmark was run on my laptop boasting an Intel i7-1185G7, 3.0 GHz with 32GB of RAM. The operating system was
 Windows 10. The L1/L2/L3 caches were 320 KB, 5 MB and 12 MB respectively. The CPU supports
 Intel® SSE4.1, Intel® SSE4.2, Intel® AVX2, Intel® AVX-512.
@@ -449,8 +449,8 @@ This is even being rolled out and described in this [blog post by Nvidia][1].
 [8]: https://web.eecs.utk.edu/~mbeck/classes/cs160/lectures/09_intruc_pipelining.pdf
 [9]: https://research.nvidia.com/sites/default/files/publications/laine2013hpg_paper.pdf
 [10]: https://jacco.ompf2.com/2019/07/18/wavefront-path-tracing/
-[11]: https://github.com/absorensen/the-guide/tree/main/m2_concurrency/code/sphere_intersection
-[12]: https://github.com/absorensen/the-guide/tree/main/m2_concurrency/code/sorting_functions
+[11]: https://github.com/absorensen/the-guide/tree/main/m4_real_time_systems/code/sphere_intersection
+[12]: https://github.com/absorensen/the-guide/tree/main/m4_real_time_systems/code/sorting_functions
 [13]: https://docs.rs/ultraviolet/latest/ultraviolet/
 [14]: https://www.youtube.com/watch?v=frLwRLS_ZR0
 [15]: https://absorensen.github.io/the-guide/m1_memory_hierarchies/s0_soft_memory_hierarchies/#access-patterns

@@ -1,11 +1,13 @@
 # Message Passing
+Message passing is one of the easiest ways to share data between multiple threads is not to use locks,
+but to just send data from one thread to another. Whoever has the data gets to use it. Once that thread is done
+using it, it can send it to another thread. Synchronization through ownership. Easy peasy.
+
 Now let's look at a different way of doing parallelism. What if we didn't share memory at all and just sent it
-between threads? That would make things so much easier! We will do that with
-[message passing](https://en.wikipedia.org/wiki/Message_passing)!
+between threads? That would make things so much easier! We will do that with [message passing][2]!
 It might also make things slower, but I will just assume that it is slower than the data parallelism, threads,
 locks and atomics we just looked at. On the other hand it allows us to work simply while maintaining a very high
-degree of freedom between threads, allowing us to take that to the extreme with
-[task parallelism](https://en.wikipedia.org/wiki/Task_parallelism).
+degree of freedom between threads, allowing us to take that to the extreme with [task parallelism][3].
 
 So why is message passing easier to work with than the mutexes and atomics we just looked at? Until now, we have
 either had a library like Rayon split some shared data into segments which each thread could consume or we have used
@@ -56,18 +58,15 @@ structs. ```mpsc``` stands for multiple producer, single consumer. When creating
 sender and a receiver are returned. The sender can be cloned multiple times, to allow several threads to send
 messages using the same channel, whereas there can only ever be one receiver.
 
-[mpsc::channel](https://doc.rust-lang.org/std/sync/mpsc/fn.channel.html) is the one most often used and
-is an asynchronous channel. It is what is known as *unbounded* and if given too many messages will resize to
-accommodate. A transmitting thread will not block.
+[mpsc::channel][4] is the one most often used and is an asynchronous channel. It is what is known as
+*unbounded* and if given too many messages will resize to accommodate. A transmitting thread will not block.
 
-The [mpsc::sync_channel](https://doc.rust-lang.org/std/sync/mpsc/fn.sync_channel.html) on the other hand
-is *bounded* and won't change its size. A transmitting thread will have to block until the message as been sent
-successfully. This might be best if you are running at high speeds and can't drop packages. You could very quickly
-accummulate a massive amount of memory.
+The [mpsc::sync_channel][5] on the other hand is *bounded* and won't change its size. A transmitting thread
+will have to block until the message as been sent successfully. This might be best if you are running at high
+speeds and can't drop packages. You could very quickly accummulate a massive amount of memory.
 
 ## Real-Time Message Passing
-I made a code example for you. You can either go to ```m2_concurrency::code::message_passing``` or
-[online](https://github.com/absorensen/the-guide/tree/main/m2_concurrency/code/message_passing).
+I made a code example for you. You can either go to ```m2_concurrency::code::message_passing``` or [online][6].
 
 In this example I use Rust's ```mpsc::channel``` to get two pairs of senders/receivers. The main thread
 generates some data and sends the ```Vec<f32>``` to a processing thread, which performs some in-place
@@ -76,7 +75,7 @@ out. Note that each thread does not block and instead of using ```.rcv()```, whi
 ```.try_rcv()``` and handles the case where there wasn't any new message to receive. In the case of no message
 being received it also prints.
 
-There are three values at the top.
+There are three values at the top -
 
 === "Rust"
 
@@ -93,8 +92,8 @@ attempting to receive another message.
 
 Try and run the code, see what happens!
 
-Now try and adjusting the wait times. How does it run when you reduce ```worker_wait_time```.
-Why do you think that is?
+Now try and adjusting the wait times. How does it run when you reduce ```worker_wait_time```. Why do you think
+that is?
 
 ## Additional Reading
 A longer, very friendly introduction to channels and message passing in Rust can be found [here][0].
@@ -104,3 +103,8 @@ the most used method for sharing data between nodes is a standard called [MPI][1
 
 [0]: https://doc.rust-lang.org/book/ch16-02-message-passing.html
 [1]: https://en.wikipedia.org/wiki/Message_Passing_Interface
+[2]: https://en.wikipedia.org/wiki/Message_passing
+[3]: https://en.wikipedia.org/wiki/Task_parallelism
+[4]: https://doc.rust-lang.org/std/sync/mpsc/fn.channel.html
+[5]: https://doc.rust-lang.org/std/sync/mpsc/fn.sync_channel.html
+[6]: https://github.com/absorensen/the-guide/tree/main/m2_concurrency/code/message_passing

@@ -1,6 +1,6 @@
 # Threads
 Now I will introduce how to explicitly define a thread and give it some work to do. This can be very good for
-workloads which are long running and data independent.
+workloads which are long running and data largely independent.
 
 This section is somewhat based on [The Book](https://doc.rust-lang.org/book/ch16-00-concurrency.html).
 In the last section we looked at what a parallelization library like Rayon can do. Under the hood, it does

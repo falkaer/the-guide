@@ -1,7 +1,9 @@
 # Bit Tricks
-There's a number of different tricks you can do with bits, and I won't even attempt to do all of them.
-But I'll briefly introduce three different things you can do. Spatial hashing, Morton codes and the
-legendary fast inverse square root.
+Seeing numbers as individual bits can result in highly compressible data and a much simpler relation to data structures.
+If you also only need a single bits worth of information, you can really save some memory bandwidth by working within
+the confines of a single 32- or 64-bit element. There's a number of different tricks you can do with bits, and I won't
+even attempt to more than a few of them. But I'll briefly introduce three different things you can do. Spatial hashing,
+Morton codes and the legendary fast inverse square root.
 
 ## Spatial Hashing
 Ok, so first off let's look at what we can do with encoding multidimensional data into a single number.

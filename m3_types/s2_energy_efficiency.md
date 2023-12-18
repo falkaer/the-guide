@@ -1,14 +1,13 @@
 # Energy Efficiency
 From experience, not a lot of people who daily write quite long-running code, necessarily
-connect the two dots computing and energy consumption/CO<sub>2</sub> emissions. Anything you
-do with a computer consumes some form of electricity. Including whatever you do on the internet
-or download from the internet. Like downloading the contents of this page for you to read.
-Generally, if your code is faster, it is greener. If your code
-downloads less, it is likely to be greener. If you use a lower precision, generally,
-it is likely to be greener. If you accumulate work to do, as in batching, instead of
-firing up the system for every single request, it is likely to be greener. If you
-preprocess the data at the edge before sending it to the cloud, it is likely to be greener.
-If your code is faster, it is likely to greener. If your code is faster, it is likely to be cheaper.
+connect the two dots - computing and energy consumption/CO<sub>2</sub> emissions. Anything you
+do with a computer consumes some form of electricity. Including whatever you do on the internet.
+Like downloading the contents of this page for you to read. Generally, if your code is faster, it is greener.
+If your code downloads less, it is likely to be greener. If you use a lower precision, generally, it is likely
+to be greener. If you accumulate work to do, as in batching, instead of firing up the system for every
+single request, it is likely to be greener. If you preprocess the data at the edge before sending it to the
+cloud, it is likely to be greener. If your code is faster, it is likely to greener. If your code is faster,
+it is likely to be cheaper.
 
 I will primarily focus on the energy efficiency of things you have direct control over. Once you
 have learned that, you should be able to infer the rest. Why not make this a more advanced or optional topic?
@@ -45,11 +44,10 @@ Image credit </a>
 </figcaption>
 </figure>
 
-As you can see, retrieving a value all the way from RAM instead of a cache
-is vastly more expensive. If you think back to the cache lines from ```m1```
-imagine lowering the precision of your data from 32-bit floats to 16-bit or
-even 8-bit. Imagine many additional data elements you could fit in a single
-cache line. Elements which could be reused and kept in cache.
+As you can see, retrieving a value all the way from RAM instead of a cache is vastly more expensive. If you
+think back to the cache lines from ```m1``` imagine lowering the precision of your data from 32-bit floats
+to 16-bit or even 8-bit. Imagine many additional data elements you could fit in a single cache line.
+Elements which could be reused and kept in cache.
 
 ## Additional Reading
 [Efficient Processing of Deep Neural Networks][0] is a highly

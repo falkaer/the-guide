@@ -1,4 +1,10 @@
 # Bitwise Operations
+Bitwise operations are operations we do on individual bits of integers. In general, doing bitwise operations on
+floats are frowned upon, if not undefined behavior. Doing individual bit operations allows us to squeeze lots
+of data into very little space which means we can keep more data cached. As we'll see later on, bitwise operations
+pose an alternative to standard binary operations such as && and ||, which is a huge boon when optimizing code
+with [branchless programming][3].
+
 After that little aside, let's get back to a more direct description of how we work with types.
 We don't just have the mathematical operators which we can use on integers and floats, taken
 directly from mathematics, like *, /, +, -, %, but we can operate directly on the bits themselves, which
@@ -127,3 +133,4 @@ reference for [operators][2].
 [0]: https://doc.rust-lang.org/std/primitive.u32.html#method.rotate_left
 [1]: https://en.wikipedia.org/wiki/Bitwise_operation
 [2]: https://doc.rust-lang.org/reference/expressions/operator-expr.html
+[3]: https://absorensen.github.io/the-guide/m4_real_time_systems/s3_branchless_programming/

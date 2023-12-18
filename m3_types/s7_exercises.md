@@ -26,13 +26,12 @@ and the accumulation. What happens if you accumulate in f64 instead? What if you
 accumulation? What if you use f16 for both? You will have to find a crate for f16, just make sure it doesn't convert
 to f32 for arithmetic operations.
 
-First up is [Kahan summation][2] and a supplemental [blog post][14].
-Next try the Kahan-Babushka-Klein sum, from the same page.
-Finally, try the [pairwise summation][4]. Iteratively add every two numbers to get a new list that is half the size
-until you have 1 number.
+First up is [Kahan summation][2] and a supplemental [blog post][14]. Next try the Kahan-Babushka-Klein sum, from the
+same page. Finally, try the [pairwise summation][4]. Iteratively add every two numbers to get a new list that is
+half the size until you have 1 number.
 
 Pairwise summation is also the principle behind the [butterfly FFT algorithm][6] and the defacto standard
-way of summation on GPU's. If you want to get nuts, we can get nuts, you can also try to implement the
+method of summation on GPU's. If you want to get nuts, we can get nuts, you can also try to implement the
 [iterative tree reduction][5] on the GPU.
 
 ## Sorting

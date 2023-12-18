@@ -1,8 +1,8 @@
 # Integers
 So far we have mainly used integers as indices into memory (arrays), but other than being good at
 doing integer math, integers also have a few other characteristics going for them. They have
-uniform precision across their entire span, they are good for compressing data and integer-based
-calculations are quite a bit more energy efficient than floating point calculations.
+uniform precision across their entire span, they are good for compressing data and representing
+floats as integers can be used for various ways of sorting.
 
 Before I go into how a computer typically represents signed and unsigned integers,
 we are going to take a look at how we represent numbers in different bases without a computer.
