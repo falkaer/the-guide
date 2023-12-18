@@ -59,7 +59,7 @@ the main graphics window it might receive a command through a channel, if it is 
 animation on a button. This is a lot easier to debug and follow with a clear separation of flow and state.
 
 I made some code for showing how you can work with events in practice. You can find the code in
-```m2_concurrency::code::egui-winit-wgpu-template``` or [online][3]. Note that the events stem from
+```m4_real_time_systems::code::egui-winit-wgpu-template``` or [online][3]. Note that the events stem from
 Rust's more-or-less defacto window handling library, [winit][2]. Try and make sense of what is happening
 and run the code!
 
@@ -70,4 +70,4 @@ are using bounded channels to distribute your events, you might also incur the r
 [0]: https://en.wikipedia.org/wiki/Event_(computing)
 [1]: https://en.wikipedia.org/wiki/Event-driven_architecture
 [2]: https://github.com/rust-windowing/winit
-[3]: https://github.com/absorensen/the-guide/tree/main/m2_concurrency/code/egui-winit-wgpu-template
+[3]: https://github.com/absorensen/the-guide/tree/main/m4_real_time_systems/code/egui-winit-wgpu-template

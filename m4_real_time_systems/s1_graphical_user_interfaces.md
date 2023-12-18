@@ -40,6 +40,6 @@ functionality making them more or less fully fledged app frameworks like [Tauri]
 [0]: https://github.com/emilk/egui
 [1]: https://www.egui.rs/#demo
 [2]: https://www.rerun.io/
-[3]: https://github.com/absorensen/the-guide/blob/main/m2_concurrency/code/egui-winit-wgpu-template/src/control_panel.rs
+[3]: https://github.com/absorensen/the-guide/blob/main/m4_real_time_systems/code/egui-winit-wgpu-template/src/control_panel.rs
 [4]: https://tauri.app/
 [5]: https://dioxuslabs.com/

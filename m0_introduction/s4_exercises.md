@@ -34,6 +34,9 @@ Once you have completed this part 1 out of 3, I suggest modifying the resulting 
 If you are more inclined towards neural networks, [Learning to Fly][3], which focuses on neural networks and genetic
 algorithms, might be more stimulating. The code is already in Rust and should be fairly easy to follow.
 
+## m0::e1 - Traits!
+Find out which traits are needed for using BURN
+
 [0]: https://github.com/absorensen/the-guide/tree/main/m1_memory_hierarchies/code/image_on_screen
 [1]: https://adventofcode.com/
 [2]: https://raytracing.github.io/books/RayTracingInOneWeekend.html
