@@ -203,8 +203,9 @@ Spot the error?
 ??? note "Answer"
 
     We had two pointers and forgot to ```free``` using the base pointer, ```base_integer_array```.
-    This is [undefined behavior][24], which means that there are literally no definitions of what will happen.
-    It is really bad. What we should have done was this.
+    This is [undefined behavior][https://en.wikipedia.org/wiki/Undefined_behavior], which means
+    that there are literally no definitions of what will happen. It is really bad. What we
+    should have done was this -
 
     === "C"
         ```c
@@ -1808,7 +1809,7 @@ If you are into spatial data structures and/or graphics, computer vision, etc he
 [21]: https://en.wikipedia.org/wiki/Word_(computer_architecture)
 [22]: https://en.wikipedia.org/wiki/Segmentation_fault
 [23]: https://en.cppreference.com/w/c/memory/free
-[24]: https://en.wikipedia.org/wiki/Undefined_behavior
+[24]: 
 [25]: https://en.wikipedia.org/wiki/Byte_addressing
 [26]: https://en.algorithmica.org/hpc/cpu-cache/alignment/
 [27]: https://github.com/absorensen/the-guide/tree/main/m1_memory_hierarchies/code/access_patterns

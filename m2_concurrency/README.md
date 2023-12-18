@@ -89,7 +89,8 @@ All of these put one thing into the center of everything. Can you guess it?
 
     Some ways of accessing memory can seem completely fine when single threaded, but break down under the scrutiny
     of parallization. Trees can be hard, especially if you also have to modify them. As one researcher found it,
-    a [hierarchical hash map][2] performed siginifcantly better for some types of algorithms on the GPU.
+    a [hierarchical hash map][https://www.researchgate.net/publication/354065094_Practical_Spatial_Hash_Map_Updates]
+    performed siginifcantly better for some types of algorithms on the GPU.
 
 Once you have the correct CPU based implementation, you should start asking yourself, where is this going to
 run and how is the memory accessed in order to accomplish what I want to do?
@@ -126,6 +127,5 @@ cases, ```Send``` and ```Sync``` are automatically derived.
 
 [0]: https://en.wikipedia.org/wiki/Concurrency_(computer_science)
 [1]: https://en.wikipedia.org/wiki/Amdahl%27s_law
-[2]: https://www.researchgate.net/publication/354065094_Practical_Spatial_Hash_Map_Updates
 [3]: https://en.wikipedia.org/wiki/Race_condition
 [4]: https://doc.rust-lang.org/nomicon/send-and-sync.html
