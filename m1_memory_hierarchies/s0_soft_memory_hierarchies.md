@@ -1809,7 +1809,6 @@ If you are into spatial data structures and/or graphics, computer vision, etc he
 [21]: https://en.wikipedia.org/wiki/Word_(computer_architecture)
 [22]: https://en.wikipedia.org/wiki/Segmentation_fault
 [23]: https://en.cppreference.com/w/c/memory/free
-[24]: 
 [25]: https://en.wikipedia.org/wiki/Byte_addressing
 [26]: https://en.algorithmica.org/hpc/cpu-cache/alignment/
 [27]: https://github.com/absorensen/the-guide/tree/main/m1_memory_hierarchies/code/access_patterns
