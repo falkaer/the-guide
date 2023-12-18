@@ -121,10 +121,12 @@ Rust does not have a bit vector implementation in the standard library, but what
 quite a number of bitwise or bitwise-adjacent operations directly on
 [integers][0]. Rust does have the bitwise NOT, usually denoted ~, but it is ! like on boolean types. Like so -
 
-```rust
-let initial_value: u8 = 0b01010101;
-let flipped_value: u8 = !initial_value; // 0b10101010;
-```
+=== "Rust"
+
+    ```rust
+    let initial_value: u8 = 0b01010101;
+    let flipped_value: u8 = !initial_value; // 0b10101010;
+    ```
 
 ## Additional Reading
 If you want to go into greater depths about bitwise operators check out [this wiki][1] or the Rust language

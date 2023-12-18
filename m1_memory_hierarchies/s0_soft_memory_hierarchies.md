@@ -1322,18 +1322,20 @@ number and then modulos that number by a number representing how much space we h
 recommendation is that a hash map should have at least twice the space needed to densely represent the
 same number of elements.
 
-```rust
-// Not actually a good hash function
-fn example_hash_function(key: Vec<char>) -> usize {
-    const PRIME: usize = 6457;
-    let mut hash: usize = 0;
-    for element in key {
-        hash = ( (hash * 31) + key as usize ) ^ PRIME;
-    }
+=== "Rust"
 
-    hash
-}
-```
+    ```rust
+    // Not actually a good hash function
+    fn example_hash_function(key: Vec<char>) -> usize {
+        const PRIME: usize = 6457;
+        let mut hash: usize = 0;
+        for element in key {
+            hash = ( (hash * 31) + key as usize ) ^ PRIME;
+        }
+
+        hash
+    }
+    ```
 
 Generally, a hash map will have constant time lookup and insertion. The reason for the recommendation of
 at least a factor 2 in space is collisions! A collision is when two different keys hash to the same
@@ -1532,14 +1534,16 @@ check whether they were ```NULL``` or ```nullptr``` whenever you were considerin
 available. In Rust, you might have something like ```Option<Arc<Node>>``` and you would have to check whether the
 child was ```None``` or ```Some(child)```.
 
-```rust
-struct BinaryNode {
-    payload: i32,
-    left: Option<Arc<BinaryNode>>,
-    parent: Option<Weak<BinaryNode>>,
-    right: Option<Arc<BinaryNode>>,
-}
-```
+=== "Rust"
+
+    ```rust
+    struct BinaryNode {
+        payload: i32,
+        left: Option<Arc<BinaryNode>>,
+        parent: Option<Weak<BinaryNode>>,
+        right: Option<Arc<BinaryNode>>,
+    }
+    ```
 
 <figure markdown>
 ![Image](../figures/binary_tree_node_weak_parent.png){ width="500" }
