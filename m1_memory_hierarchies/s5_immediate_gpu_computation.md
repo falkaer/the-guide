@@ -184,4 +184,4 @@ case you might need some form of cache eviction mechanism, such as LRU.
 [3]: https://github.com/absorensen/the-guide/blob/main/m1_memory_hierarchies/code/computational_graphs/src/shared/shaders/relu.wgsl
 [4]: https://github.com/absorensen/the-guide/blob/main/m1_memory_hierarchies/code/computational_graphs/src/shared/shaders/relu_inline.wgsl
 [5]: https://github.com/absorensen/the-guide/blob/main/m1_memory_hierarchies/code/computational_graphs/src/shared/shaders/softmax.wgsl
-[6]: https://absorensen.github.io/the-guide/m1_memory_hierarchies/s2_intro_to_gpus/
+[6]: https://absorensen.github.io/the-guide/m1_memory_hierarchies/s4_intro_to_gpus/
