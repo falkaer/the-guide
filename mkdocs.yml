@@ -79,12 +79,14 @@ nav:
   - M1 - Memory Hierarchies:
     - m1_memory_hierarchies/README.md
     - S0 - Soft Memory Hierarchies: m1_memory_hierarchies/s0_soft_memory_hierarchies.md
-    - S1 - Computational Graphs: m1_memory_hierarchies/s1_computational_graphs.md
-    - S2 - Introduction to GPU's: m1_memory_hierarchies/s2_intro_to_gpus.md
-    - S3 - Immediate GPU Computation: m1_memory_hierarchies/s3_immediate_gpu_computation.md
-    - S4 - Building a Computational Graph: m1_memory_hierarchies/s4_building_a_computational_graph.md
-    - S5 - Computational Graph Compilers: m1_memory_hierarchies/s5_computational_graph_compilers.md
-    - S6 - 👨🏼‍💻 Exercises: m1_memory_hierarchies/s6_exercises.md    
+    - S1 - Basic Data Structures: m1_memory_hierarchies/s1_basic_data_structures.md
+    - S2 - Less Basic Data Structures: m1_memory_hierarchies/s2_less_basic_data_structures.md
+    - S3 - Computational Graphs: m1_memory_hierarchies/s3_computational_graphs.md
+    - S4 - Introduction to GPU's: m1_memory_hierarchies/s4_intro_to_gpus.md
+    - S5 - Immediate GPU Computation: m1_memory_hierarchies/s5_immediate_gpu_computation.md
+    - S6 - Building a Computational Graph: m1_memory_hierarchies/s6_building_a_computational_graph.md
+    - S7 - Computational Graph Compilers: m1_memory_hierarchies/s7_computational_graph_compilers.md
+    - S8 - 👨🏼‍💻 Exercises: m1_memory_hierarchies/s8_exercises.md    
   - M2 - Concurrency:
     - m2_concurrency/README.md
     - S0 - Data Parallelism: m2_concurrency/s0_data_parallelism.md

@@ -10,11 +10,14 @@ In order to get a hang of the basic of Rust I recommend doing [Advent of Code][1
 problems until you feel comfortable moving forward. You can give yourself a bigger challenge by rewriting your
 solutions to use iterators whenever possible.
 
-## m0::e1::a - Ray Tracing in One Weekend
+## m0::e2 - Traits
+Find out which traits are needed for using BURN.
+
+## m0::e3::a - Ray Tracing in One Weekend
 Doing this exercise will be quite challenging if you don't know how to read C++. To better practice
 structure, smart pointers, dynamic dispatch and traits, I recommend moving on to doing
 [Ray Tracing in One Weekend][2] in Rust. There is a code snippet which shows your image on screen
-instead of writing it to file in ```m1_memory_hierarchies::code::image_on_screen``` or [online][0].
+instead of writing it to file in ```m0_introduction::code::image_on_screen``` or [online][0].
 
 Once you have completed this part 1 out of 3, I suggest modifying the resulting code in the following ways -
 
@@ -30,14 +33,11 @@ Once you have completed this part 1 out of 3, I suggest modifying the resulting 
     * Formulate your rendering as a base iterator that calls the inner function with the correct
     pixel indices, then trade .iter() for .par_iter() 
 
-## m0::e1::b - Learning to Fly
+## m0::e3::b - Learning to Fly
 If you are more inclined towards neural networks, [Learning to Fly][3], which focuses on neural networks and genetic
 algorithms, might be more stimulating. The code is already in Rust and should be fairly easy to follow.
 
-## m0::e1 - Traits!
-Find out which traits are needed for using BURN
-
-[0]: https://github.com/absorensen/the-guide/tree/main/m1_memory_hierarchies/code/image_on_screen
+[0]: https://github.com/absorensen/the-guide/tree/main/m0_introduction/code/image_on_screen
 [1]: https://adventofcode.com/
 [2]: https://raytracing.github.io/books/RayTracingInOneWeekend.html
 [3]: https://pwy.io/posts/learning-to-fly-pt1/

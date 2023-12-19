@@ -69,6 +69,10 @@ need in the next module. The exercises here are fitting as a hand-in if you are 
 just doing the 1D convolution is plenty complicated for someone coming from Python. You'll get the point of how
 to use shared memory doing it. Doing matrix multiplication as well is good practice, but not strictly necessary.
 
+??? note "Answer"
+
+    We had two pointers and forgot to ```free``` using the base pointer, ```base_integer_array```.
+
 ### m1::e3 - 1D Convolution
 Go to ```m1_memory_hierarchies::code::gpu_hand_in``` or [online][0] and follow the instructions.
 You need to do 3 different version of 1D convolution, a naive version, one with zero padding of the input
