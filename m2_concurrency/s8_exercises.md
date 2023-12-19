@@ -62,7 +62,7 @@ an atomic variable outside of the iterator for summing the data. You can use eit
 
 Why might you use .par_chunks instead()?
 
-??? note "Answer"
+??? success "Answer"
     Summing as many of the values as possible locally mitigates the contention for the atomic sum variable.
 
 ### m2::e2 - Parallel Histogram with Atomics
