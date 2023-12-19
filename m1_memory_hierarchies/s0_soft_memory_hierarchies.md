@@ -444,7 +444,7 @@ copying every single element of a large array every time ownership changes hands
 An explanation of memory allocation, stack and heap [in C][10].
 
 A more rigorous [explanation][11] of the register, cache, main memory and virtual memory parts of
-the memory hierarchy. 
+the memory hierarchy.
 
 Check out the memory and cache specs for Apple's [M1 series][12].
 
