@@ -58,10 +58,10 @@ an atomic variable outside of the iterator for summing the data. You can use eit
 ??? note "Hints"
 
     To solve this in very few lines, use
-    [.par_chunks(chunk_size)][https://docs.rs/rayon/latest/rayon/slice/trait.ParallelSlice.html#method.par_chunks]
-    , [.for_each()][https://docs.rs/rayon/latest/rayon/iter/trait.ParallelIterator.html#method.for_each]
-    , [AtomicU64][https://doc.rust-lang.org/std/sync/atomic/struct.AtomicU64.html]
-    and [.fetch_add()][https://doc.rust-lang.org/std/sync/atomic/struct.AtomicU64.html#method.fetch_add]
+    [.par_chunks(chunk_size)](https://docs.rs/rayon/latest/rayon/slice/trait.ParallelSlice.html#method.par_chunks)
+    , [.for_each()](https://docs.rs/rayon/latest/rayon/iter/trait.ParallelIterator.html#method.for_each)
+    , [AtomicU64](https://doc.rust-lang.org/std/sync/atomic/struct.AtomicU64.html)
+    and [.fetch_add()](https://doc.rust-lang.org/std/sync/atomic/struct.AtomicU64.html#method.fetch_add)
     with a relaxed ordering.
 
 Why might you use .par_chunks instead()?
@@ -107,10 +107,10 @@ it should print its histogram. But how do you know it's finished?
 
 ??? note "Hints"
 
-    * You can partition the input data into [&[u32]][https://doc.rust-lang.org/rust-by-example/primitives/array.html]
-    slices, by using [.split_at()][https://doc.rust-lang.org/std/vec/struct.Vec.html#method.split_at].
+    * You can partition the input data into [&[u32]](https://doc.rust-lang.org/rust-by-example/primitives/array.html)
+    slices, by using [.split_at()](https://doc.rust-lang.org/std/vec/struct.Vec.html#method.split_at).
     * For creating a channel, check out the
-    [std::sync::mpsc::channel][https://doc.rust-lang.org/std/sync/mpsc/fn.channel.html].
-    * Create threads using [thread::spawn][https://doc.rust-lang.org/std/thread/fn.spawn.html].
+    [std::sync::mpsc::channel](https://doc.rust-lang.org/std/sync/mpsc/fn.channel.html).
+    * Create threads using [thread::spawn](https://doc.rust-lang.org/std/thread/fn.spawn.html).
     * You can check for all senders having been dropped, by handling the receiving of ```Err(_)``` in your accumulator.
     * Make sure to join your threads.
