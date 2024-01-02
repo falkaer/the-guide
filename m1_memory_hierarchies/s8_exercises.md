@@ -69,9 +69,27 @@ need in the next module. The exercises here are fitting as a hand-in if you are 
 just doing the 1D convolution is plenty complicated for someone coming from Python. You'll get the point of how
 to use shared memory doing it. Doing matrix multiplication as well is good practice, but not strictly necessary.
 
-??? note "Answer"
+??? note "Hints"
 
-    We had two pointers and forgot to ```free``` using the base pointer, ```base_integer_array```.
+    * You have to hard code the size of the shared memory array, there are ways around it, but they are outside
+    the scope of the exercise. Just pick a size that is bigger than your work group size.
+    * A common issue is for people to forget to set the correct size for shared memory arrays. In other
+    languages, indexing outside of an array might get you a catastrophic error, such as a segmentation fault.
+    In WGSL, it depends on the implementation. But one behavior spotted in the wild is replication of the
+    [n-1] value in perpetuity.
+    * WGSL will complain if you have unused variables.
+    * Try to think of the part of your shader which loads values into shared memory as completely distinct
+    from the part of your shader which is using that data. This includes which thread ID's corresponds to
+    which piece of data.
+    * Don't be disheartened when the first version of your code isn't faster than the non-shared memory version
+    of your shader is faster once you've mitigated branching through padding. The 1D convolution problem
+    doesn't maximally expose memory bandwidth problems as well as the harder matrix multiplication
+    (a 2D problem). You might see the shared memory version pull ahead once you have completed some of
+    the improvements suggested in the next item.
+    * Ideally, when loading data into shared memory you want to have as few if-statements as possible. In the
+    best case you can use a for-loop to stride through the data you are loading with a stride equal to the
+    amount of active threads in the work group. This should result in coalesced memory reads. You should
+    look that up.
 
 ### m1::e3 - 1D Convolution
 Go to ```m1_memory_hierarchies::code::gpu_hand_in``` or [online][0] and follow the instructions.
