@@ -84,18 +84,180 @@ frameworks such as [Numba][3] perform JIT compilation of your annotated Python c
 In some languages like [C][4], [C++][5] and [Rust][6], machine code is the outcome.
 That machine code can be quite platform specific, both because of the operating system and the
 hardware, and is in binary. 1's and 0's! These three languages are not garbage collected (more on that later).
+[Godbolt][7] is an online compiler explorer where we can explore what happens when we compile or interpret
+languages. I have defined this very simple example function, where in a number is multiplied with itself
+in-place, twice. In a perfect world, the system would see that we could store the intermediate results
+as close to the arithmetic logic unit (ALU), which is doing the multiplication, as possible in order to
+not redo the loading and storing into the more expensive RAM.
 
-Another quite popular language is [Go][7], which also compiles to machine code, but is garbage collected.
-[Julia][8] has more of a scientific/numerical focus, but features garbage collection,
+=== "Python"
+
+    ```python
+    def example(num):
+        num *= num
+        num *= num
+
+    ```
+
+=== "Rust"
+
+    ```rust
+    pub fn example(num: &mut i32) -> () {
+        *num *= *num;
+        *num *= *num;
+    }
+    ```
+
+=== "C++"
+
+    ```c++
+    void example(int * num) {
+        *num *= *num;
+        *num *= *num;
+    }
+    ```
+
+Now let's look at the compiled (interpreted for Python) outputs.
+
+=== "Python"
+
+    ```rust
+    // Python 3.11
+    0           0 RESUME                    0
+ 
+    1           2 LOAD_CONST                0 (<code object cube at 0x55fe5de6a460, file "example.py", line 1>)
+                4 MAKE_FUNCTION             0
+                6 STORE_NAME                0 (example)
+                8 LOAD_CONST                1 (None)
+                10 RETURN_VALUE
+
+    Disassembly of <code object cube at 0x55fe5de6a460, file "example.py", line 1>:
+    1           0 RESUME                    0
+    // Focus on this part and down
+    2           2 LOAD_FAST                 0 (num)
+                4 LOAD_FAST                 0 (num)
+                6 BINARY_OP                18 (*=)
+                10 STORE_FAST               0 (num)
+
+    3           12 LOAD_FAST                0 (num)
+                14 LOAD_FAST                0 (num)
+                16 BINARY_OP               18 (*=)
+                20 STORE_FAST               0 (num)
+                22 LOAD_CONST               0 (None)
+                24 RETURN_VALUE
+    ```
+
+=== "Rust Unoptimized"
+
+    ```rust
+    // rustc 1.74.0: -O -C debuginfo=0 -C opt-level=0
+    example::example:
+            sub     rsp, 24
+            mov     qword ptr [rsp + 8], rdi
+            mov     eax, dword ptr [rdi]
+            imul    eax, dword ptr [rdi]
+            mov     dword ptr [rsp + 20], eax
+            seto    al
+            test    al, 1
+            jne     .LBB0_2
+            mov     rcx, qword ptr [rsp + 8]
+            mov     eax, dword ptr [rsp + 20]
+            mov     dword ptr [rcx], eax
+            mov     eax, dword ptr [rcx]
+            imul    eax, dword ptr [rcx]
+            mov     dword ptr [rsp + 4], eax
+            seto    al
+            test    al, 1
+            jne     .LBB0_4
+            jmp     .LBB0_3
+    .LBB0_2:
+            lea     rdi, [rip + str.0]
+            lea     rdx, [rip + .L__unnamed_1]
+            mov     rax, qword ptr [rip + core::panicking::panic@GOTPCREL]
+            mov     esi, 33
+            call    rax
+            ud2
+    .LBB0_3:
+            mov     rax, qword ptr [rsp + 8]
+            mov     ecx, dword ptr [rsp + 4]
+            mov     dword ptr [rax], ecx
+            add     rsp, 24
+            ret
+    .LBB0_4:
+            lea     rdi, [rip + str.0]
+            lea     rdx, [rip + .L__unnamed_2]
+            mov     rax, qword ptr [rip + core::panicking::panic@GOTPCREL]
+            mov     esi, 33
+            call    rax
+            ud2
+
+    .L__unnamed_3:
+            .ascii  "/app/example.rs"
+
+    .L__unnamed_1:
+            .quad   .L__unnamed_3
+            .asciz  "\017\000\000\000\000\000\000\000\002\000\000\000\005\000\000"
+
+    str.0:
+            .ascii  "attempt to multiply with overflow"
+
+    .L__unnamed_2:
+            .quad   .L__unnamed_3
+            .asciz  "\017\000\000\000\000\000\000\000\003\000\000\000\005\000\000"
+    ```
+
+=== "Rust Optimized"
+
+    ```rust
+    // rustc 1.74.0: -O -C debuginfo=0 -C opt-level=3
+    example::example:
+        mov     eax, dword ptr [rdi]
+        imul    eax, eax
+        imul    eax, eax
+        mov     dword ptr [rdi], eax
+        ret
+    ```
+
+=== "C++/GCC"
+
+    ```rust
+    // x86-64 gcc 13.2: -O3
+    example(int*):
+        mov     eax, DWORD PTR [rdi]
+        imul    eax, eax
+        imul    eax, eax
+        mov     DWORD PTR [rdi], eax
+        ret
+    ```
+
+As you can see, with the interpreted Python version, wherein Python is ready and executing a single line
+at a time, the lack of context and constraint results in loading the same value into registers twice and
+storing it in main memory, only to load it twice and storing it again. This is wildly ineffecient.
+If we instead move to Rust and compile it in what is more or less debug mode, we get all sorts of
+additional information and quite a bit of code to handle stuff like overflows and panics (error states).
+
+If we instead tell the Rust compiler to optimize the code and remove some of the additional debug
+info, we get what we would think a computer would always reduce the code to in terms of raw instructions.
+The compiler has recognized that there is only a single value being multiplied, not two different values
+as in the general form of the binary multiplication operation. It has also recognized that the store
+operation is happening in the same variable. Thus we have 4 instructions. Load the value into a register.
+Multiply the value in the register in place. Twice. Store the result in memory.
+
+And this is why shouldn't be doing raw math in pure Python, but either use a compiler to optimize or
+use libraries, like numpy, which have been written and compiled in lower level languages like C, C++
+and Rust.
+
+Another quite popular language is [Go][8], which also compiles to machine code, but is garbage collected.
+[Julia][9] has more of a scientific/numerical focus, but features garbage collection,
 JIT compilation and can use either a runtime or compile to a standalone binary.
 
-Other languages like [Java][9] and [C#][10] compile to something called bytecode,
+Other languages like [Java][10] and [C#][11] compile to something called bytecode,
 which can then be interpreted by a process virtual machine. Thus all Java programs compile to the same
 bytecode, regardless of whether it's supposed to run on a Mac, Linux or Windows platform.
 The bytecode is then interpreted, sometimes optimized as well,
 at runtime by a virtual machine written for that specific platform.
 
-[Javascript][11] is a just-in-time compiled language running on most web pages.  
+[Javascript][12] is a just-in-time compiled language running on most web pages.  
 It can occassionally have a reasonable speed due to the optimizing runtime.  
 Heavy development has tuned the widely used V8 runtime to improve Javascripts performance.  
 Writing Javascript can seem easy, but the amount of things you are allowed to do,  
@@ -115,7 +277,7 @@ To help you get familiar with new topics, we only need reasonable performance an
 the code to be runnable on most laptops.  
 Most importantly, the setup process should be easy and not make you want to stress-eat
 the contents of your entire fridge when going through the installation process.
-As such the guide will mainly use [Rust][12] and the GPU API [wgpu][13]. The guide will in all cases that do
+As such the guide will mainly use [Rust][13] and the GPU API [wgpu][14]. The guide will in all cases that do
 not require graphics output only concern itself with pure computation through wgpu, which makes setup quite
 a bit simpler. wgpu is an abstraction layer that runs whatever GPU API it finds best suitable on your
 system. Having exact control and the absolute best performance isn't as important as allowing as many people to
@@ -131,14 +293,14 @@ computation. Usually, it will be called a compute shader. Shader is the common n
 If running CUDA or OpenCL, it is called a kernel. The guide will mostly focus on the pure compute parts
 of GPU APIs, except for the graphics specialization. Thus it will be assumed that if you are interested in
 the graphics specialization you might already have done a graphics course or a tutorial such as
-[LearnOpenGL][14] or [Learn Wgpu][15]. It is worth noting that a compute shader using a graphics-based
+[LearnOpenGL][15] or [Learn Wgpu][16]. It is worth noting that a compute shader using a graphics-based
 API, such as Vulkan, can perform just as well as an implementation in a compute-only API, such as CUDA.
-One example of this is [VkFFT][16]. A GPU API is all the stuff that you have to write in your code that
+One example of this is [VkFFT][17]. A GPU API is all the stuff that you have to write in your code that
 is not the function (shaders) that you want to run. It could be calls like creating a connection to the GPU,
 allocating memory on the GPU, transferring the contents of a buffer to the memory you just allocated on the
 GPU or launching your shader/kernel and transferring the results back to the CPU. The GPU languages themselves
 vary with the APIs. Some APIs, such as Vulkan, can take an intermediate representation called SPIR-V, this
-allows the user to write in any shading language, or even Rust in [one case][17], as long as it is
+allows the user to write in any shading language, or even Rust in [one case][18], as long as it is
 compiled to SPIR-V. Usually a shading language will look a lot like C/C++, but have its own distinct
 rules. You can't always make the same assumptions.
 
@@ -147,11 +309,11 @@ The rest of this section is an overview of the various available GPU APIs.
 ### Web APIs
 An often used strategy for making your programs as widely available as possible, is to use web-based techonology.
 Whatever browser you, or the end user is using supports some GPU APIs. For a long time it has been
-[WebGL][18], which is a subset of OpenGL. WebGL has a version 2.0, which was
+[WebGL][19], which is a subset of OpenGL. WebGL has a version 2.0, which was
 finally supported by all major browsers not too long ago. The 2.0 version brought support for compute shaders with it.
-The modern newcomer is [WebGPU][19] which has a way of doing things that more
+The modern newcomer is [WebGPU][20] which has a way of doing things that more
 closely resembles modern APIs such as Vulkan, DirectX 12 and Metal. It is not widely supported in browsers, outside
-of developer modes. Until then, the [wgpu][13] abstraction can be used. It has an API which follows
+of developer modes. Until then, the [wgpu][14] abstraction can be used. It has an API which follows
 the WebGPU specification, with some optional extensions for more features, but under the hood it uses whatever API
 it deems best for the current platform. Once the support for WebGPU becomes widespread, it can merely choose to run
 using WebGPU instead. In general, you will find that most frameworks or APIs which have to support a lot of things
@@ -160,22 +322,22 @@ the system you are on for support of an extension, which does allow access to sp
 however, end up with several versions of some elements of your code, based on whether some feature is there or not.
 
 ### Platform-Specific APIs
-Some GPU APIs are specific to specific operating systems. [DirectX11][20] and [DirectX12][21] targets Windows
-and XBox platforms, while [Metal][22] targets Apple devices. The guide won't concern itself too much
+Some GPU APIs are specific to specific operating systems. [DirectX11][21] and [DirectX12][22] targets Windows
+and XBox platforms, while [Metal][23] targets Apple devices. The guide won't concern itself too much
 with these. DirectX11 is somewhat similar to OpenGL, while DirectX12 and Metal are from the same, more low-level,
 generation as Vulkan. Metal however, seems to be a bit less low-level compared to DirectX12 and Vulkan.
 
 ### Cross-Platform APIs
-[OpenGL][23] and [Vulkan][24] are cross platform. OpenGL hasn't seen any updates for a
+[OpenGL][24] and [Vulkan][25] are cross platform. OpenGL hasn't seen any updates for a
 while. Vulkan on the other hand is a low level, but generally popular API. It puts a lot of
 responsibility on to the programmer, but works on Windows and Linux, as well as Intel, Nvidia and
-AMD GPUs. It even works fairly decently on Apple devices thanks to [MoltenVK][25]
-Another cross-platform tool is [wgpu][13], mentioned earlier. It is also the one that will
+AMD GPUs. It even works fairly decently on Apple devices thanks to [MoltenVK][26]
+Another cross-platform tool is [wgpu][14], mentioned earlier. It is also the one that will
 be used in the guide for GPU code.
 
 ### Compute APIs
-Some GPU APIs are strictly not for graphics, such as [CUDA][26] and
-[OpenCL][27]. OpenCL is cross-platform (works on all GPUs), as well
+Some GPU APIs are strictly not for graphics, such as [CUDA][27] and
+[OpenCL][28]. OpenCL is cross-platform (works on all GPUs), as well
 as compiling to FPGAs, DSPs and parallelized CPU code. On the other hand CUDA is just for Nvidia GPUs.
 CUDA is widely used in scientific computing and mostly dominates academia. Both CUDA and OpenCL have their kernels
 written in a specialized version of C++.
@@ -186,30 +348,30 @@ Graphics APIs have some specific functionality which the language has to support
 Usually you will find support for small vectors and matrices (up to 4x4) and various types you might not find
 on the CPU such as fp16. They will also usually have something called textures, bindings, samplers and built-in variables.
 You don't need to worry about that very much in the guide.
-[GLSL][28], [HLSL][29], [WGSL][30] and [MSL][31] are all shading languages developed for graphics APIs.
+[GLSL][29], [HLSL][30], [WGSL][31] and [MSL][32] are all shading languages developed for graphics APIs.
 OpenGL, DirectX, WebGPU and Metal, respectively. GLSL is the main shader language of Vulkan,
 but HLSL is also seeing rising popularity in that community. Lately, the tooling for cross compiling and running the
 same shaders on different graphics APIs has become a lot better. Shaders can be compiled to SPIR-V,
 an intermediate representation, sort of like the byte code we discussed earlier.
 This allows the platform independent SPIR-V to be translated to the specific instructions
-the GPU the code is actually run on. One tool for compiling shaders is [naga][32].
+the GPU the code is actually run on. One tool for compiling shaders is [naga][33].
 
 ## Domain Specific Languages and Frameworks
 Shading languages all benefit from limitations and specializations from being specifically for graphics on a GPU.
 Another form of limitation is domain specific languages and frameworks. One such framework you might know of is
-[PyTorch][33]. You are generally supposed to formulate your neural network as a graph and not
+[PyTorch][34]. You are generally supposed to formulate your neural network as a graph and not
 just a sequence of operations. This allows PyTorch to have a clearer picture of what it is you want to do. It can
 check that all dimensions fit before running the training loop and it can optimize the process. Taking things even
-further PyTorch even has its own compiler from [version 2.0][34].  
+further PyTorch even has its own compiler from [version 2.0][35].  
 
 Another way of achieving speedy results in a flexible format is retrofitting an existing language, in this case
-Python, with a slightly different language. [Taichi][35] combines a domain specific
+Python, with a slightly different language. [Taichi][36] combines a domain specific
 language to JIT compile highly performant code, which can also run graphics, to whatever platform you are running
 on. It can do this because of increased requirements of the user. Namely, annotating their code and setting
-limitations. [Halide][36] on the other hand restricts itself to be a AOT- or
+limitations. [Halide][37] on the other hand restricts itself to be a AOT- or
 JIT-compiled language embedded in C++ made specifically for working with images and tensors.
 
-[Futhark][37] is a language made specifically for replacing the parts of your code
+[Futhark][38] is a language made specifically for replacing the parts of your code
 which need to be fast. As such it is not a general language and can make opinionated choices which allows
 it to generate more performant code.
 
@@ -220,34 +382,35 @@ it to generate more performant code.
 [4]: https://en.wikipedia.org/wiki/C_(programming_language)
 [5]: https://en.wikipedia.org/wiki/C%2B%2B
 [6]: https://en.wikipedia.org/wiki/Rust_(programming_language)
-[7]: https://en.wikipedia.org/wiki/Go_(programming_language)
-[8]: https://en.wikipedia.org/wiki/Julia_(programming_language)
-[9]: https://en.wikipedia.org/wiki/Java_%28programming_language%29
-[10]: https://en.wikipedia.org/wiki/C_Sharp_(programming_language)
-[11]: https://en.wikipedia.org/wiki/JavaScript
-[12]: https://www.rust-lang.org/
-[13]: https://wgpu.rs/
-[14]: https://learnopengl.com/
-[15]: https://sotrh.github.io/learn-wgpu/
-[16]: https://github.com/DTolm/VkFFT
-[17]: https://github.com/EmbarkStudios/rust-gpu
-[18]: https://en.wikipedia.org/wiki/WebGL
-[19]: https://en.wikipedia.org/wiki/WebGPU
-[20]: https://en.wikipedia.org/wiki/DirectX#DirectX_11
-[21]: https://en.wikipedia.org/wiki/DirectX#DirectX_12
-[22]: https://en.wikipedia.org/wiki/Metal_(API)
-[23]: https://en.wikipedia.org/wiki/OpenGL
-[24]: https://en.wikipedia.org/wiki/Vulkan
-[25]: https://moltengl.com/moltenvk/
-[26]: https://en.wikipedia.org/wiki/CUDA
-[27]: https://en.wikipedia.org/wiki/OpenCL
-[28]: https://en.wikipedia.org/wiki/OpenGL_Shading_Language
-[29]: https://en.wikipedia.org/wiki/High-Level_Shader_Language
-[30]: https://en.wikipedia.org/wiki/Shading_language#WebGPU_Shading_Language
-[31]: https://en.wikipedia.org/wiki/Metal_(API)
-[32]: https://github.com/gfx-rs/naga
-[33]: https://pytorch.org/
-[34]: https://pytorch.org/get-started/pytorch-2.0/
-[35]: https://www.taichi-lang.org/
-[36]: https://halide-lang.org/
-[37]: https://futhark-lang.org/
+[7]: https://godbolt.org/
+[8]: https://en.wikipedia.org/wiki/Go_(programming_language)
+[9]: https://en.wikipedia.org/wiki/Julia_(programming_language)
+[10]: https://en.wikipedia.org/wiki/Java_%28programming_language%29
+[11]: https://en.wikipedia.org/wiki/C_Sharp_(programming_language)
+[12]: https://en.wikipedia.org/wiki/JavaScript
+[13]: https://www.rust-lang.org/
+[14]: https://wgpu.rs/
+[15]: https://learnopengl.com/
+[16]: https://sotrh.github.io/learn-wgpu/
+[17]: https://github.com/DTolm/VkFFT
+[18]: https://github.com/EmbarkStudios/rust-gpu
+[19]: https://en.wikipedia.org/wiki/WebGL
+[20]: https://en.wikipedia.org/wiki/WebGPU
+[21]: https://en.wikipedia.org/wiki/DirectX#DirectX_11
+[22]: https://en.wikipedia.org/wiki/DirectX#DirectX_12
+[23]: https://en.wikipedia.org/wiki/Metal_(API)
+[24]: https://en.wikipedia.org/wiki/OpenGL
+[25]: https://en.wikipedia.org/wiki/Vulkan
+[26]: https://moltengl.com/moltenvk/
+[27]: https://en.wikipedia.org/wiki/CUDA
+[28]: https://en.wikipedia.org/wiki/OpenCL
+[29]: https://en.wikipedia.org/wiki/OpenGL_Shading_Language
+[30]: https://en.wikipedia.org/wiki/High-Level_Shader_Language
+[31]: https://en.wikipedia.org/wiki/Shading_language#WebGPU_Shading_Language
+[32]: https://en.wikipedia.org/wiki/Metal_(API)
+[33]: https://github.com/gfx-rs/naga
+[34]: https://pytorch.org/
+[35]: https://pytorch.org/get-started/pytorch-2.0/
+[36]: https://www.taichi-lang.org/
+[37]: https://halide-lang.org/
+[38]: https://futhark-lang.org/
