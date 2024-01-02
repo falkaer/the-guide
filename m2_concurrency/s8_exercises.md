@@ -57,7 +57,7 @@ an atomic variable outside of the iterator for summing the data. You can use eit
 
 ??? note "Hints"
 
-    To solve this in very few lines, use .par_chunks(chunk_size), .for_each(), AtomicU64 and .fetch_add() with
+    To solve this in very few lines, use [.par_chunks(chunk_size)][0], [.for_each()][1], [AtomicU64][2] and [.fetch_add()][3] with
     a relaxed ordering.
 
 Why might you use .par_chunks instead()?
@@ -91,24 +91,29 @@ value add to the count for the bin.
 Now instead of each thread accessing an individual element at a time, try using an array of bin values with the
 entire array wrapped in a Mutex (lock). Why not use a RwLock instead of a Mutex?
 
-### m2::e4 - Parallel Histogram with Channels
-This is where things get a little nuts... In this exercise a number of threads will go presort the data into the
-bins by sending them to corresponding channels. Then a thread per bin will receive the values and count how many
-it has received. Once all of the senders have been dropped it will send its count and index through a channel to
-the main thread which will accumulate the received values into the final histogram.
+### m2::e4 - Parallel Histogram with Channels and Threads
+In this exercise a number of threads will receive a subset of the input data, compute their own subhistrogram,
+then send that subhistogram to another thread for accumulation into a final histogram.
 
-* PARTITION INTO CHUNKS - Partition the data vector into ```thread_count``` number of chunks using slices,
-```&[u32]```, and ```.split_at()```.
-* SORTING PAIRS - Setup a BIN_COUNT number of sender/receiver pairs using ```mpsc::channels```.
-* ACCUMULATION PAIR - Setup a single sender/receiver pair, also using ```mpsc::channels```.
-* SORTING THREADS - Give the slices to ```thread_count``` number of threads (use ```thread::spawn```).
-Each thread should be given BIN_COUNT sender copies of the sorting pairs. Meaning if thread A sees a 5 it
-should send that 5 through sender 5. Once the thread has been through all values it should terminate and drop
-its held senders.
-* COUNTING THREADS - Setup BIN_COUNT number of threads each taking a single sorting receiver. It will also take a
-clone of the accumulation pair sender. It will block on the sorting receiver and count all the incoming
-values until it receives a ```Err(_)``` value. Once it does so, it will send its accumulated count through its
-clone of the accumulation sender and then terminate.
-* MASTER ACCUMULATOR - The main thread will block on the accumulation receiver and take all incoming values,
-I suggest ```(usize, u64)```, and use them for constructing a histogram. Once it receives an ```Err(_)```, meaning
-all senders have been dropped, it should print its histogram.
+* Partition the data vector into ```thread_count``` number of slices.
+* Create a channel with a sender/receiver pair.
+* Move the slices and senders (by cloning the sender) to ```thread_count``` number of threads.
+* The main thread will block on the receiver and take all incoming subhistograms. Once finished,
+it should print its histogram. But how do you know it's finished?
+
+??? note "Hints"
+
+    * You can partition the input data into [&[u32]][4] slices, by using [.split_at()][5].
+    * For creating a channel, check out the [std::sync::mpsc::channel][6].
+    * Create threads using [thread::spawn][7].
+    * You can check for all senders having been dropped, by handling the receiving of ```Err(_)``` in your accumulator.
+    * Make sure to join your threads.
+
+[0]: https://docs.rs/rayon/latest/rayon/slice/trait.ParallelSlice.html#method.par_chunks
+[1]: https://docs.rs/rayon/latest/rayon/iter/trait.ParallelIterator.html#method.for_each
+[2]: https://doc.rust-lang.org/std/sync/atomic/struct.AtomicU64.html
+[3]: https://doc.rust-lang.org/std/sync/atomic/struct.AtomicU64.html#method.fetch_add
+[4]: https://doc.rust-lang.org/rust-by-example/primitives/array.html
+[5]: https://doc.rust-lang.org/std/vec/struct.Vec.html#method.split_at
+[6]: https://doc.rust-lang.org/std/sync/mpsc/fn.channel.html
+[7]: https://doc.rust-lang.org/std/thread/fn.spawn.html
