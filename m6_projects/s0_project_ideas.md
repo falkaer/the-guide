@@ -67,7 +67,7 @@ Allow the user to navigate the scene with camera controls.
 Load a point cloud.
 Render the points using primitives like GL_POINT or similar in a classic vertex-/fragment shader
 pipeline.
-Render the points to texture using compute shaders instead and use a fragment shader to render
+Render the points to a buffer using compute shaders instead and use a fragment shader to render
 the points to screen. How do you handle which points are closest in terms of depth? Which
 type of synchronization might you need?
 Could you preprocess the points to compress the data?

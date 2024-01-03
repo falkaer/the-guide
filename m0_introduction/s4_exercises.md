@@ -6,18 +6,38 @@ of structure and the borrow checker through doing either m0::e1::a or m0::e1::b.
 wheras the other is more neural network oriented.
 
 ## m0::e0 - Advent of Code
-In order to get a hang of the basic of Rust I recommend doing [Advent of Code][1]
-problems until you feel comfortable moving forward. You can give yourself a bigger challenge by rewriting your
-solutions to use iterators whenever possible.
+In order to get a hang of the basic of Rust I recommend doing [Advent of Code][0]
+problems until you feel comfortable moving forward.
 
-## m0::e2 - Traits
-Find out which traits are needed for using BURN.
+Give yourself a bigger challenge:
 
-## m0::e3::a - Ray Tracing in One Weekend
+* Rewrite your solutions to use iterators whenever possible
+* Handle errors properly instead of using ```.unwrap()``` everywhere
+* Implement testing
+
+## m0::e1 - Traits
+Traits are one of the ways in which we can begin to create structure in our programs. In Rust, traits
+are somewhat like interfaces seen in other languages. A struct can implement multiple traits and we can enable
+lots of different types of input as function arguments by specifying them somewhat generically. Imagine a
+function definition. Argument A might be an ```f32```, argument B might be a ```&Vec<i64>```, but argument
+C could support a range of possible inputs, by specifying that all arguments in the third spot (C), should
+implement the interface Alpha. Meaning that they all must implement some form of behaviour that is
+needed by this function. It could have lots of other behavior, but we don't care about that behavior.
+Or we could even require multiple kinds of behavior such as argument C must support behavior of
+trait Alpha + trait Beta + trait Omega. This is known as composition. Now for the exercise.
+
+* Read [this link][1] about traits
+* Create a new project (```cargo new name```)
+* Create 3 different traits
+* Create 3 different structs, each implementing 2 different traits
+* Create 3 functions each requiring one or more arguments to implement one or more of those traits
+* Create a test program which uses all structs, all functions and all traits
+
+## m0::e2::a - Ray Tracing in One Weekend
 Doing this exercise will be quite challenging if you don't know how to read C++. To better practice
 structure, smart pointers, dynamic dispatch and traits, I recommend moving on to doing
 [Ray Tracing in One Weekend][2] in Rust. There is a code snippet which shows your image on screen
-instead of writing it to file in ```m0_introduction::code::image_on_screen``` or [online][0].
+instead of writing it to file in ```m0_introduction::code::image_on_screen``` or [online][3].
 
 Once you have completed this part 1 out of 3, I suggest modifying the resulting code in the following ways -
 
@@ -33,11 +53,12 @@ Once you have completed this part 1 out of 3, I suggest modifying the resulting 
     * Formulate your rendering as a base iterator that calls the inner function with the correct
     pixel indices, then trade .iter() for .par_iter() 
 
-## m0::e3::b - Learning to Fly
-If you are more inclined towards neural networks, [Learning to Fly][3], which focuses on neural networks and genetic
+## m0::e2::b - Learning to Fly
+If you are more inclined towards neural networks, [Learning to Fly][4], which focuses on neural networks and genetic
 algorithms, might be more stimulating. The code is already in Rust and should be fairly easy to follow.
 
-[0]: https://github.com/absorensen/the-guide/tree/main/m0_introduction/code/image_on_screen
-[1]: https://adventofcode.com/
+[0]: https://adventofcode.com/
+[1]: https://github.com/absorensen/the-guide/tree/main/m0_introduction/code/image_on_screen
 [2]: https://raytracing.github.io/books/RayTracingInOneWeekend.html
-[3]: https://pwy.io/posts/learning-to-fly-pt1/
+[3]: https://github.com/absorensen/the-guide/tree/main/m0_introduction/code/image_on_screen
+[4]: https://pwy.io/posts/learning-to-fly-pt1/
